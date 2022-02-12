@@ -1,0 +1,30 @@
+env:
+  # $TERM変数を'xterm-256colorに設定'
+  TERM: xterm-256color
+
+window:
+  # 起動時ウィンドウサイズ
+  startup_mode: Maximized 
+  # 透過率
+  # version > 0.9.0
+  opacity: 0.95
+
+# 透過率
+# version <= 0.9.0
+#background_opacity: 0.75
+
+font:
+  normal:
+    family: "RobotoMono Nerd Font" 
+  bold:
+    family: "RobotoMono Nerd Font"
+  italic:
+    family: "RobotoMono Nerd font"
+  bold_italic:
+    family: "RobotoMono Nerd Font"
+  size: 10
+
+# 背景色透過
+# version > 0.9.0
+colors:
+ transparent_background_colors: true

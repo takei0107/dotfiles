@@ -1,0 +1,63 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+
+[[plugins]]
+repo = 'haishanh/night-owl.vim'
+hook_add = '''
+colorscheme night-owl
+'''
+
+[[plugins]]
+repo = 'itchyny/vim-gitbranch'
+
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+let g:lightline = {
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+  \ },
+  \ 'component_function': {
+  \   'gitbranch': 'gitbranch#name'
+  \ },
+  \ }
+'''
+
+[[plugins]]
+repo = 'vim-jp/vimdoc-ja'
+
+[[plugins]]
+repo = 'lambdalisue/fern.vim'
+hook_add = '''
+  nnoremap <leader>nt :Fern . -reveal=%<CR>
+  let g:fern#default_hidden=1
+  augroup fern
+    autocmd!
+    autocmd FileType fern nmap <buffer> r <Plug>(fern-action-remove)
+  augroup END
+'''
+
+[[plugins]]
+repo = 'lambdalisue/fern-hijack.vim'
+
+[[plugins]]
+repo = 'lambdalisue/fern-git-status.vim'
+
+[[plugins]]
+repo = 'junegunn/fzf'
+build = './install --all'
+hook_add = '''
+  let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.85 } }
+'''
+
+[[plugins]]
+repo = 'junegunn/fzf.vim'
+depends = ['junegunn/fzf']
+hook_add = '''
+  let g:fzf_preview_window = ['up:45%', 'ctrl-/']
+  nnoremap <silent> <leader>f :Files<CR>
+  nnoremap <silent> <leader>gf :GFiles<CR>
+  nnoremap <silent> <leader>s :GFiles?<CR>
+  nnoremap <silent> <leader>b :Buffers<CR>
+'''

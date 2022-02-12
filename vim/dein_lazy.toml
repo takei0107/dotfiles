@@ -1,0 +1,30 @@
+[[plugins]]
+repo = 'lambdalisue/gina.vim'
+on_cmd = ['Gina*']
+
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+on_path = '.*'
+
+[[plugins]]
+repo = 'puremourning/vimspector'
+on_ft = ['java']
+hook_add = '''
+  let g:vimspector_enable_mappings = "HUMAN"
+'''
+
+[[plugins]]
+repo = 'cohama/lexima.vim'
+on_event = ['InsertEnter']
+
+[[plugins]]
+repo = 'skanehira/preview-markdown.vim'
+on_ft = ['markdown']
+on_cmd = ['PreviewMarkdown*']
+hook_add = '''
+  let g:preview_markdown_parser = "glow"
+'''
+
+[[plugins]]
+repo = 'machakann/vim-sandwich'
+on_path = '.*'

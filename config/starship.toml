@@ -1,0 +1,15 @@
+format = "$username$hostname$all"
+add_newline = false
+
+[directory]
+truncate_to_repo = false
+truncation_length = 10
+
+[package]
+disabled = true
+
+[status]
+disabled = false
+
+[username]
+show_always = true
