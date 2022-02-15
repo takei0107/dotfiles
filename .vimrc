@@ -109,6 +109,8 @@ endif
 " {{{ マッピング
 inoremap <silent> jj <ESC>
 nnoremap <silent> <ESC><ESC> :nohlsearch<CR>
+nnoremap <silent> <leader>ts :Gina status<CR>
+nnoremap <silent> <leader>td :Gina diff<CR>
 " }}}
 
 
