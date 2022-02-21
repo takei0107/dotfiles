@@ -15,6 +15,8 @@ HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
+export TLDR_LANGUAGE="ja"
+
 [[ -f ~/.zshrc_local ]] && source ~/.zshrc_local
 alias ll='ls -alt'
 alias tailf='tail -f'
