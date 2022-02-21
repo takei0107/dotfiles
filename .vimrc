@@ -120,5 +120,13 @@ augroup java
   autocmd FileType java set ts=4
 augroup END
 " }}}
+"
+" {{{ Go
+augroup go
+  autocmd!
+  autocmd FileType go set ts=4
+  autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
+augroup END
+" }}}
 
 filetype plugin indent on
