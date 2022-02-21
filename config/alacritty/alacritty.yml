@@ -7,22 +7,26 @@ window:
   startup_mode: Maximized 
   # 透過率
   # version > 0.9.0
-  opacity: 0.95
+  opacity: 0.8
 
 # 透過率
 # version <= 0.9.0
 #background_opacity: 0.75
 
-font:
-  normal:
-    family: "RobotoMono Nerd Font" 
-  bold:
-    family: "RobotoMono Nerd Font"
-  italic:
-    family: "RobotoMono Nerd font"
-  bold_italic:
-    family: "RobotoMono Nerd Font"
-  size: 10
+#font:
+#  normal:
+#    family: "BitstreamVeraSansMono Nerd Font" 
+#  bold:
+#    family: "BitstreamVeraSansMono Nerd Font"
+#  italic:
+#    family: "BitstreamVeraSansMono Nerd Font"
+#  bold_italic:
+#    family: "BitstreamVeraSansMono Nerd Font"
+#  size: 15
+
+# フォント設定はローカル設定を使う
+import:
+  - ~/alacritty-font.yml
 
 # 背景色透過
 # version > 0.9.0
