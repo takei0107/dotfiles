@@ -1,3 +1,5 @@
+bindkey -v
+
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' menu select=2
