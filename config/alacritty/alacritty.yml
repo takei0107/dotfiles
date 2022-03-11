@@ -24,8 +24,9 @@ window:
 #    family: "BitstreamVeraSansMono Nerd Font"
 #  size: 15
 
-# フォント設定はローカル設定を使う
+# ローカル設定
 import:
+  - ~/alacritty-tmux.yml
   - ~/alacritty-font.yml
 
 # 背景色透過
