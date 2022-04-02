@@ -81,7 +81,7 @@ endif
 syntax on
 
 " {{{ only Linux
-if has('linux')
+if has('unix')
   set clipboard^=unnamedplus,unnamed
 endif
 " }}}
