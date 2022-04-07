@@ -1,3 +1,4 @@
+set encoding=utf-8
 scriptencoding utf-8
 
 " {{{ 基本設定
@@ -12,7 +13,6 @@ if has('cursorshape')
   let &t_EI = "\e]50;CursorShape=0\x7"
 endif
 
-set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,cp932,default
 set helplang=ja
 set smartindent autoindent
