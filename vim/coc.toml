@@ -19,6 +19,7 @@ hook_add = '''
   nmap <silent> gy <Plug>(coc-type-definition)
   nmap <silent> gi <Plug>(coc-implementation)
   nmap <silent> gr <Plug>(coc-references)
+  nmap <silent> gn <Plug>(coc-rename)
 
   function! s:show_documentation()
     if (index(['vim','help'], &filetype) >= 0)
