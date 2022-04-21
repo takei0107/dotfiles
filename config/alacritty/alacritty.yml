@@ -26,8 +26,8 @@ window:
 
 # ローカル設定
 import:
-  - ~/alacritty-tmux.yml
-  - ~/alacritty-font.yml
+  - ~/.config/alacritty/alacritty-tmux.yml
+  - ~/.config/alacritty/alacritty-font.yml
 
 # 背景色透過
 # version > 0.9.0
