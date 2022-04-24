@@ -10,7 +10,7 @@ hook_add = '''
     if (index(['vim','help'], &filetype) >= 0)
       execute 'h '.expand('<cword>')
     else
-      call execute('LspHover')
+      execute 'LspHover'
     endif
   endfunction
   augroup lsp_installed
