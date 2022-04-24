@@ -64,12 +64,16 @@ endif
 
 let s:dein_toml = s:dotvim_dir . 'dein.toml'
 let s:dein_lazy_toml = s:dotvim_dir . 'dein_lazy.toml' 
-let s:coc_toml = s:dotvim_dir . 'coc.toml'
+"let s:coc_toml = s:dotvim_dir . 'coc.toml'
+let s:lsp_toml = s:dotvim_dir . 'lsp.toml'
+let s:ddc_toml = s:dotvim_dir . 'ddc.toml'
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir)
   call dein#load_toml(s:dein_toml, {'lazy' : 0})
+  "call dein#load_toml(s:coc_toml, {'lazy' : 0})
+  call dein#load_toml(s:lsp_toml, {'lazy' : 0})
+  call dein#load_toml(s:ddc_toml, {'lazy' : 0})
   call dein#load_toml(s:dein_lazy_toml, {'lazy' : 1})
-  call dein#load_toml(s:coc_toml, {'lazy' : 0})
   call dein#end()
   call dein#save_state()
 endif
@@ -125,7 +129,7 @@ augroup END
 augroup go
   autocmd!
   autocmd FileType go set ts=4
-  autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
+  "autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
 augroup END
 " }}}
 
