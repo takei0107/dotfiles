@@ -66,6 +66,7 @@ path=(
   /opt/homebrew/bin(N-/)
   ~/.volta/bin(N-/)
   /usr/local/go/bin(N-/)
+  ~/go/bin/(N-/)
   $path
 )
 
