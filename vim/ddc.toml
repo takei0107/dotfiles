@@ -1,0 +1,30 @@
+[[plugins]]
+repo = 'Shougo/ddc.vim'
+hook_add = '''
+  inoremap <silent><expr> <TAB>
+  \ ddc#map#pum_visible() ? '<C-n>' :
+  \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
+  \ '<TAB>' : ddc#map#manual_complete()
+  call ddc#custom#patch_global('sources', ['vim-lsp', 'around'])
+  call ddc#custom#patch_global('sourceOptions', {
+        \ '_' : {
+        \    'matchers' : ['matcher_head'],
+        \    'sorters'  : ['sorter_rank'],
+        \ },
+        \ 'vim-lsp' : {'mark': 'lsp'},
+        \ 'around'  : {'mark': 'A'},
+        \ })
+  call ddc#enable()
+'''
+
+[[plugins]]
+repo = 'shun/ddc-vim-lsp'
+
+[[plugins]]
+repo = 'Shougo/ddc-around'
+
+[[plugins]]
+repo = 'Shougo/ddc-matcher_head'
+
+[[plugins]]
+repo = 'Shougo/ddc-sorter_rank'

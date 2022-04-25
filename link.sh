@@ -50,6 +50,14 @@ if [ ! -e $dotvim/coc.toml ]; then
   ln -s $PWD/vim/coc.toml $dotvim/coc.toml
 fi
 
+if [ ! -e $dotvim/lsp.toml ]; then
+  ln -s $PWD/vim/lsp.toml $dotvim/lsp.toml
+fi
+
+if [ ! -e $dotvim/ddc.toml ]; then
+  ln -s $PWD/vim/ddc.toml $dotvim/ddc.toml
+fi
+
 if [ ! -e $dotconfig/nvim/init.vim ]; then
   ln -s $PWD/config/nvim/init.vim $dotconfig/nvim/init.vim
 fi
