@@ -45,6 +45,8 @@ if type fzf > /dev/null 2>&1; then
   }
   zle -N fzf_src
   bindkey '^]' fzf_src
+
+  alias fcd='cd `dirname $(fzf)`'
 fi
 
 function workdir () {
