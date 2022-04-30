@@ -19,8 +19,7 @@ hook_add = '''
   augroup END
   augroup auto_organize
     au!
-    autocmd BufWritePre *.go,*.java
-    \ call execute('LspCodeActionSync source.organizeImports')
+    autocmd BufWritePre *.go,*.java LspDocumentFormatSync
   augroup END
 '''
 

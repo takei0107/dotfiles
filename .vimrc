@@ -138,7 +138,7 @@ augroup END
 " {{{ Go
 augroup go
   autocmd!
-  autocmd FileType go set ts=4
+  autocmd FileType go set nolist
 augroup END
 " }}}
 
