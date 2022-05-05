@@ -7,7 +7,7 @@ repo = 'vim-denops/denops.vim'
 [[plugins]]
 repo = 'haishanh/night-owl.vim'
 hook_add = '''
-colorscheme night-owl
+  colorscheme night-owl
 '''
 
 [[plugins]]
@@ -17,13 +17,15 @@ repo = 'itchyny/vim-gitbranch'
 repo = 'itchyny/lightline.vim'
 hook_add = '''
 let g:lightline = {
-  \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ],
-  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-  \ },
-  \ 'component_function': {
-  \   'gitbranch': 'gitbranch#name'
-  \ },
+  \   'active': {
+  \     'left': [ 
+  \               [ 'mode', 'paste' ],
+  \               [ 'gitbranch', 'readonly', 'filename', 'modified' ] 
+  \             ]
+  \   },
+  \   'component_function': {
+  \    'gitbranch': 'gitbranch#name'
+  \   },
   \ }
 '''
 
