@@ -40,6 +40,7 @@ else
 fi
 
 if type fzf > /dev/null 2>&1; then
+  export FZF_DEFAULT_OPTS='--cycle'
   function fzf_src () {
     local selected_dir=$(ghq list -p | fzf)
     if [ -n "$selected_dir" ]; then
