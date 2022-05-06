@@ -123,8 +123,6 @@ endif
 " {{{ マッピング
 inoremap <silent> jj <ESC>
 nnoremap <silent> <ESC><ESC> :nohlsearch<CR>
-nnoremap <silent> <leader>ts :Gina status<CR>
-nnoremap <silent> <leader>td :Gina diff<CR>
 " }}}
 
 
@@ -138,7 +136,7 @@ augroup END
 " {{{ Go
 augroup go
   autocmd!
-  autocmd FileType go set ts=4
+  autocmd FileType go set nolist
 augroup END
 " }}}
 

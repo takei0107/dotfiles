@@ -32,9 +32,15 @@ if [[ -f "${ZINIT_HOME}/zinit.zsh" ]];then
   zinit light zdharma-continuum/fast-syntax-highlighting
 fi
 
-[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+if [[ -f ~/.fzf.zsh ]]; then
+  source ~/.fzf.zsh
+else 
+  [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+  [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+fi
 
 if type fzf > /dev/null 2>&1; then
+  export FZF_DEFAULT_OPTS='--cycle'
   function fzf_src () {
     local selected_dir=$(ghq list -p | fzf)
     if [ -n "$selected_dir" ]; then

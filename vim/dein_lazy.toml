@@ -1,6 +1,10 @@
 [[plugins]]
 repo = 'lambdalisue/gina.vim'
 on_cmd = ['Gina*']
+hook_add = '''
+  nnoremap <silent> <leader>ts :Gina status<CR>
+  nnoremap <silent> <leader>td :Gina diff<CR>
+'''
 
 [[plugins]]
 repo = 'airblade/vim-gitgutter'
