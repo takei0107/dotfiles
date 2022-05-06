@@ -49,6 +49,7 @@ repo = 'lambdalisue/fern-git-status.vim'
 
 [[plugins]]
 repo = 'junegunn/fzf'
+merged = 0
 hook_add = '''
   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.85 } }
   if executable('fd')
@@ -58,7 +59,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'junegunn/fzf.vim'
-depends = ['junegunn/fzf']
+depends = ['fzf']
 hook_add = '''
   let g:fzf_preview_window = ['up:45%', 'ctrl-/']
   nnoremap <silent> <leader>f :Files<CR>
