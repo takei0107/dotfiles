@@ -26,7 +26,9 @@ repo = 'skanehira/preview-markdown.vim'
 on_ft = ['markdown']
 on_cmd = ['PreviewMarkdown*']
 hook_add = '''
+  nnoremap <silent> <leader>ma :PreviewMarkdown right<CR>
   let g:preview_markdown_parser = "glow"
+  let g:preview_markdown_auto_update = 1
 '''
 
 [[plugins]]
