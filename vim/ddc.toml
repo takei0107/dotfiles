@@ -3,8 +3,10 @@ repo = 'Shougo/ddc.vim'
 hook_add = '''
   inoremap <silent><expr> <TAB>
   \ ddc#map#pum_visible() ? '<C-n>' :
-  \ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
-  \ '<TAB>' : ddc#map#manual_complete()
+  \ (col('.') <= 1 
+  \   <Bar><Bar> getline('.')[col('.') - 2] =~# '\s'
+  \   <Bar><Bar> getline('.')[col('.') - 2] =~# '\\') ? '<TAB>' : 
+  \ ddc#map#manual_complete()
   call ddc#custom#patch_global('sources', ['vim-lsp', 'around'])
   call ddc#custom#patch_global('sourceOptions', {
         \   '_' : {
