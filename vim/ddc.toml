@@ -7,15 +7,22 @@ hook_add = '''
   \   <Bar><Bar> getline('.')[col('.') - 2] =~# '\s'
   \   <Bar><Bar> getline('.')[col('.') - 2] =~# '\\') ? '<TAB>' : 
   \ ddc#map#manual_complete()
-  call ddc#custom#patch_global('sources', ['vim-lsp', 'around'])
+  call ddc#custom#patch_global('sources', ['vim-lsp', 'around', 'path'])
   call ddc#custom#patch_global('sourceOptions', {
         \   '_' : {
         \      'matchers' : ['matcher_head'],
         \      'sorters'  : ['sorter_rank'],
         \   },
-        \   'vim-lsp' : {'mark': 'lsp'},
-        \   'around'  : {'mark': 'A'},
+        \   'vim-lsp' : {'mark' : 'lsp'},
+        \   'around'  : {'mark' : 'A'},
+        \   'path'    : {'mark' : 'path'},
         \ })
+  call ddc#custom#patch_global('sourceParams', {
+        \  'path' : {
+        \    'absolute' : v:false,
+        \    'cmd' : (executable('fd') ? ['fd', '--max-depth', '5'] : ['find', '-maxdepth', '5']),
+        \  }
+        \  })
   call ddc#enable()
 '''
 
@@ -30,3 +37,6 @@ repo = 'Shougo/ddc-matcher_head'
 
 [[plugins]]
 repo = 'Shougo/ddc-sorter_rank'
+
+[[plugins]]
+repo = 'tani/ddc-path'
