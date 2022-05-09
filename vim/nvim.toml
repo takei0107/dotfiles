@@ -1,0 +1,12 @@
+[[plugins]]
+repo = 'nvim-treesitter/nvim-treesitter'
+hook_source = '''
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = 'all',
+  highlight = {
+    enable = true,
+  },
+}
+EOF
+'''

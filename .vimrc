@@ -74,6 +74,7 @@ let s:dein_lazy_toml = s:dotvim_dir . 'dein_lazy.toml'
 let s:coc_toml = s:dotvim_dir . 'coc.toml'
 let s:lsp_toml = s:dotvim_dir . 'lsp.toml'
 let s:ddc_toml = s:dotvim_dir . 'ddc.toml'
+let s:nvim_toml = s:dotvim_dir . 'nvim.toml'
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir)
   call dein#load_toml(s:dein_toml, {'lazy' : 0})
@@ -82,6 +83,9 @@ if dein#load_state(s:dein_dir)
     call dein#load_toml(s:ddc_toml, {'lazy' : 0})
   else
     call dein#load_toml(s:coc_toml, {'lazy' : 0})
+  endif
+  if has('nvim')
+    call dein#load_toml(s:nvim_toml, {'lazy' : 0})
   endif
   call dein#load_toml(s:dein_lazy_toml, {'lazy' : 1})
   call dein#end()
