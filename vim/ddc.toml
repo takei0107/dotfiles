@@ -7,12 +7,12 @@ hook_add = '''
   \ '<TAB>' : ddc#map#manual_complete()
   call ddc#custom#patch_global('sources', ['vim-lsp', 'around'])
   call ddc#custom#patch_global('sourceOptions', {
-        \ '_' : {
-        \    'matchers' : ['matcher_head'],
-        \    'sorters'  : ['sorter_rank'],
-        \ },
-        \ 'vim-lsp' : {'mark': 'lsp'},
-        \ 'around'  : {'mark': 'A'},
+        \   '_' : {
+        \      'matchers' : ['matcher_head'],
+        \      'sorters'  : ['sorter_rank'],
+        \   },
+        \   'vim-lsp' : {'mark': 'lsp'},
+        \   'around'  : {'mark': 'A'},
         \ })
   call ddc#enable()
 '''

@@ -7,7 +7,7 @@ repo = 'vim-denops/denops.vim'
 [[plugins]]
 repo = 'haishanh/night-owl.vim'
 hook_add = '''
-colorscheme night-owl
+  colorscheme night-owl
 '''
 
 [[plugins]]
@@ -17,13 +17,15 @@ repo = 'itchyny/vim-gitbranch'
 repo = 'itchyny/lightline.vim'
 hook_add = '''
 let g:lightline = {
-  \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ],
-  \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-  \ },
-  \ 'component_function': {
-  \   'gitbranch': 'gitbranch#name'
-  \ },
+  \   'active': {
+  \     'left': [ 
+  \               [ 'mode', 'paste' ],
+  \               [ 'gitbranch', 'readonly', 'filename', 'modified' ] 
+  \             ]
+  \   },
+  \   'component_function': {
+  \    'gitbranch': 'gitbranch#name'
+  \   },
   \ }
 '''
 
@@ -53,7 +55,7 @@ merged = 0
 hook_add = '''
   let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.85 } }
   if executable('fd')
-    let $FZF_DEFAULT_COMMAND = 'fd --type f -H --exclude ".git"'
+    let $FZF_DEFAULT_COMMAND = 'fd --strip-cwd-prefix --type f -H --exclude ".git/"'
   endif
 '''
 
