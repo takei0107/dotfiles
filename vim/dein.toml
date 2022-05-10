@@ -35,7 +35,7 @@ repo = 'vim-jp/vimdoc-ja'
 [[plugins]]
 repo = 'lambdalisue/fern.vim'
 hook_add = '''
-  nnoremap <leader>nt :Fern . -reveal=%<CR>
+  nnoremap <silent> <leader>nt :Fern . -reveal=%<CR>
   let g:fern#default_hidden=1
   augroup fern
     autocmd!
