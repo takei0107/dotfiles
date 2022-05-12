@@ -51,7 +51,6 @@ if &compatible
 endif
 " }}}
 
-
 " {{{ dein
 let s:dein_dir = expand('~/.cache/dein/')
 let s:dein_repo_dir = s:dein_dir . 'repos/github.com/Shougo/dein.vim/'
@@ -104,7 +103,6 @@ if has('unix')
 endif
 " }}}
 
-
 " {{{ only MAC
 if has('mac')
   set clipboard+=unnamed
@@ -129,14 +127,13 @@ inoremap <silent> jj <ESC>
 nnoremap <silent> <ESC><ESC> :nohlsearch<CR>
 " }}}
 
-
 " {{{ Java
 augroup java
   autocmd!
   autocmd FileType java set ts=4
 augroup END
 " }}}
-"
+
 " {{{ Go
 augroup go
   autocmd!
@@ -145,3 +142,4 @@ augroup END
 " }}}
 
 filetype plugin indent on
+au FileType * setlocal formatoptions-=ro
