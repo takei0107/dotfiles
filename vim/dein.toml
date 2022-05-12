@@ -77,7 +77,10 @@ hook_add = '''
   endfunction
   function! s:fern_open_with_cd(path)
     execute 'cd ' . a:path
-    " TODO Fernコマンドの存在チェック
+    if exists(':Fern') !=# 2
+      echoerr "Ex command ':Fern' is not defined."
+      return
+    endif
     execute 'Fern . -reveal=%'
   endfunction
   nnoremap <silent> <leader>nf :call <SID>fzf_with_ghq()<CR>
