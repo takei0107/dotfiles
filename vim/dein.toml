@@ -68,4 +68,17 @@ hook_add = '''
   nnoremap <silent> <leader>gf :GFiles<CR>
   nnoremap <silent> <leader>s :GFiles?<CR>
   nnoremap <silent> <leader>b :Buffers<CR>
+  function! s:fzf_with_ghq() abort
+    if !executable('ghq')
+      echoerr "ghq is not installed."
+      return
+    endif
+    call fzf#run(fzf#wrap({'source': 'ghq list --full-path', 'sink': function('s:fern_open_with_cd') }))
+  endfunction
+  function! s:fern_open_with_cd(path)
+    execute 'cd ' . a:path
+    " TODO Fernコマンドの存在チェック
+    execute 'Fern . -reveal=%'
+  endfunction
+  nnoremap <silent> <leader>nf :call <SID>fzf_with_ghq()<CR>
 '''
