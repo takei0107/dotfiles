@@ -149,5 +149,4 @@ augroup END
 
 
 filetype plugin indent on
-syntax on
 au FileType * setlocal formatoptions-=ro
