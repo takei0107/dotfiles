@@ -41,6 +41,11 @@ hook_add = '''
     autocmd!
     autocmd FileType fern nmap <buffer> r <Plug>(fern-action-remove)
   augroup END
+  function! s:cd_with_fern_open(path)
+    execute 'cd ' . a:path
+    execute 'Fern . -reveal=%'
+  endfunction
+  command! -complete=file -nargs=1 Cdf :call s:cd_with_fern_open(<q-args>)
 '''
 
 [[plugins]]
@@ -73,15 +78,7 @@ hook_add = '''
       echoerr "ghq is not installed."
       return
     endif
-    call fzf#run(fzf#wrap({'source': 'ghq list --full-path', 'sink': function('s:fern_open_with_cd') }))
-  endfunction
-  function! s:fern_open_with_cd(path)
-    execute 'cd ' . a:path
-    if exists(':Fern') !=# 2
-      echoerr "Ex command ':Fern' is not defined."
-      return
-    endif
-    execute 'Fern . -reveal=%'
+    call fzf#run(fzf#wrap({'source': 'ghq list --full-path', 'sink': function('s:cd_with_fern_open') }))
   endfunction
   nnoremap <silent> <leader>nf :call <SID>fzf_with_ghq()<CR>
 '''
