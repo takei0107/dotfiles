@@ -5,8 +5,20 @@ local function basename(s)
 end
 
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+  local nerd_icons = {
+    nvim = wezterm.nerdfonts.custom_vim,
+    vim = wezterm.nerdfonts.custom_vim,
+    bash = wezterm.nerdfonts.dev_terminal,
+    zsh = wezterm.nerdfonts.dev_terminal,
+    ssh = wezterm.nerdfonts.mdi_server,
+    top = wezterm.nerdfonts.mdi_monitor,
+  }
   local pane = tab.active_pane
-  local title = pane.pane_id .. ": " .. basename(pane.foreground_process_name)
+  local p_name = basename(pane.foreground_process_name)
+  local icon = nerd_icons[p_name]
+  local index = tab.tab_index + 1
+  local p_name_formated = index .. ": " .. basename(pane.foreground_process_name)
+  local title = icon and icon .. "  " .. p_name_formated or p_name_formated
   return {
     {Text=" " .. title .. " "},
   }
@@ -19,6 +31,6 @@ return {
   ),
   use_ime = true,
   font_size = 14.0,
-  color_scheme = "Ayu Mirage",
+  color_scheme = "FishTank",
   window_background_opacity = 0.8,
 }
