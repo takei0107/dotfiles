@@ -113,11 +113,14 @@ endif
 " {{{ Preference
 if has('termguicolors')
   set termguicolors
-  highlight Normal ctermbg=none
-  highlight NonText ctermbg=none
-  highlight LineNr ctermbg=none
-  highlight Folded ctermbg=none
-  highlight EndOfBuffer ctermbg=none 
+  highlight Normal guibg=none
+  highlight NonText guibg=none
+  highlight LineNr guibg=none
+  highlight Folded guibg=none
+  highlight EndOfBuffer guibg=none 
+  highlight CursorLineSign guibg=none
+  highlight CursorLineFold guibg=none
+  highlight SignColumn guibg=none
 endif
 " }}}
 
