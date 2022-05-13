@@ -26,6 +26,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 end)
 
 -- フォント決定
+-- TODO ローカル設定がアーキ依存なのでもっと良くしたい
 local e_font = "JetBrains Mono" -- 組み込みフォント(デフォルト)
 local e_font_size = 12.0
 if wezterm.target_triple == "x86_64-unknown-linux-gnu" then
@@ -41,7 +42,7 @@ end
 return {
   default_cwd = wezterm.home_dir,
   font = wezterm.font(
-    e_font, { weight = "Regular", }
+    e_font, { weight = "Regular" }
   ),
   use_ime = true,
   font_size = e_font_size,
