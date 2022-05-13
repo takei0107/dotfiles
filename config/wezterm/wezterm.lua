@@ -4,6 +4,7 @@ local function basename(s)
   return string.gsub(s, "(.*[/\\])(.*)", "%2")
 end
 
+-- タブの表示
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
   local nerd_icons = {
     nvim = wezterm.nerdfonts.custom_vim,
@@ -24,13 +25,26 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   }
 end)
 
+-- フォント決定
+local e_font = "JetBrains Mono" -- 組み込みフォント(デフォルト)
+local e_font_size = 12.0
+if wezterm.target_triple == "x86_64-unknown-linux-gnu" then
+  -- linux
+  e_font = "RobotoMono Nerd Font"
+  e_font_size = 18.0
+elseif wezterm.target_triple == "x86_64-apple-darwin" then
+  -- mac
+  e_font = "BitstreamVeraSansMono Nerd Font"
+  e_font_size = 14.0
+end
+
 return {
   default_cwd = wezterm.home_dir,
   font = wezterm.font(
-    "BitstreamVeraSansMono Nerd Font", { weight = "Regular", }
+    e_font, { weight = "Regular", }
   ),
   use_ime = true,
-  font_size = 14.0,
+  font_size = e_font_size,
   color_scheme = "FishTank",
   window_background_opacity = 0.8,
 }
