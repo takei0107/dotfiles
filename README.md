@@ -21,6 +21,7 @@
 - feh
 - fzf
 - ghq
+- go
 - i3-gaps
 - i3lock
 - i3status
