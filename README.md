@@ -2,10 +2,12 @@
 
 ## requires
 
-- Git
-- Homebrew(mac)
+### must
+- git
+- brew(mac)
 - yay(arch)
 
+### packages
 - alacritty
 - autorandr
 - arandr
@@ -24,7 +26,9 @@
 - i3status
 - neovim
 - noto-fonts-emoji
+- ntp
 - ripgrep
+- rofi
 - slack
 - starship
 - tree
@@ -37,6 +41,7 @@
 - zinit
 - zsh
 
+### manual install
 - nerdfont
 - sdkman
 
