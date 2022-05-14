@@ -74,7 +74,6 @@ path=(
   /opt/homebrew/bin(N-/)
   # volta管理下のnpmでインストールされたツールを利用するために必要
   ~/.volta/bin(N-/)
-  /usr/local/go/bin(N-/)
   ~/go/bin/(N-/)
   $path
 )
