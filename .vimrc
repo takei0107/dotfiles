@@ -14,6 +14,7 @@ if has('cursorshape')
 endif
 
 set fileencodings=ucs-bom,utf-8,cp932,default
+set hidden
 set helplang=ja
 set smartindent autoindent
 set number
