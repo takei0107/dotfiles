@@ -14,6 +14,7 @@ if has('cursorshape')
 endif
 
 set fileencodings=ucs-bom,utf-8,cp932,default
+set hidden
 set helplang=ja
 set smartindent autoindent
 set number
@@ -50,6 +51,7 @@ if &compatible
   set nocompatible
 endif
 " }}}
+
 
 " {{{ dein
 let s:dein_dir = expand('~/.cache/dein/')
@@ -94,14 +96,14 @@ if dein#check_install()
   call dein#install()
 endif
 " }}}
-"
-syntax on
+
 
 " {{{ only Linux
 if has('unix')
   set clipboard^=unnamedplus,unnamed
 endif
 " }}}
+
 
 " {{{ only MAC
 if has('mac')
@@ -130,6 +132,7 @@ inoremap <silent> jj <ESC>
 nnoremap <silent> <ESC><ESC> :nohlsearch<CR>
 " }}}
 
+
 " {{{ Java
 augroup java
   autocmd!
@@ -137,12 +140,14 @@ augroup java
 augroup END
 " }}}
 
+
 " {{{ Go
 augroup go
   autocmd!
   autocmd FileType go set nolist
 augroup END
 " }}}
+
 
 filetype plugin indent on
 au FileType * setlocal formatoptions-=ro

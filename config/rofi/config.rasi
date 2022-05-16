@@ -1,0 +1,11 @@
+configuration {
+  modi: "drun";
+  ml-row-left: "Control+h";
+  ml-row-right: "Control+l";
+  ml-row-up: "Control+k";
+  ml-row-down: "Control+j";
+  sidebar-mode: true;
+  show-icons: true;
+}
+
+@theme "/usr/share/rofi/themes/Pop-Dark.rasi"

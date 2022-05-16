@@ -4,6 +4,7 @@ local function basename(s)
   return string.gsub(s, "(.*[/\\])(.*)", "%2")
 end
 
+-- タブの表示
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
   local nerd_icons = {
     nvim = wezterm.nerdfonts.custom_vim,
@@ -24,13 +25,42 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   }
 end)
 
+-- フォント決定
+-- TODO ローカル設定がアーキ依存なのでもっと良くしたい
+local e_font = "JetBrains Mono" -- 組み込みフォント(デフォルト)
+local e_font_size = 12.0
+if wezterm.target_triple == "x86_64-unknown-linux-gnu" then
+  -- linux
+  e_font = "RobotoMono Nerd Font"
+  e_font_size = 18.0
+elseif wezterm.target_triple == "x86_64-apple-darwin" then
+  -- mac
+  e_font = "BitstreamVeraSansMono Nerd Font"
+  e_font_size = 14.0
+end
+
 return {
   default_cwd = wezterm.home_dir,
   font = wezterm.font(
-    "BitstreamVeraSansMono Nerd Font", { weight = "Regular", }
+    e_font, { weight = "Regular" }
   ),
   use_ime = true,
-  font_size = 14.0,
+  font_size = e_font_size,
   color_scheme = "FishTank",
   window_background_opacity = 0.8,
+  keys = {
+    {key="t", mods="ALT", action = wezterm.action({SpawnTab="CurrentPaneDomain"})},
+    {key="1", mods="ALT", action = wezterm.action({ActivateTab=0})},
+    {key="2", mods="ALT", action = wezterm.action({ActivateTab=1})},
+    {key="3", mods="ALT", action = wezterm.action({ActivateTab=2})},
+    {key="4", mods="ALT", action = wezterm.action({ActivateTab=3})},
+    {key="5", mods="ALT", action = wezterm.action({ActivateTab=4})},
+    {key="6", mods="ALT", action = wezterm.action({ActivateTab=5})},
+    {key="7", mods="ALT", action = wezterm.action({ActivateTab=6})},
+    {key="8", mods="ALT", action = wezterm.action({ActivateTab=7})},
+    {key="9", mods="ALT", action = wezterm.action({ActivateTab=8})},
+    {key="a", mods="ALT", action = "ShowTabNavigator"},
+    {key="q", mods="ALT", action = wezterm.action({CloseCurrentTab = {confirm = false}})},
+  },
+  --debug_key_events = true,
 }
