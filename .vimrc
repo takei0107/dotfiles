@@ -149,6 +149,21 @@ augroup go
 augroup END
 " }}}
 
+" {{{ util functions
+function! IsExistsInCurrentDirR(path) abort
+  let cwd = getcwd()
+  let resoleved = Resolve_from_current_path(a:path)
+  return IsFileExists(cwd . '/' . resoleved)
+endfunction
+" 引数のパスをカレントディレクトリから解決する
+function! Resolve_from_current_path(path) abort
+  return fnamemodify(a:path, ':.')
+endfunction
+function! IsFileExists(path) abort
+  return isdirectory(a:path) || filereadable(a:path)
+endfunction
+"}}}
+
 
 filetype plugin indent on
 au FileType * setlocal formatoptions-=ro
