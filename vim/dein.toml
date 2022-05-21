@@ -36,6 +36,7 @@ repo = 'vim-jp/vimdoc-ja'
 repo = 'lambdalisue/fern.vim'
 hook_add = '''
   nnoremap <silent> <leader>nt :Fern . -drawer -reveal=% -toggle<CR>
+  nnoremap <silent> <leader>nr :call <SID>fern_do_reveal_current()<CR>
   let g:fern#default_hidden=1
   augroup fern
     autocmd!
@@ -46,6 +47,10 @@ hook_add = '''
     execute 'Fern . -reveal=%'
   endfunction
   command! -complete=file -nargs=1 Cdf :call s:cd_with_fern_open(<q-args>)
+  function! s:fern_do_reveal_current() abort
+    let current_path = expand('%:.')
+    execute 'FernDo ' . 'FernReveal ' . current_path
+  endfunction
 '''
 
 [[plugins]]
