@@ -36,18 +36,23 @@ repo = 'vim-jp/vimdoc-ja'
 repo = 'lambdalisue/fern.vim'
 hook_add = '''
   let g:fern#default_hidden=1
-  command! FernDrawerToggle :Fern . -drawer -reveal=% -toggle
-  nnoremap <silent> <leader>nt :FernDrawerToggle<CR>
-  nnoremap <silent> <leader>nr :call <SID>fern_do_reveal_current()<CR>
   augroup fern-keymap
     autocmd!
     autocmd FileType fern nmap <buffer> r <Plug>(fern-action-remove)
     autocmd FileType fern nmap <buffer> s <Plug>(fern-action-open:split)
     autocmd FileType fern nmap <buffer> v <Plug>(fern-action-open:vsplit)
   augroup END
-  function! s:fern_do_reveal_current() abort
-    let current_path = expand('%:.')
-    execute 'FernDo ' . 'FernReveal ' . current_path
+  command! FernDrawerToggle :Fern . -drawer -reveal=% -toggle
+  command! -nargs=1 -complete=file FernDoReveal :call <SID>fern_do_reveal(<q-args>)
+  command! FernDoRevealCurrent :call <SID>fern_do_reveal_current_file()
+  nnoremap <silent> <leader>nt :FernDrawerToggle<CR>
+  nnoremap <silent> <leader>nr :FernDoRevealCurrent<CR>
+  function! s:fern_do_reveal(path) abort
+    let target = expand(a:path)
+    execute 'FernDo ' . 'FernReveal ' . target
+  endfunction
+  function! s:fern_do_reveal_current_file() abort
+    call s:fern_do_reveal(expand('%:.'))
   endfunction
 '''
 
