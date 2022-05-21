@@ -38,9 +38,11 @@ hook_add = '''
   nnoremap <silent> <leader>nt :Fern . -drawer -reveal=% -toggle<CR>
   nnoremap <silent> <leader>nr :call <SID>fern_do_reveal_current()<CR>
   let g:fern#default_hidden=1
-  augroup fern
+  augroup fern-keymap
     autocmd!
     autocmd FileType fern nmap <buffer> r <Plug>(fern-action-remove)
+    autocmd FileType fern nmap <buffer> s <Plug>(fern-action-open:split)
+    autocmd FileType fern nmap <buffer> v <Plug>(fern-action-open:vsplit)
   augroup END
   function! s:cd_with_fern_open(path)
     execute 'cd ' . a:path
