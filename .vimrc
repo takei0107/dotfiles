@@ -129,6 +129,8 @@ endif
 
 " {{{ マッピング
 inoremap <silent> jj <ESC>
+nnoremap <silent> j gj
+nnoremap <silent> k gk
 nnoremap <silent> <ESC><ESC> :nohlsearch<CR>
 nnoremap <silent> tos :split<Bar>wincmd j<Bar>resize 15<Bar>term<CR>
 " }}}
