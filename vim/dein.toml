@@ -35,17 +35,25 @@ repo = 'vim-jp/vimdoc-ja'
 [[plugins]]
 repo = 'lambdalisue/fern.vim'
 hook_add = '''
-  nnoremap <silent> <leader>nt :Fern . -drawer -reveal=% -toggle<CR>
   let g:fern#default_hidden=1
-  augroup fern
+  augroup fern-keymap
     autocmd!
     autocmd FileType fern nmap <buffer> r <Plug>(fern-action-remove)
+    autocmd FileType fern nmap <buffer> s <Plug>(fern-action-open:split)
+    autocmd FileType fern nmap <buffer> v <Plug>(fern-action-open:vsplit)
   augroup END
-  function! s:cd_with_fern_open(path)
-    execute 'cd ' . a:path
-    execute 'Fern . -reveal=%'
+  command! FernDrawerToggle :Fern . -drawer -reveal=% -toggle
+  command! -nargs=1 -complete=file FernDoReveal :call <SID>fern_do_reveal(<q-args>)
+  command! FernDoRevealCurrent :call <SID>fern_do_reveal_current_file()
+  nnoremap <silent> <leader>nt :FernDrawerToggle<CR>
+  nnoremap <silent> <leader>nr :FernDoRevealCurrent<CR>
+  function! s:fern_do_reveal(path) abort
+    let target = expand(a:path)
+    execute 'FernDo ' . 'FernReveal ' . target
   endfunction
-  command! -complete=file -nargs=1 Cdf :call s:cd_with_fern_open(<q-args>)
+  function! s:fern_do_reveal_current_file() abort
+    call s:fern_do_reveal(expand('%:.'))
+  endfunction
 '''
 
 [[plugins]]
@@ -73,12 +81,4 @@ hook_add = '''
   nnoremap <silent> <leader>gf :GFiles<CR>
   nnoremap <silent> <leader>s :GFiles?<CR>
   nnoremap <silent> <leader>b :Buffers<CR>
-  function! s:fzf_with_ghq() abort
-    if !executable('ghq')
-      echoerr "ghq is not installed."
-      return
-    endif
-    call fzf#run(fzf#wrap({'source': 'ghq list --full-path', 'sink': function('s:cd_with_fern_open') }))
-  endfunction
-  nnoremap <silent> <leader>nf :call <SID>fzf_with_ghq()<CR>
 '''
