@@ -95,6 +95,8 @@ endif
 if dein#check_install()
   call dein#install()
 endif
+" hook_post_sourceが発火するように
+autocmd VimEnter * call dein#call_hook('post_source')
 " }}}
 
 
