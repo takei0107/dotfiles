@@ -1,22 +1,60 @@
-set encoding=utf-8
 scriptencoding utf-8
+set encoding=utf-8
+set fileencodings=ucs-bom,utf-8,cp932,default
+
+let s:vim_features = {
+  \ 'vim' : {
+  \   'dirs' : {
+  \     'cache' : '~/.cache/vim/',
+  \   },
+  \ },
+  \ 'nvim' : {
+  \   'dirs' : {
+  \     'config' : '~/.config/nvim/',
+  \     'cache' : '~/.cache/nvim/',
+  \   },
+  \ },
+  \ }
+let s:feature_vim = 'vim'
+let s:feature_settings = s:vim_features['vim']
+function! s:resolve_vim_feature() abort
+  for [feature, settings] in s:vim_features
+    if has(feature)
+      let s:feature_vim = feature
+      let s:feature_settings = settings
+      return
+    endif
+  endfor
+endfunction
+call s:resolve_vim_feature()
+
+function! s:mkdir_if_not_exist(path) abort
+  if !isdirectory(a:path)
+    call mkdir(a:path, 'p')
+  endif
+endfunction
 
 " {{{ 基本設定
 filetype off
 filetype plugin indent off
 
-let mapleader = "\<Space>"
-let s:dotvim_dir = expand('~/.vim') . '/'
-let s:dotnvim_dir = expand('~/.nvim') . '/'
+let s:cache_dir = expand(s:feature_settings['cache'])
+call s:mkdir_if_not_exist(s:dotcache_dir)
+let s:config_dir = expand(s:feature_settings['config'])
+call s:mkdir_if_not_exist(s:dotconfig_dir)
+
 if has('cursorshape')
   let &t_SI = "\e]50;CursorShape=1\x7"
   let &t_EI = "\e]50;CursorShape=0\x7"
 endif
 
-set fileencodings=ucs-bom,utf-8,cp932,default
 set hidden
 set helplang=ja
-set smartindent autoindent
+set smartindent 
+set autoindent
+set expandtab
+set tabstop=2
+set shiftwidth=0
 set number
 set belloff=all
 set hlsearch
@@ -26,25 +64,20 @@ set smartcase
 set cursorline
 set number
 set laststatus=2
-set expandtab
-set ts=2
-set shiftwidth=0
 set wildmenu
-set display=truncate
-set list
 set showcmd
+set display=truncate
 set backspace=indent,eol,start
+set list
 set updatetime=500
 set splitbelow
 set splitright
 set noswapfile
 set nobackup
 if has('persistent_undo')
-  let undo_dir = (has('nvim') ? s:dotnvim_dir : s:dotvim_dir) . 'undo'
-  if !isdirectory(undo_dir)
-    call mkdir(undo_dir, 'p')
-  endif
-  execute 'set undodir=' . undo_dir
+  let s:undo_dir = (has('nvim') ? s:dotnvim_dir : s:dotvim_dir) . 'undo'
+  call s:mkdir_if_not_exist(s:undo_dir)
+  execute 'set undodir=' . s:undo_dir
   set undofile
 endif
 if &compatible
@@ -130,6 +163,7 @@ endif
 
 
 " {{{ マッピング
+let mapleader = "\<Space>"
 inoremap jj <ESC>
 nnoremap j gj
 nnoremap k gk
@@ -142,7 +176,7 @@ nnoremap <silent> tos :split<Bar>wincmd j<Bar>resize 15<Bar>term<CR>
 " {{{ Java
 augroup java
   autocmd!
-  autocmd FileType java set ts=4
+  autocmd FileType java setlocal ts=4
 augroup END
 " }}}
 
@@ -150,7 +184,7 @@ augroup END
 " {{{ Go
 augroup go
   autocmd!
-  autocmd FileType go set nolist
+  autocmd FileType go setlocal nolist
 augroup END
 " }}}
 
