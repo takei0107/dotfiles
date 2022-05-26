@@ -22,7 +22,7 @@ $DEIN_DIR
 "
 
 function mkdir_if_not_exists() {
-  dir=$1
+  local dir=$1
   if [[ ! -d $dir ]]; then
     if [[ $dir != $DEIN_REPO_DIR ]]; then
       echo "make directory '${dir}'"
