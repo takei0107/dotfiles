@@ -17,7 +17,7 @@ hook_add = '''
     au!
     autocmd User lsp_buffer_enabled nnoremap <silent> K :call <SID>show_documentation()<CR>
   augroup END
-  augroup auto_organize
+  augroup lsp_auto_organize
     au!
     autocmd BufWritePre *.go,*.java LspDocumentFormatSync
   augroup END

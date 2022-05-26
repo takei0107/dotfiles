@@ -1,6 +1,7 @@
 [[plugins]]
 repo = 'nvim-treesitter/nvim-treesitter'
-hook_add = '''
+merged = 0
+hook_post_source = '''
 lua << EOF
 require'nvim-treesitter.configs'.setup {
   highlight = {

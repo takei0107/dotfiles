@@ -95,6 +95,8 @@ endif
 if dein#check_install()
   call dein#install()
 endif
+" hook_post_sourceが発火するように
+autocmd VimEnter * call dein#call_hook('post_source')
 " }}}
 
 
@@ -115,14 +117,14 @@ endif
 " {{{ Preference
 if has('termguicolors')
   set termguicolors
-  highlight Normal guibg=none
-  highlight NonText guibg=none
-  highlight LineNr guibg=none
-  highlight Folded guibg=none
-  highlight EndOfBuffer guibg=none 
-  highlight CursorLineSign guibg=none
-  highlight CursorLineFold guibg=none
-  highlight SignColumn guibg=none
+  highlight Normal guibg=NONE
+  highlight NonText guibg=NONE
+  highlight LineNr guibg=NONE
+  highlight Folded guibg=NONE
+  highlight EndOfBuffer guibg=NONE 
+  highlight CursorLineSign guibg=NONE
+  highlight CursorLineFold guibg=NONE
+  highlight SignColumn guibg=NONE
 endif
 " }}}
 
