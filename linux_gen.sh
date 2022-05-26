@@ -11,22 +11,30 @@ DEIN_DIR=$CACHE_DIR/dein
 # !!!ディレクトリでdein.vimの存在チェックするのでここで作成は不要 !!!
 DEIN_REPO_DIR=$DEIN_DIR/repos/github.com/Shougo/dein.vim
 
+declare -a DIRS="
+$CONFIG_DIR
+$CACHE_DIR
+$VIM_CONFIG_DIR
+$VIM_CACHE_DIR
+$NVIM_CONFIG_DIR
+$NVIM_CACHE_DIR
+$DEIN_DIR
+"
+
+function mkdir_if_not_exists() {
+  dir=$1
+  if [[ ! -d $dir ]]; then
+    if [[ $dir != $DEIN_REPO_DIR ]]; then
+      echo "make directory '${dir}'"
+      mkdir -p $dir
+    fi
+  fi
+}
+
 # make directories
-if [[ ! -d $VIM_CONFIG_DIR ]]; then
-  mkdir -p $VIM_CONFIG_DIR
-fi
-if [[ ! -d $VIM_CACHE_DIR ]]; then
-  mkdir -p $VIM_CACHE_DIR
-fi
-if [[ ! -d $NVIM_CONFIG_DIR ]]; then
-  mkdir $NVIM_CONFIG_DIR
-fi
-if [[ ! -d $NVIM_CACHE_DIR ]]; then
-  mkdir $NVIM_CACHE_DIR
-fi
-if [[ ! -d $DEIN_DIR ]]; then
-  mkdir $DEIN_DIR
-fi
+for dir in $DIRS; do
+  mkdir_if_not_exists $dir
+done
 
 # generate vimfile
 VIM_LOCALRC=$HOME/.vimrc.local
