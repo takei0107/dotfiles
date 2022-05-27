@@ -39,9 +39,12 @@ hook_add = '''
   let g:fern#default_hidden=1
   augroup fern-keymap
     autocmd!
-    autocmd FileType fern nmap <buffer> r <Plug>(fern-action-remove)
+    autocmd FileType fern nmap <buffer> r <Plug>(fern-action-rename)
+    autocmd FileType fern nmap <buffer> R <Plug>(fern-action-remove)
     autocmd FileType fern nmap <buffer> s <Plug>(fern-action-open:split)
     autocmd FileType fern nmap <buffer> v <Plug>(fern-action-open:vsplit)
+    " systemで開くを無効化
+    autocmd FileType fern nnoremap <buffer> <Plug>(fern-action-open:system) <Nop>
   augroup END
   command! FernDrawerToggle :Fern . -drawer -reveal=% -toggle
   command! -nargs=1 -complete=file FernDoReveal :call <SID>fern_do_reveal(<q-args>)
