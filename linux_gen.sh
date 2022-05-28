@@ -31,14 +31,9 @@ function mkdir_if_not_exists() {
   fi
 }
 
-# make directories
-for dir in $DIRS; do
-  mkdir_if_not_exists $dir
-done
-
-# generate vimfile
-VIM_LOCALRC=$HOME/.vimrc.local
-cat << EOF > $VIM_LOCALRC
+function generate_vimfile() {
+  VIM_LOCALRC=$HOME/.vimrc.local
+  cat << EOF > $VIM_LOCALRC
 if has('nvim')
   let g:config_dir = expand('${NVIM_CONFIG_DIR}' .. '/')
   let g:cache_dir = expand('${NVIM_CACHE_DIR}' .. '/')
@@ -49,3 +44,12 @@ endif
 let g:dein_dir = expand('${DEIN_DIR}' .. '/')
 let g:dein_repo_dir = expand('${DEIN_REPO_DIR}' .. '/')
 EOF
+}
+
+# make directories
+for dir in $DIRS; do
+  mkdir_if_not_exists $dir
+done
+
+# generate local files
+generate_vimfile
