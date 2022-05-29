@@ -5,23 +5,15 @@ filetype off
 filetype plugin indent off
 let mapleader = "\<Space>"
 
-" {{{  ローカル設定インポート
+" {{{  
+" 環境設定インポート
 if filereadable(expand('~/.vimrc.env'))
   execute 'source ' .. expand('~/.vimrc.env')
 endif
+" ローカル設定インポート
 if filereadable(expand('~/.vimrc.local'))
   execute 'source ' .. expand('~/.vimrc.local')
 endif
-" TODO 変数の存在有無によって処理分ける？
-" TODO この辺整理する
-let s:config_dir = g:config_dir
-let s:cache_dir = g:cache_dir
-let s:dein_dir = g:dein_dir
-let s:dein_repo_dir = g:dein_repo_dir
-unlet g:config_dir
-unlet g:cache_dir
-unlet g:dein_dir
-unlet g:dein_repo_dir
 " }}}
 
 " {{{ カーソル
