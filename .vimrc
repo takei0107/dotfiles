@@ -6,10 +6,14 @@ filetype plugin indent off
 let mapleader = "\<Space>"
 
 " {{{  ローカル設定インポート
+if filereadable(expand('~/.vimrc.env'))
+  execute 'source ' .. expand('~/.vimrc.env')
+endif
 if filereadable(expand('~/.vimrc.local'))
   execute 'source ' .. expand('~/.vimrc.local')
 endif
 " TODO 変数の存在有無によって処理分ける？
+" TODO この辺整理する
 let s:config_dir = g:config_dir
 let s:cache_dir = g:cache_dir
 let s:dein_dir = g:dein_dir
@@ -72,58 +76,8 @@ elseif has('mac')
 endif
 " }}}
 
-" {{{ dein
-let s:dein_enable = v:false
-function! s:init_dein() abort
-  if &runtimepath !~# '/dein.vim'
-    if !isdirectory(s:dein_repo_dir)
-      " NOTE `git clone` はディレクトリも再帰的に作られる
-      execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
-    endif
-    execute 'set runtimepath^=' . s:dein_repo_dir
-  endif
-  let s:dein_enable = v:true
-endfunction
-call s:init_dein()
-
-" lsp type 'lsp+ddc:0(default), coc:1'
-" TODO LSPのキーマップを共通インターフェースにしてうまいこと制御したい
-let g:use_lsp_type = 0
-let s:ctr_lsp_type_file = s:config_dir . 'ctr_lsp_type.vim'
-if filereadable(s:ctr_lsp_type_file)
-  execute 'source ' . s:ctr_lsp_type_file
-endif
-
-if s:dein_enable
-  " TODO toml廃止検討
-  let s:dein_toml = s:config_dir . 'dein.toml'
-  let s:dein_lazy_toml = s:config_dir . 'dein_lazy.toml' 
-  let s:coc_toml = s:config_dir . 'coc.toml'
-  let s:lsp_toml = s:config_dir . 'lsp.toml'
-  let s:ddc_toml = s:config_dir . 'ddc.toml'
-  let s:nvim_toml = s:config_dir . 'nvim.toml'
-  if dein#load_state(s:dein_dir)
-    call dein#begin(s:dein_dir)
-    call dein#load_toml(s:dein_toml, {'lazy' : 0})
-    if (g:use_lsp_type == 0)
-      call dein#load_toml(s:lsp_toml, {'lazy' : 0})
-      call dein#load_toml(s:ddc_toml, {'lazy' : 0})
-    else
-      call dein#load_toml(s:coc_toml, {'lazy' : 0})
-    endif
-    if has('nvim')
-      call dein#load_toml(s:nvim_toml, {'lazy' : 0})
-    endif
-    call dein#load_toml(s:dein_lazy_toml, {'lazy' : 1})
-    call dein#end()
-    call dein#save_state()
-  endif
-  if dein#check_install()
-    call dein#install()
-  endif
-  " hook_post_sourceが発火するように
-  autocmd VimEnter * call dein#call_hook('post_source')
-endif
+" {{{ プラグインマネージャー
+source vim/plugin_manager.vim
 " }}}
 
 " {{{ Preference

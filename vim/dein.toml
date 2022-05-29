@@ -1,4 +1,5 @@
 [[plugins]]
+# runtimepath再構築されるので必要
 repo = 'Shougo/dein.vim'
 
 [[plugins]]

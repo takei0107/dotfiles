@@ -32,17 +32,21 @@ function mkdir_if_not_exists() {
 }
 
 function generate_vimfile() {
-  VIM_LOCALRC=$HOME/.vimrc.local
+  VIM_LOCALRC=$HOME/.vimrc.env
   cat << EOF > $VIM_LOCALRC
 if has('nvim')
-  let g:config_dir = expand('${NVIM_CONFIG_DIR}' .. '/')
-  let g:cache_dir = expand('${NVIM_CACHE_DIR}' .. '/')
+  let s:config_dir = expand('${NVIM_CONFIG_DIR}' .. '/')
+  let s:cache_dir = expand('${NVIM_CACHE_DIR}' .. '/')
 else
-  let g:config_dir = expand('${VIM_CONFIG_DIR}' .. '/')
-  let g:cache_dir = expand('${VIM_CACHE_DIR}' .. '/')
+  let s:config_dir = expand('${VIM_CONFIG_DIR}' .. '/')
+  let s:cache_dir = expand('${VIM_CACHE_DIR}' .. '/')
 endif
-let g:dein_dir = expand('${DEIN_DIR}' .. '/')
-let g:dein_repo_dir = expand('${DEIN_REPO_DIR}' .. '/')
+let s:dein_dir = expand('${DEIN_DIR}' .. '/')
+let s:dein_repo_dir = expand('${DEIN_REPO_DIR}' .. '/')
+let g:config_vars = {
+\ 'config_dir' : s:config_dir,
+\ 'cache_dir' : s:cache_dir,
+\}
 EOF
 }
 
