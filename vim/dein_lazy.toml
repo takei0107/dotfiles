@@ -34,3 +34,7 @@ hook_add = '''
 [[plugins]]
 repo = 'machakann/vim-sandwich'
 on_path = '.*'
+
+[[plugins]]
+repo = 'chrisbra/csv.vim'
+on_path = '.*\.csv'
