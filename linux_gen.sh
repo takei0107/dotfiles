@@ -29,15 +29,18 @@ function generate_vimfile() {
   cat << EOF > $VIM_LOCALRC
 if has('nvim')
   let s:config_dir = fnamemodify('${NVIM_CONFIG_DIR}', ':p')
-  let s:cache_dir = fnamemodiry('${NVIM_CACHE_DIR}', ':p')
+  let s:cache_dir = fnamemodify('${NVIM_CACHE_DIR}', ':p')
 else
-  let s:config_dir = fnamemodiry('${VIM_CONFIG_DIR}', ':p')
-  let s:cache_dir = fnamemodiry('${VIM_CACHE_DIR}', ':p')
+  let s:config_dir = fnamemodify('${VIM_CONFIG_DIR}', ':p')
+  let s:cache_dir = fnamemodify('${VIM_CACHE_DIR}', ':p')
 endif
-let g:config_vars = {
+let s:config_vars = {
 \ 'config_dir' : s:config_dir,
 \ 'cache_dir' : s:cache_dir,
 \}
+if exists('ExportConfigValues')
+  call ExportConfigValues(s:config_vars)
+endif
 EOF
 }
 

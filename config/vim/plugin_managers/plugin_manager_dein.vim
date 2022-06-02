@@ -1,7 +1,7 @@
-let s:config_dir = get(g:config_vars, 'cofig_dir', expand('~/.config/vim/'))
+let s:config_dir = GetConfigValue('config_dir')
 let s:dein_dir = expand('~/.cache/dein/')
 let s:dein_repos_dir = s:dein_dir .. 'repos/github.com/Shougo/dein.vim'
-let s:dein_toml_dir = s:config_dir .. 'toml/dein/'
+let s:dein_toml_dir = s:config_dir .. 'dein/toml/'
 let s:dein_lsp_toml_dir = s:dein_toml_dir .. 'lsp/'
 
 " Init dein
@@ -19,12 +19,12 @@ endfunction
 call s:init_dein()
 
 if s:dein_enable
-  g:dein#auto_recache = 0
+  let g:dein#auto_recache = 0
   if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
 
     " loac TOMLs
-    let s:toml_files = glob(s:dein_toml_dir .. '*.toml')
+    let s:toml_files = glob(s:dein_toml_dir .. '*.toml', '', 1)
     for s:toml_file in s:toml_files
       let s:lazy_flg = 0
       " 遅延読み込みファイル

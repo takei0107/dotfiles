@@ -7,6 +7,14 @@ let mapleader = "\<Space>"
 
 " {{{  
 " 環境設定インポート
+let s:config_values = {}
+function! ExportConfigValues(config_values) abort
+  call extend(s:config_values, a:config_values, 'force')
+endfunction
+" TODO デフォルト値を受け取る
+function! GetConfigValue(config_name) abort
+  return get(s:config_values, a:config_name, '')
+endfunction
 if filereadable(expand('~/.vimrc.env'))
   execute 'source ' .. expand('~/.vimrc.env')
 endif
@@ -51,6 +59,7 @@ set splitright
 set noswapfile
 set nobackup
 if has('persistent_undo')
+  let s:cache_dir = GetConfigValue('cache_dir')
   let s:undo_dir = s:cache_dir . 'undo'
   if !isdirectory(s:undo_dir)
     call mkdir(s:undo_dir, '')
@@ -69,7 +78,9 @@ endif
 " }}}
 
 " {{{ プラグインマネージャー
-source vim/plugin_manager.vim
+if filereadable(expand('~/.config/vim/plugin_manager.vim'))
+  exec "source " .. expand('~/.config/vim/plugin_manager.vim')
+endif
 " }}}
 
 " {{{ Preference
