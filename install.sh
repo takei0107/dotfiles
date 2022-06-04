@@ -6,6 +6,7 @@ log_info "start install"
 
 os=`uname -a | cut -d' ' -f 1`
 log_info "os name: $os"
+echo ""
 
 # deploy for linux and mac 
 for deploy_file in `find . -type f -regextype posix-egrep -regex '.*/deploy\.sh$'`; do

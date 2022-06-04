@@ -13,12 +13,18 @@ ABS_DIR="$( cd "$( dirname "$script_name" )" && pwd -P)"
 
 # 展開
 log_info "###### deploy start ######"
-VIM_DIR=$HOME/.config/vim
-NVIM_DIR=$HOME/.config/nvim
-for DIR in $VIM_DIR $NVIM_DIR; do
-  for f in `find $ABS_DIR -type f`; do
+DIR=$HOME/.config
+# vim,nvimディレクトリは独自のdeploy.shあるので除外
+# configディレクトリはスクリプトのあるディレクトリなので除外
+for d in `find $ABS_DIR -maxdepth 1 -type d | grep -v -e '/\(vim\|nvim\|config\)$'`; do
+  for f in `find $d -type f`; do
     if [[ ! $f =~ \/deploy\.sh$ ]]; then
-      dirpath=$DIR`dirname ${f#*$ABS_DIR}`
+      # tmux,xディレクトリのファイルはホームに展開
+      if [[ $d =~ \/x$ ]] || [[ $d =~ \/tmux$ ]];then
+        dirpath=$HOME
+      else
+        dirpath=$DIR`dirname ${f#*$ABS_DIR}`
+      fi
       mkdir_if_not_exists $dirpath
       log_info "link $f to $dirpath"
       ln -fs $f $dirpath
@@ -26,6 +32,5 @@ for DIR in $VIM_DIR $NVIM_DIR; do
   done
 done
 log_info "##### deploy end #####"
-
 log_info "complete $script_name"
 echo ""

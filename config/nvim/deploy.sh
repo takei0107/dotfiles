@@ -12,7 +12,6 @@ log_info "execute $script_name"
 ABS_DIR="$( cd "$( dirname "$script_name" )" && pwd -P)"
 
 # 展開
-echo ""
 log_info "###### deploy start ######"
 DIR=$HOME/.config/nvim
 for f in `find $ABS_DIR -type f`; do
@@ -24,4 +23,6 @@ for f in `find $ABS_DIR -type f`; do
   fi
 done
 log_info "##### deploy end #####"
+
+log_info "complete $script_name"
 echo ""

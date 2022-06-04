@@ -12,7 +12,6 @@ log_info "execute $script_file"
 ABS_DIR="$( cd "$( dirname "$script_file" )" && pwd -P)"
 
 # 展開
-echo ""
 log_info "###### deploy start ######"
 # ディレクトリ直下のファイルのみをホームディレクトリに展開
 for f in `find $ABS_DIR -maxdepth 1 -type f`; do
@@ -22,4 +21,6 @@ for f in `find $ABS_DIR -maxdepth 1 -type f`; do
   fi
 done
 log_info "##### deploy end #####"
+
+log_info "complete $script_file"
 echo ""
