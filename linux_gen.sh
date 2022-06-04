@@ -16,14 +16,6 @@ $NVIM_CONFIG_DIR
 $NVIM_CACHE_DIR
 "
 
-function mkdir_if_not_exists() {
-  local dir=$1
-  if [[ ! -d $dir ]]; then
-    echo "make directory '${dir}'"
-    mkdir -p $dir
-  fi
-}
-
 function generate_vimfile() {
   VIM_LOCALRC=$HOME/.vimrc.env
   cat << EOF > $VIM_LOCALRC
@@ -38,7 +30,7 @@ let s:config_vars = {
 \ 'config_dir' : s:config_dir,
 \ 'cache_dir' : s:cache_dir,
 \}
-if exists('ExportConfigValues')
+if exists('*ExportConfigValues')
   call ExportConfigValues(s:config_vars)
 endif
 EOF

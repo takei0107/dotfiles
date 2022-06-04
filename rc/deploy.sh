@@ -1,16 +1,25 @@
 #!/bin/bash
 
-echo "execute $0"
+script_file=$BASH_SOURCE
+if [[ -z $script_file ]]; then
+  log_error 'variable $BASH_SOURCE has not found.'
+  exit 1
+fi
+
+log_info "execute $script_file"
 
 # スクリプトの絶対パス
-ABS_DIR="$( cd "$( dirname "$0" )" && pwd -P)"
+ABS_DIR="$( cd "$( dirname "$script_file" )" && pwd -P)"
 
 # 展開
-echo "deploy start"
+echo ""
+log_info "###### deploy start ######"
 # ディレクトリ直下のファイルのみをホームディレクトリに展開
-for file in `find $ABS_DIR -maxdepth 1 -type f`; do
-  if [[ ! $file =~ \/deploy\.sh$ ]]; then
-    echo "[deploy] link $file to $HOME"
-    ln -fs $file $HOME
+for f in `find $ABS_DIR -maxdepth 1 -type f`; do
+  if [[ ! $f =~ \/deploy\.sh$ ]]; then
+    log_info "link $f to $HOME"
+    ln -fs $f $HOME
   fi
 done
+log_info "##### deploy end #####"
+echo ""
