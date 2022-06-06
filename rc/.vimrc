@@ -120,6 +120,7 @@ augroup END
 augroup go
   autocmd!
   autocmd FileType go setlocal nolist
+  autocmd FileType go setlocal ts=4
 augroup END
 " }}}
 

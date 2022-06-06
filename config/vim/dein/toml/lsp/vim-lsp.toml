@@ -19,9 +19,16 @@ hook_add = '''
   augroup END
   augroup lsp_auto_organize
     au!
-    autocmd BufWritePre *.go,*.java LspDocumentFormatSync
+    "autocmd BufWritePre *.go,*.java LspDocumentFormatSync
+    autocmd BufWritePre *.java LspDocumentFormatSync
   augroup END
 '''
 
 [[plugins]]
 repo = 'mattn/vim-lsp-settings'
+
+[[plugins]]
+repo = 'mattn/vim-goimports'
+hook_add = '''
+  let g:goimports = 1
+'''
