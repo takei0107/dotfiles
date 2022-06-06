@@ -9,7 +9,12 @@ log_info "os name: $os"
 echo ""
 
 # deploy for linux and mac 
-for deploy_file in `find . -type f -regextype posix-egrep -regex '.*/deploy\.sh$'`; do
+if [[ $os == 'Darwin' ]]; then
+  cmd="find -E . -type f -regex '.*\/deploy\.sh$'"
+else
+  cmd="find . -type f -regextype posix-egrep -regex '.*/deploy\.sh$'"
+fi
+for deploy_file in `eval $cmd`; do
   source $deploy_file
 done
 
