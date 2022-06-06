@@ -1,9 +1,9 @@
-#/bin/bash
+#!/bin/bash
 
 function log() {
   local log_level=$1
   local msg=$2
-  echo "[$log_level] $2"
+  echo "[$log_level] $msg"
 }
 
 function log_info() {

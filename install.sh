@@ -4,9 +4,7 @@ source ./bin/functions.sh
 
 log_info "start install"
 
-os=`uname -a | cut -d' ' -f 1`
-log_info "os name: $os"
-echo ""
+os=$(uname -a | cut -d' ' -f 1)
 
 # deploy for linux and mac 
 if [[ $os == 'Darwin' ]]; then
@@ -14,8 +12,9 @@ if [[ $os == 'Darwin' ]]; then
 else
   cmd="find . -type f -regextype posix-egrep -regex '.*/deploy\.sh$'"
 fi
-for deploy_file in `eval $cmd`; do
-  source $deploy_file
+# shellcheck disable=SC1090
+for deploy_file in $(eval "$cmd"); do
+  source "$deploy_file"
 done
 
 # create environmental settings
