@@ -10,7 +10,7 @@ echo ""
 
 # deploy for linux and mac 
 if [[ $os == 'Darwin' ]]; then
-  cmd="find -E . -type f -regex '.*\/deploy\.sh$'"
+  cmd="find -E . -type f -regex '.*/deploy\.sh$'"
 else
   cmd="find . -type f -regextype posix-egrep -regex '.*/deploy\.sh$'"
 fi
