@@ -85,12 +85,12 @@
   $ sdk install java
   ```
 
-## シンボリックリンク作成
+## インストール
 
 ```
 $ cd [インストールディレクトリ]
-$ chmod +x link.sh
-$ ./link.sh
+$ chmod +x install.sh
+$ ./install.sh
 $ source ~/.zshrc
 $ vim .
 ```
