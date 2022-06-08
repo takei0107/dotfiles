@@ -38,3 +38,14 @@ on_path = '.*'
 [[plugins]]
 repo = 'chrisbra/csv.vim'
 on_path = '.*\.csv'
+
+[[plugins]]
+repo = 'vim-test/vim-test'
+on_cmd = ['Test*']
+hook_add = '''
+  if has('nvim')
+    let g:test#strategy = 'neovim'
+  else
+    let g:test#strategy = 'vimterminal'
+  endif
+'''
