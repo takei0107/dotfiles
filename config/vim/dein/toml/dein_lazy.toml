@@ -40,12 +40,13 @@ repo = 'chrisbra/csv.vim'
 on_path = '.*\.csv'
 
 [[plugins]]
+repo = 'tpope/vim-dispatch'
+
+[[plugins]]
 repo = 'vim-test/vim-test'
+depends = ['vim-dispatch']
 on_cmd = ['Test*']
 hook_add = '''
-  if has('nvim')
-    let g:test#strategy = 'neovim'
-  else
-    let g:test#strategy = 'vimterminal'
-  endif
+  let g:test#strategy = 'dispatch'
+  nnoremap <silent> <leader>tf :TestFile<CR>
 '''
