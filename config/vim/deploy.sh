@@ -13,7 +13,7 @@ ABS_DIR="$( cd "$( dirname "$script_name" )" && pwd -P)"
 
 # 展開
 log_info "###### deploy start ######"
-VIM_DIR=$HOME/.config/vim
+VIM_DIR=$HOME/.vim
 NVIM_DIR=$HOME/.config/nvim
 for DIR in $VIM_DIR $NVIM_DIR; do
   for f in `find $ABS_DIR -type f`; do
