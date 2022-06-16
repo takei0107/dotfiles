@@ -36,7 +36,7 @@ if wezterm.target_triple == "x86_64-unknown-linux-gnu" then
 elseif wezterm.target_triple == "aarch64-apple-darwin" then
   -- mac
   e_font = "BitstreamVeraSansMono Nerd Font"
-  e_font_size = 14.0
+  e_font_size = 11.5
 end
 
 return {

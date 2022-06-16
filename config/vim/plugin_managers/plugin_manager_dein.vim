@@ -23,7 +23,7 @@ if s:dein_enable
   if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
 
-    " loac TOMLs
+    " load TOMLs
     let s:toml_files = glob(s:dein_toml_dir .. '*.toml', '', 1)
     for s:toml_file in s:toml_files
       let s:lazy_flg = 0
