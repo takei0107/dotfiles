@@ -12,7 +12,6 @@ endif
 if filereadable(expand('~/.vimrc.local'))
   execute 'source ' .. expand('~/.vimrc.local')
 endif
-" }}}
 
 " {{{ カーソル
 if has('cursorshape')
@@ -34,7 +33,6 @@ set incsearch
 set ignorecase
 set smartcase
 set cursorline
-set number
 set laststatus=2
 set wildmenu
 set showcmd
