@@ -106,6 +106,8 @@ inoremap jj <ESC>
 nnoremap j gj
 nnoremap k gk
 nnoremap v$ vg_
+nnoremap <leader>dG ggVGd<CR>
+nnoremap <leader>cG ggVGc
 nnoremap <silent> <ESC><ESC> :nohlsearch<CR>
 nnoremap <silent> tos :split<Bar>wincmd j<Bar>resize 15<Bar>term<CR>
 " }}}

@@ -1,10 +1,12 @@
+" {{{ 変数
 let s:config_dir = get(g:, 'config_dir')
 let s:dein_dir = get(g:, 'cache_dir') .. 'dein/'
 let s:dein_repos_dir = s:dein_dir .. 'repos/github.com/Shougo/dein.vim'
 let s:dein_toml_dir = s:config_dir .. 'dein/toml/'
 let s:dein_lsp_toml_dir = s:dein_toml_dir .. 'lsp/'
+" }}}
 
-" Init dein
+" {{{ initialization
 let s:dein_enable = 0
 function! s:init_dein() abort
   if &runtimepath !~# '/dein.vim'
@@ -17,7 +19,9 @@ function! s:init_dein() abort
   let s:dein_enable = 1
 endfunction
 call s:init_dein()
+" }}}
 
+" {{{ load plugins
 if s:dein_enable
   let g:dein#auto_recache = 0
   if dein#load_state(s:dein_dir)
@@ -54,3 +58,4 @@ if s:dein_enable
   " hook_post_sourceが発火するように
   autocmd VimEnter * call dein#call_hook('post_source')
 endif
+" }}}
