@@ -32,7 +32,7 @@ local e_font_size = 12.0
 if wezterm.target_triple == "x86_64-unknown-linux-gnu" then
   -- linux
   e_font = "RobotoMono Nerd Font"
-  e_font_size = 18.0
+  e_font_size = 15.0
 elseif wezterm.target_triple == "aarch64-apple-darwin" then
   -- mac
   e_font = "BitstreamVeraSansMono Nerd Font"

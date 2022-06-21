@@ -1,5 +1,5 @@
-let s:config_dir = GetConfigValue('config_dir')
-let s:dein_dir = GetConfigValue('cache_dir') .. 'dein/'
+let s:config_dir = get(g:, 'config_dir')
+let s:dein_dir = get(g:, 'cache_dir') .. 'dein/'
 let s:dein_repos_dir = s:dein_dir .. 'repos/github.com/Shougo/dein.vim'
 let s:dein_toml_dir = s:config_dir .. 'dein/toml/'
 let s:dein_lsp_toml_dir = s:dein_toml_dir .. 'lsp/'
