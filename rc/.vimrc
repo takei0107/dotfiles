@@ -1,10 +1,26 @@
+" {{{ 基本設定
+
+" プラグイン無効化
+let g:loaded_tutor_mode_plugin = 1
+let g:loaded_2html_plugin = 1
+
+" スクリプトで使う文字コード 
 scriptencoding utf-8
+
+" vim内部で使う文字コード
 set encoding=utf-8
+" ファイルを読み取る文字コード
 set fileencodings=ucs-bom,utf-8,cp932,default
+
+" ファイルタイプ検知off
 filetype off
+" ファイルタイププラグイン、ファイルタイプインデントoff
 filetype plugin indent off
+
+" <leader>キー設定
 let mapleader = "\<Space>"
 
+" 環境ごとの設定インポート
 if filereadable(expand('~/.vimrc.env'))
   execute 'source ' .. expand('~/.vimrc.env')
 endif
@@ -12,6 +28,7 @@ endif
 if filereadable(expand('~/.vimrc.local'))
   execute 'source ' .. expand('~/.vimrc.local')
 endif
+" }}}
 
 " {{{ カーソル
 if has('cursorshape')
@@ -42,6 +59,7 @@ set list
 set updatetime=500
 set splitbelow
 set splitright
+set foldmethod=marker
 set noswapfile
 set nobackup
 if has('persistent_undo')
@@ -83,7 +101,6 @@ if has('termguicolors')
 endif
 " }}}
 
-
 " {{{ マッピング
 inoremap jj <ESC>
 nnoremap j gj
@@ -98,7 +115,7 @@ augroup filetype
   autocmd!
   autocmd FileType java setlocal expandtab shiftwidth=4
   autocmd FileType go setlocal nolist tabstop=4
-  autocmd FileType vim setlocal shiftwidth=2
+  autocmd FileType vim setlocal shiftwidth=2 foldmethod=marker foldopen=all foldclose=all
   autocmd FileType sh,zsh setlocal shiftwidth=2
 augroup END
 "}}}
