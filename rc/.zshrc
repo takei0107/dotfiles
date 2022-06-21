@@ -40,7 +40,7 @@ fi
 
 if type fzf > /dev/null 2>&1; then
   export FZF_DEFAULT_OPTS='--cycle'
-  function fzf_src () {
+  function fzf_repo () {
     local selected_dir=$(ghq list -p | fzf)
     if [ -n "$selected_dir" ]; then
       BUFFER="cd ${selected_dir}"
@@ -48,8 +48,19 @@ if type fzf > /dev/null 2>&1; then
     fi
     zle clear-screen
   }
-  zle -N fzf_src
-  bindkey '^]' fzf_src
+  zle -N fzf_repo
+  bindkey '^]' fzf_repo
+
+  function fzf_ssh () {
+    local selected_dir=$(find ~/.ssh/** -name config -or -name _config | xargs cat | grep "Host " | awk -F' ' '{print $2}' | sort --reverse | fzf)
+    if [ -n "$selected_dir" ]; then
+      BUFFER="ssh ${selected_dir}"
+      zle accept-line
+    fi
+    zle clear-screen
+  }
+  zle -N fzf_ssh
+  bindkey '^h' fzf_ssh
 
   alias fcd='cd `dirname $(fzf)`'
 fi
