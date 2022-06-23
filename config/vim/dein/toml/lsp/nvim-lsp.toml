@@ -22,7 +22,14 @@ for _, server in ipairs(lsp_installer.get_installed_servers()) do
 	}
 end
 EOF
+set completeopt-=preview
 '''
 
 [[plugins]]
 repo = 'mfussenegger/nvim-jdtls'
+
+[[plugins]]
+repo = 'matsui54/denops-popup-preview.vim'
+hook_add = '''
+call popup_preview#enable()
+'''
