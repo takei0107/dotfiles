@@ -8,16 +8,12 @@ hook_add = '''
   \   <Bar><Bar> getline('.')[col('.') - 2] =~# '\\') ? '<TAB>' : 
   \ ddc#map#manual_complete()
   inoremap <expr><S-TAB>  ddc#map#pum_visible() ? '<C-p>' : '<C-h>'
-  call ddc#custom#patch_global('sources', ['vim-lsp', 'around', 'file'])
+  " call ddc#custom#patch_global('sources', ['vim-lsp', 'around', 'file'])
+  call ddc#custom#patch_global('sources', ['nvim-lsp', 'around', 'file'])
   call ddc#custom#patch_global('sourceOptions', {
         \   '_' : {
         \      'matchers' : ['matcher_head'],
         \      'sorters'  : ['sorter_rank'],
-        \   },
-        \   'vim-lsp' : {
-        \     'mark' : '[lsp]',
-        \     'isVolatile' : v:true,
-        \     'forceCompletionPattern': '\.',
         \   },
         \   'around'  : {'mark' : '[A]'},
         \   'file'    : {
@@ -26,11 +22,28 @@ hook_add = '''
         \     'forceCompletionPattern' : '\S/\S*'
         \   },
         \ })
+  call ddc#custom#patch_global('sourceOptions', {
+        \   'vim-lsp' : {
+        \     'mark' : '[lsp]',
+        \     'isVolatile' : v:true,
+        \     'forceCompletionPattern': '\.',
+        \   },
+	\ })
+  "call ddc#custom#patch_global('sourceOptions', {
+  "      \   'nvim-lsp' : {
+  "      \     'mark' : '[lsp]',
+  "      \     'isVolatile' : v:true,
+  "      \     'forceCompletionPattern': '\.',
+  "      \   },
+  "      \ })
   call ddc#enable()
 '''
 
+#[[plugins]]
+#repo = 'shun/ddc-vim-lsp'
+
 [[plugins]]
-repo = 'shun/ddc-vim-lsp'
+repo = 'Shougo/ddc-nvim-lsp'
 
 [[plugins]]
 repo = 'Shougo/ddc-around'
