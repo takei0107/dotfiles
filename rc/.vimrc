@@ -118,8 +118,9 @@ augroup filetype
   autocmd FileType java setlocal expandtab shiftwidth=4
   autocmd FileType jsp setlocal expandtab shiftwidth=2
   autocmd FileType go setlocal nolist tabstop=4
-  autocmd FileType vim setlocal shiftwidth=2 foldmethod=marker foldopen=all foldclose=all
-  autocmd FileType sh,zsh setlocal shiftwidth=2
+  autocmd FileType vim setlocal tabstop=2 foldmethod=marker foldopen=all foldclose=all
+  autocmd FileType sh,zsh setlocal tabstop=2
+  autocmd FileType toml setlocal tabstop=2
 augroup END
 "}}}
 

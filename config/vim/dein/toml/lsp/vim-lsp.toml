@@ -26,9 +26,3 @@ hook_add = '''
 
 [[plugins]]
 repo = 'mattn/vim-lsp-settings'
-
-[[plugins]]
-repo = 'mattn/vim-goimports'
-hook_add = '''
-  let g:goimports = 1
-'''
