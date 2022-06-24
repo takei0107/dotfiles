@@ -16,7 +16,7 @@ EOF
 repo = 'EdenEast/nightfox.nvim'
 hook_add = '''
   syntax enable
-  colorscheme Dayfox
+  colorscheme dayfox
 '''
 
 [[plugins]]
