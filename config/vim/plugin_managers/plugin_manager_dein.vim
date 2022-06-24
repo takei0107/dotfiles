@@ -23,7 +23,7 @@ call s:init_dein()
 
 " {{{ load plugins
 if s:dein_enable
-  let g:dein#auto_recache = 0
+  let g:dein#auto_recache = 1
   if dein#load_state(s:dein_dir)
     call dein#begin(s:dein_dir)
 

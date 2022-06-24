@@ -90,14 +90,14 @@ endif
 " {{{ Preference
 if has('termguicolors')
   set termguicolors
-  highlight Normal guibg=NONE
-  highlight NonText guibg=NONE
-  highlight LineNr guibg=NONE
-  highlight Folded guibg=NONE
-  highlight EndOfBuffer guibg=NONE 
-  highlight CursorLineSign guibg=NONE
-  highlight CursorLineFold guibg=NONE
-  highlight SignColumn guibg=NONE
+"  highlight Normal guibg=NONE
+"  highlight NonText guibg=NONE
+"  highlight LineNr guibg=NONE
+"  highlight Folded guibg=NONE
+"  highlight EndOfBuffer guibg=NONE 
+"  highlight CursorLineSign guibg=NONE
+"  highlight CursorLineFold guibg=NONE
+"  highlight SignColumn guibg=NONE
 endif
 " }}}
 

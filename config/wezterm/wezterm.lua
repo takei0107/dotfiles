@@ -42,7 +42,7 @@ end
 return {
   default_cwd = wezterm.home_dir,
   font = wezterm.font(
-    e_font, { weight = "Regular" }
+    e_font, { weight = "Medium" }
   ),
   use_ime = true,
   font_size = e_font_size,

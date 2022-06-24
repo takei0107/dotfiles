@@ -11,3 +11,32 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 '''
+
+[[plugins]]
+repo = 'EdenEast/nightfox.nvim'
+hook_add = '''
+  syntax enable
+  colorscheme Dayfox
+'''
+
+[[plugins]]
+repo = 'nanozuki/tabby.nvim'
+hook_add = '''
+lua << EOF
+require"tabby".setup()
+EOF
+'''
+
+[[plugins]]
+repo = 'feline-nvim/feline.nvim'
+hook_add = '''
+lua << EOF
+require('feline').setup()
+EOF
+'''
+
+[[plugins]]
+repo = 'kyazdani42/nvim-web-devicons'
+
+[[plugins]]
+repo = 'lewis6991/gitsigns.nvim'

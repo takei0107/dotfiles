@@ -9,27 +9,12 @@ repo = 'vim-denops/denops.vim'
 repo = 'haishanh/night-owl.vim'
 hook_add = '''
   syntax enable
-  colorscheme night-owl
+  "colorscheme night-owl
 '''
 
 [[plugins]]
 repo = 'itchyny/vim-gitbranch'
 
-[[plugins]]
-repo = 'itchyny/lightline.vim'
-hook_add = '''
-let g:lightline = {
-  \   'active': {
-  \     'left': [ 
-  \               [ 'mode', 'paste' ],
-  \               [ 'gitbranch', 'readonly', 'filename', 'modified' ] 
-  \             ]
-  \   },
-  \   'component_function': {
-  \    'gitbranch': 'gitbranch#name'
-  \   },
-  \ }
-'''
 
 [[plugins]]
 repo = 'vim-jp/vimdoc-ja'
@@ -66,6 +51,25 @@ repo = 'lambdalisue/fern-hijack.vim'
 
 [[plugins]]
 repo = 'lambdalisue/fern-git-status.vim'
+
+[[plugins]]
+repo = 'lambdalisue/nerdfont.vim'
+
+[[plugins]]
+repo = 'lambdalisue/fern-renderer-nerdfont.vim'
+hook_add = '''
+	let g:fern#renderer = 'nerdfont'
+'''
+
+[[plugins]]
+repo = 'lambdalisue/glyph-palette.vim'
+hook_add = '''
+augroup my-glyph-palette
+  autocmd! *
+	autocmd FileType fern call glyph_palette#apply()
+	autocmd FileType nerdtree,startify call glyph_palette#apply()
+augroup END
+'''
 
 [[plugins]]
 repo = 'junegunn/fzf'
