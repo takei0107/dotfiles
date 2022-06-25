@@ -92,6 +92,13 @@ if type volta > /dev/null 2>&1; then
   export VOLTA_HOME="$HOME/.volta"
 fi
 
+if type scrot > /dev/null 2>&1; then
+	if [[ ! -d ~/Pictures/screenshots ]]; then
+		mkdir ~/Pictures/screenshots
+	fi
+	alias scsho='scrot -s -e '\''mv $f ~/Pictures/screenshots'\'
+fi
+
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
