@@ -23,7 +23,9 @@ hook_add = '''
 repo = 'nanozuki/tabby.nvim'
 hook_add = '''
 lua << EOF
-require"tabby".setup()
+require"tabby".setup({
+	tabline = require('tabby.presets').tab_only,
+})
 EOF
 '''
 
@@ -50,6 +52,23 @@ local modes = {
 	[""] = "SELECT",
 	t = "TERMINAL",
 }
+local modes_hl = {
+	n = {fg = fg, bg = 'green'},
+	no = {fg = fg, bg = 'green'},
+	i = {fg = bg, bg = 'red'},
+	v = {fg = fg, bg = 'orange'},
+	V = {fg = fg, bg = 'orange'},
+	[""] = {fg = fg, bg = 'orange'},
+	c = {fg = bg, bg = 'oceanblue'},
+	cv = {fg = bg, bg = 'oceanblue'},
+	ce = {fg = bg, bg = 'oceanblue'},
+	R = {fg = bg, bg = 'red'},
+	Rv = {fg = bg, bg = 'red'},
+	s = {fg = fg, bg = 'skyblue'},
+	S = {fg = fg, bg = 'skyblue'},
+	[""] = {fg = fg, bg = 'skyblue'},
+	t = {fg = fg, bg = 'green'},
+}
 local components = {
 	active = {},
 	inactive = {}
@@ -63,19 +82,20 @@ table.insert(components.active[1], {
 	end,
 	hl = function()
 		return {
-			name = require('feline.providers.vi_mode').get_mode_highlight_name(),
-			fg = require('feline.providers.vi_mode').get_mode_color(),
+			fg = modes_hl[vim.fn.mode()]['fg'],
+			bg = modes_hl[vim.fn.mode()]['bg'],
 			style = 'bold'
 		}
 	end,
 	right_sep ={
 		{
 			str = 'right_filled',
-			hl = {
-				fg = bg,
-				bg = fg,
-			},
-			always_visible = true
+			hl = function()
+				return {
+					fg = modes_hl[vim.fn.mode()]['bg'],
+					bg = fg,
+				}
+			end
 		},
 	}
 })
