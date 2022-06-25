@@ -106,8 +106,6 @@ inoremap jj <ESC>
 nnoremap j gj
 nnoremap k gk
 nnoremap v$ vg_
-nnoremap <leader>dG ggVGd<CR>
-nnoremap <leader>cG ggVGc
 nnoremap <silent> <ESC><ESC> :nohlsearch<CR>
 nnoremap <silent> tos :split<Bar>wincmd j<Bar>resize 15<Bar>term<CR>
 " }}}
@@ -117,11 +115,12 @@ augroup filetype
   autocmd!
   autocmd FileType java setlocal expandtab shiftwidth=4
   autocmd FileType jsp setlocal expandtab shiftwidth=2
-  autocmd FileType go setlocal nolist tabstop=4
+  autocmd FileType go setlocal tabstop=4
   autocmd FileType vim setlocal tabstop=2 foldmethod=marker foldopen=all foldclose=all
   autocmd FileType lua setlocal tabstop=2
   autocmd FileType sh,zsh setlocal tabstop=2
   autocmd FileType toml setlocal tabstop=2
+  autocmd FileType diff setlocal tabstop=2
 augroup END
 "}}}
 
