@@ -31,7 +31,206 @@ EOF
 repo = 'feline-nvim/feline.nvim'
 hook_add = '''
 lua << EOF
-require('feline').setup()
+local bg = '#DBDBDB'
+local fg = '#233F5E'
+local modes = {
+	n = "NORMAL",
+	no = "NORMAL",
+	i = "INSERT",
+	v = "VISUAL",
+	V = "V-LINE",
+	[""] = "V-BLOCK",
+	c = "COMMAND",
+	cv = "COMMAND",
+	ce = "COMMAND",
+	R = "REPLACE",
+	Rv = "REPLACE",
+	s = "SELECT",
+	S = "SELECT",
+	[""] = "SELECT",
+	t = "TERMINAL",
+}
+local components = {
+	active = {},
+	inactive = {}
+}
+table.insert(components.active, {})
+table.insert(components.active, {})
+table.insert(components.active, {})
+table.insert(components.active[1], {
+	provider = function()
+		return string.format(" %s ", modes[vim.fn.mode()])
+	end,
+	hl = function()
+		return {
+			name = require('feline.providers.vi_mode').get_mode_highlight_name(),
+			fg = require('feline.providers.vi_mode').get_mode_color(),
+			style = 'bold'
+		}
+	end,
+	right_sep ={
+		{
+			str = 'right_filled',
+			hl = {
+				fg = bg,
+				bg = fg,
+			},
+			always_visible = true
+		},
+	}
+})
+table.insert(components.active[1], {
+	provider = 'file_info',
+	hl = {
+		fg = bg,
+		bg = fg,
+		style = 'bold'
+	},
+	left_sep = {
+		{
+			str = ' ',
+			hl = {
+				bg = fg,
+			},
+		}
+	},
+	right_sep ={
+		{
+			str = ' ',
+			hl = {
+				bg = fg,
+			},
+		},
+		{
+			str = 'slant_right_2',
+		}
+	},
+	icon = '',
+})
+table.insert(components.active[1], {
+	provider = 'git_branch',
+	hl = {
+		style = 'bold',
+	},
+	left_sep = {
+		str = ' ',
+	},
+})
+table.insert(components.active[1], {
+	provider = 'git_diff_added',
+	hl = {
+		style = 'bold',
+		fg = 'skyblue',
+	},
+})
+table.insert(components.active[1], {
+	provider = 'git_diff_changed',
+	hl = {
+		style = 'bold',
+		fg = '#FFFB66',
+	},
+})
+table.insert(components.active[1], {
+	provider = 'git_diff_removed',
+	hl = {
+		style = 'bold',
+		fg = 'red',
+	},
+})
+-- ダミー
+table.insert(components.active[1], {
+	provider = ''
+})
+table.insert(components.active[2], {
+	provider = 'diagnostic_errors',
+	hl = {
+		fg = 'red',
+	}
+})
+table.insert(components.active[2], {
+	provider = 'diagnostic_warnings',
+	hl = {
+		fg = 'yellow',
+	}
+})
+table.insert(components.active[3], {
+	provider = {
+		name = 'file_type',
+		opts = {
+			case = 'lowercase',
+			filetype_icon = true
+		},
+	},
+	hl = {
+		style = 'bold',
+		fg = bg,
+		bg = fg,
+	},
+	left_sep = {
+		{
+			str = 'slant_left_2',
+		},
+		{
+			str = ' ',
+			hl = {
+				bg = fg
+			}
+		}	
+	},
+	right_sep = {
+		{
+			str = ' ',
+			hl = {
+				bg = fg
+			}
+		},
+		{
+			str = 'slant_right',
+		}
+	}
+})
+table.insert(components.active[3], {
+	provider = 'file_format',
+	hl = {
+		style = 'bold',
+	},
+	left_sep = {
+		str = ' '
+	}
+})
+table.insert(components.active[3], {
+	provider = 'file_encoding',
+	hl = {
+		style = 'bold',
+	},
+	left_sep = {
+		str = ' ',
+	}
+})
+table.insert(components.active[3], {
+	provider = 'position',
+	left_sep = {
+		str = ' ',
+	}
+})
+table.insert(components.active[3], {
+	provider = 'line_percentage',
+	left_sep = {
+		str = ' ',
+	},
+	right_sep = {
+		str = ' ',
+	}
+})
+require('feline').setup({
+	components = components,
+	theme = {bg = bg, fg = fg},
+	force_inactive = {
+		filetypes = {
+			'^fern$',
+		}
+	}
+})
 EOF
 '''
 
@@ -40,3 +239,8 @@ repo = 'kyazdani42/nvim-web-devicons'
 
 [[plugins]]
 repo = 'lewis6991/gitsigns.nvim'
+hook_add = '''
+lua << EOF
+require('gitsigns').setup()
+EOF
+'''
