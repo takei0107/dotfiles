@@ -26,3 +26,4 @@ hook_add = '''
 
 [[plugins]]
 repo = 'mattn/vim-lsp-settings'
+depends = ['vim-lsp']

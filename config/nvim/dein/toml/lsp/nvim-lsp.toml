@@ -27,9 +27,11 @@ set completeopt-=preview
 
 [[plugins]]
 repo = 'mfussenegger/nvim-jdtls'
+on_ft = ['java']
 
 [[plugins]]
 repo = 'matsui54/denops-popup-preview.vim'
 hook_add = '''
 call popup_preview#enable()
 '''
+depends = ['denops.vim']

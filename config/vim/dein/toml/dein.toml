@@ -9,12 +9,30 @@ repo = 'vim-denops/denops.vim'
 repo = 'haishanh/night-owl.vim'
 hook_add = '''
   syntax enable
-  "colorscheme night-owl
+  colorscheme night-owl
 '''
+if = '!has("nvim")'
+
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+let g:lightline = {
+	\   'active': {
+	\     'left': [ 
+	\               [ 'mode', 'paste' ],
+	\               [ 'gitbranch', 'readonly', 'filename', 'modified' ] 
+	\             ]
+	\   },
+	\   'component_function': {
+	\    'gitbranch': 'gitbranch#name'
+	\   },
+	\ }
+'''
+if = '!has("nvim")'
 
 [[plugins]]
 repo = 'itchyny/vim-gitbranch'
-
+depends = ['lightline.vim']
 
 [[plugins]]
 repo = 'vim-jp/vimdoc-ja'
@@ -29,8 +47,8 @@ hook_add = '''
     autocmd FileType fern nmap <buffer> R <Plug>(fern-action-remove)
     autocmd FileType fern nmap <buffer> s <Plug>(fern-action-open:split)
     autocmd FileType fern nmap <buffer> v <Plug>(fern-action-open:vsplit)
-    " systemで開くを無効化
-    autocmd FileType fern nnoremap <buffer> <Plug>(fern-action-open:system) <Nop>
+    " systemで開くを無効化 
+		autocmd FileType fern nnoremap <buffer> <Plug>(fern-action-open:system) <Nop>
   augroup END
   command! FernDrawerToggle :Fern . -drawer -reveal=% -toggle
   command! -nargs=1 -complete=file FernDoReveal :call <SID>fern_do_reveal(<q-args>)
@@ -48,18 +66,22 @@ hook_add = '''
 
 [[plugins]]
 repo = 'lambdalisue/fern-hijack.vim'
+depends = ['fern.vim']
 
 [[plugins]]
 repo = 'lambdalisue/fern-git-status.vim'
+depends = ['fern.vim']
 
 [[plugins]]
 repo = 'lambdalisue/nerdfont.vim'
+depends = ['fern.vim']
 
 [[plugins]]
 repo = 'lambdalisue/fern-renderer-nerdfont.vim'
 hook_add = '''
 	let g:fern#renderer = 'nerdfont'
 '''
+depends = ['fern.vim', 'nerdfont.vim']
 
 [[plugins]]
 repo = 'lambdalisue/glyph-palette.vim'
@@ -70,6 +92,7 @@ augroup my-glyph-palette
 	autocmd FileType nerdtree,startify call glyph_palette#apply()
 augroup END
 '''
+depends = ['fern-renderer-nerdfont.vim']
 
 [[plugins]]
 repo = 'junegunn/fzf'
