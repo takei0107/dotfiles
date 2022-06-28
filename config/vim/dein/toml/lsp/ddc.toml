@@ -22,37 +22,49 @@ hook_add = '''
         \     'forceCompletionPattern' : '\S/\S*'
         \   },
         \ })
-  call ddc#custom#patch_global('sourceOptions', {
-        \   'vim-lsp' : {
-        \     'mark' : '[lsp]',
-        \     'isVolatile' : v:true,
-        \     'forceCompletionPattern': '\.',
-        \   },
-	\ })
-  "call ddc#custom#patch_global('sourceOptions', {
-  "      \   'nvim-lsp' : {
-  "      \     'mark' : '[lsp]',
-  "      \     'isVolatile' : v:true,
-  "      \     'forceCompletionPattern': '\.',
-  "      \   },
-  "      \ })
-  call ddc#enable()
+	if !has('nvim')
+		call ddc#custom#patch_global('sourceOptions', {
+					\   'vim-lsp' : {
+					\     'mark' : '[lsp]',
+					\     'isVolatile' : v:true,
+					\     'forceCompletionPattern': '\.',
+					\   },
+		\ })
+	else
+		call ddc#custom#patch_global('sourceOptions', {
+					\   'nvim-lsp' : {
+					\     'mark' : '[lsp]',
+					\     'isVolatile' : v:true,
+					\     'forceCompletionPattern': '\.',
+					\   },
+					\ })
+	endif
+	call ddc#enable()
 '''
+depends = ['denops.vim']
 
-#[[plugins]]
-#repo = 'shun/ddc-vim-lsp'
+[[plugins]]
+repo = 'shun/ddc-vim-lsp'
+if = '!has("nvim")'
+depends = ['ddc.vim']
 
 [[plugins]]
 repo = 'Shougo/ddc-nvim-lsp'
+if = 'has("nvim")'
+depends = ['ddc.vim']
 
 [[plugins]]
 repo = 'Shougo/ddc-around'
+depends = ['ddc.vim']
 
 [[plugins]]
 repo = 'Shougo/ddc-matcher_head'
+depends = ['ddc.vim']
 
 [[plugins]]
 repo = 'Shougo/ddc-sorter_rank'
+depends = ['ddc.vim']
 
 [[plugins]]
 repo = 'LumaKernel/ddc-file'
+depends = ['ddc.vim']
