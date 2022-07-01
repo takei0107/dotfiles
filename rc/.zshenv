@@ -1,5 +1,1 @@
-typeset -U path
-path=(
-	/opt/homebrew/bin(N-/)
-	$path
-)
+source $HOME/.zshenv.local
