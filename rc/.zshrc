@@ -13,7 +13,7 @@ setopt histignorealldups
 
 HISTSIZE=10000
 SAVEHIST=10000
-HISTFILE=~/.zsh_history
+HISTFILE=$HOME/.zsh_history
 
 export TLDR_LANGUAGE="ja"
 
@@ -22,79 +22,79 @@ alias tailf='tail -f'
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 if [[ -f "${ZINIT_HOME}/zinit.zsh" ]];then
-  source "${ZINIT_HOME}/zinit.zsh"
-  autoload -Uz compinit && compinit
-  autoload -Uz _zinit
-  (( ${+_comps} )) && _comps[zinit]=_zinit
+	source "${ZINIT_HOME}/zinit.zsh"
+	autoload -Uz compinit && compinit
+	autoload -Uz _zinit
+	(( ${+_comps} )) && _comps[zinit]=_zinit
 
-  zinit light zsh-users/zsh-autosuggestions
-  zinit light zdharma-continuum/fast-syntax-highlighting
+	zinit light zsh-users/zsh-autosuggestions
+	zinit light zdharma-continuum/fast-syntax-highlighting
 fi
 
-if [[ -f ~/.fzf.zsh ]]; then
-  source ~/.fzf.zsh
+if [[ -f $HOME/.fzf.zsh ]]; then
+	source $HOME/.fzf.zsh
 else 
-  [[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
-  [[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+	[[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+	[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
 fi
 
 if type fzf > /dev/null 2>&1; then
-  export FZF_DEFAULT_OPTS='--cycle'
-  function fzf_repo () {
-    local selected_dir=$(ghq list -p | fzf)
-    if [ -n "$selected_dir" ]; then
-      BUFFER="cd ${selected_dir}"
-      zle accept-line
-    fi
-    zle clear-screen
-  }
-  zle -N fzf_repo
-  bindkey '^]' fzf_repo
+	export FZF_DEFAULT_OPTS='--cycle'
+	function fzf_repo () {
+		local selected_dir=$(ghq list -p | fzf)
+		if [ -n "$selected_dir" ]; then
+			BUFFER="cd ${selected_dir}"
+			zle accept-line
+		fi
+		zle clear-screen
+	}
+	zle -N fzf_repo
+	bindkey '^]' fzf_repo
 
-  function fzf_ssh () {
-    local selected_dir=$(find ~/.ssh/** -name config -or -name _config | xargs cat | grep "Host " | awk -F' ' '{print $2}' | sort --reverse | fzf)
-    if [ -n "$selected_dir" ]; then
-      BUFFER="ssh ${selected_dir}"
-      zle accept-line
-    fi
-    zle clear-screen
-  }
-  zle -N fzf_ssh
-  bindkey '^h' fzf_ssh
+	function fzf_ssh () {
+		local selected_dir=$(find $HOME/.ssh/** -name config -or -name _config | xargs cat | grep "Host " | awk -F' ' '{print $2}' | sort --reverse | fzf)
+		if [ -n "$selected_dir" ]; then
+			BUFFER="ssh ${selected_dir}"
+			zle accept-line
+		fi
+		zle clear-screen
+	}
+	zle -N fzf_ssh
+	bindkey '^h' fzf_ssh
 
-  alias fcd='cd `dirname $(fzf)`'
+	alias fcd='cd `dirname $(fzf)`'
 fi
 
 function workdir () {
-  local work=~/work
-  if [[ ! -d $work ]]; then
-    mkdir $work
-  fi
-  local today=$(date '+%Y%m%d')
-  local today_work="$work/$today"
-  if [[ ! -d $today_work ]]; then
-    mkdir $today_work
-  fi
-  cd $today_work
-  echo change dir to \'`pwd`\'
+	local work=$HOME/work
+	if [[ ! -d $work ]]; then
+		mkdir $work
+	fi
+	local today=$(date '+%Y%m%d')
+	local today_work="$work/$today"
+	if [[ ! -d $today_work ]]; then
+		mkdir $today_work
+	fi
+	cd $today_work
+	echo change dir to \'`pwd`\'
 }
 
-typeset -U path PATH
+typeset -U path # $path $PATH にすでにある値は追加されない
 path=(
-  /opt/homebrew/bin(N-/)
-  # volta管理下のnpmでインストールされたツールを利用するために必要
-  ~/.volta/bin(N-/)
-  ~/go/bin/(N-/)
-  $path
+	# volta管理下のnpmでインストールされたツールを利用するために必要
+	$HOME/.volta/bin(N-/)
+	$HOME/go/bin/(N-/)
+	$HOME/.cargo/bin(N-/)
+	$path
 )
 
 if type volta > /dev/null 2>&1; then
-  export VOLTA_HOME="$HOME/.volta"
+	export VOLTA_HOME="$HOME/.volta"
 fi
 
 if type scrot > /dev/null 2>&1; then
-	if [[ ! -d ~/Pictures/screenshots ]]; then
-		mkdir ~/Pictures/screenshots
+	if [[ ! -d $HOME/Pictures/screenshots ]]; then
+		mkdir $HOME/Pictures/screenshots
 	fi
 	alias scsho='scrot -s -e '\''mv $f ~/Pictures/screenshots'\'
 fi
@@ -105,7 +105,7 @@ export SDKMAN_DIR="$HOME/.sdkman"
 
 # Starship
 if type starship > /dev/null 2>&1; then
-  eval "$(starship init zsh)"
+	eval "$(starship init zsh)"
 fi
 
-[[ -f ~/.zshrc_local ]] && source ~/.zshrc_local
+[[ -f $HOME/.zshrc_local ]] && source $HOME/.zshrc_local
