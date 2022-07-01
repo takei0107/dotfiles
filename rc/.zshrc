@@ -79,15 +79,6 @@ function workdir () {
 	echo change dir to \'`pwd`\'
 }
 
-typeset -U path # $path にすでにある値は追加されない
-path=(
-	# volta管理下のnpmでインストールされたツールを利用するために必要
-	$HOME/.volta/bin(N-/)
-	$HOME/go/bin/(N-/)
-	$HOME/.cargo/bin(N-/)
-	$path
-)
-
 if type volta > /dev/null 2>&1; then
 	export VOLTA_HOME="$HOME/.volta"
 fi
@@ -109,5 +100,14 @@ fi
 if type starship > /dev/null 2>&1; then
 	eval "$(starship init zsh)"
 fi
+
+typeset -U path # $path にすでにある値は追加されない
+path=(
+	# volta管理下のnpmでインストールされたツールを利用するために必要
+	$HOME/.volta/bin(N-/)
+	$HOME/go/bin/(N-/)
+	$HOME/.cargo/bin(N-/)
+	$path
+)
 
 [[ -f $HOME/.zshrc_local ]] && source $HOME/.zshrc_local
