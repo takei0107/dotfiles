@@ -79,7 +79,7 @@ function workdir () {
 	echo change dir to \'`pwd`\'
 }
 
-typeset -U path # $path $PATH にすでにある値は追加されない
+typeset -U path # $path にすでにある値は追加されない
 path=(
 	# volta管理下のnpmでインストールされたツールを利用するために必要
 	$HOME/.volta/bin(N-/)
@@ -100,8 +100,10 @@ if type scrot > /dev/null 2>&1; then
 fi
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+if [[ -d "$HOME/.sdkman" ]]; then
+	export SDKMAN_DIR="$HOME/.sdkman"
+	[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+fi
 
 # Starship
 if type starship > /dev/null 2>&1; then
