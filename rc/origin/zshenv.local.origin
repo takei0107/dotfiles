@@ -1,6 +1,4 @@
 typeset -U path
 path=(
-	# for mac
-	# /opt/homebrew/bin(N-/)
 	$path
 )

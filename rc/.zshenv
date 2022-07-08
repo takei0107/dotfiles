@@ -1,1 +1,1 @@
-source $HOME/.zshenv.local
+[[ -f $HOME/.zshenv.local ]] && source $HOME/.zshenv.local
