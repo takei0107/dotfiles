@@ -77,6 +77,12 @@ require('packer').startup(function(use)
 			-- remove duplicated command
 			vim.cmd[[ let g:neo_tree_remove_legacy_commands = 1 ]]
 
+			local keymap = vim.keymap
+			local bufopts = { noremap = true, silent = true }
+			keymap.set('n', '<leader>nt', function()
+				vim.cmd [[ Neotree reveal toggle left ]]
+			end, bufopts)
+
 			require('neo-tree').setup({
 				close_if_last_window = true,
 				enable_git_status = true,
