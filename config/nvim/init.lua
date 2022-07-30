@@ -388,7 +388,27 @@ require('packer').startup(function(use)
 
 	-- git
 	use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
-
+	use {
+		'lewis6991/gitsigns.nvim',
+		config = function()
+			require('gitsigns').setup({
+				on_attach = function (bufnr)
+					local gs = require('gitsigns')
+					local opts = { noremap = true, silent = true }
+					vim.keymap.set('n', ']c', function ()
+						vim.schedule(function ()
+							gs.next_hunk()
+						end)
+					end, opts)
+					vim.keymap.set('n', '[c', function ()
+						vim.schedule(function ()
+							gs.prev_hunk()
+						end)
+					end, opts)
+				end
+			})
+		end
+	}
 	-- lexima
 	use 'cohama/lexima.vim'
 
