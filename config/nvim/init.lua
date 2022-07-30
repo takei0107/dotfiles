@@ -2,6 +2,8 @@ local cmd = vim.cmd
 local fn = vim.fn
 local opt = vim.opt
 
+local vimlib = require('lib.vim')
+
 vim.g.loaded_tutor_mode_plugin = true
 vim.g.loaded_2html_plugin = true
 vim.g.mapleader = " "
@@ -11,42 +13,6 @@ opt.fileencodings={'ucs-boom', 'utf-8', 'cp932', 'default'}
 
 cmd [[filetype off]]
 cmd [[filetype plugin indent off]]
-
-function ReloadRCFile()
-	local vimrc = vim.env.MYVIMRC
-	if vimrc == nil then
-		return "env $MYVIMRC is nil"
-	end
-	local arg = string.format(':luafile %s', vimrc)
-	local success, errMsg = pcall(vim.cmd, arg)
-	if not success then
-		return string.format("error %s", errMsg)
-	end
-	return nil
-end
-
-function OpenVimrc()
-	local vimrc = vim.env.MYVIMRC
-	if vimrc == nil then 
-		print "env $MYVIMRC is nil"
-		return
-	end
-	vim.cmd(string.format("edit %s", vimrc))
-end
-
-function ToHex(num)
-	return string.format("%x", num)
-end
-
-function GetHl(name)
-	return vim.api.nvim_get_hl_by_name(name, true)
-end
-
--- TODO
---function Trim()
---	local curLine = vim.fn.getline('.')
---	local len = string.len(curLine)
---end
 
 vim.keymap.set('n', '<F4>', function ()
 		vim.cmd("tabnew | lua OpenVimrc()")
@@ -64,7 +30,7 @@ cmd [[packadd packer.nvim]]
 require('packer').startup(function(use)
 	-- recompile packer
 	local function packerRecompile()
-		local errMsg = ReloadRCFile()
+		local errMsg = vimlib.reload_vimrc()
 		if not (errMsg == nil) then
 			print('fail: packer recompile. error = ' .. errMsg)
 			return
@@ -171,6 +137,7 @@ require('packer').startup(function(use)
 		requires = { 'kyazdani42/nvim-web-devicons' },
 		after = 'nightfox.nvim',
 		config = function()
+			local vimlib = require('lib.vim')
 			require('lualine').setup({
 				options = {
 					icons_enabled = true,
@@ -185,19 +152,19 @@ require('packer').startup(function(use)
 							sources = {'nvim_lsp'},
 							diagnostics_color = {
 								error = {
-									fg = "#".. ToHex(GetHl('DiagnosticError').foreground),
+									fg = vimlib.get_hl_by_name('DiagnosticError').fg,
 									bg = require("lualine.themes.nord").normal.b.bg
 								},
 								warn = {
-									fg = "#".. ToHex(GetHl('DiagnosticWarn').foreground),
+									fg = vimlib.get_hl_by_name('DiagnosticWarn').fg,
 									bg = require("lualine.themes.nord").normal.b.bg
 								},
 								info = {
-									fg = "#".. ToHex(GetHl('DiagnosticInfo').foreground),
+									fg = vimlib.get_hl_by_name('DiagnosticInfo').fg,
 									bg = require("lualine.themes.nord").normal.b.bg
 								},
 								hint = {
-									fg = "#".. ToHex(GetHl('DiagnosticHint').foreground),
+									fg = vimlib.get_hl_by_name('DiagnosticHint').fg,
 									bg = require("lualine.themes.nord").normal.b.bg
 								},
 							},
@@ -222,9 +189,10 @@ require('packer').startup(function(use)
 		after = {'nightfox.nvim', 'nvim-web-devicons'},
 		config = function ()
 			local text = require('tabby.text')
+			local vimlib = require('lib.vim')
 			local hl_head = {
 				fg = '#019833',
-				bg = "#" .. ToHex(GetHl("TabLine").background)
+				bg = vimlib.get_hl_by_name("TabLine").bg
 			}
 			local head =  {
 				{ '  ', hl = hl_head },
@@ -462,7 +430,7 @@ end
 
 vim.keymap.set('n', '<ESC><ESC>', function() cmd('nohlsearch') end, {silent = true})
 vim.keymap.set('n', '<F5>', function ()
-	ReloadRCFile()
+	vimlib.reload_vimrc()
 end, {silent = true})
 
 vim.cmd [[
