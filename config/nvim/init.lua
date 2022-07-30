@@ -2,7 +2,7 @@ local cmd = vim.cmd
 local fn = vim.fn
 local opt = vim.opt
 
-local vimlib = require('lib.vim')
+local vimrc = require('vimrc')
 
 vim.g.loaded_tutor_mode_plugin = true
 vim.g.loaded_2html_plugin = true
@@ -15,7 +15,8 @@ cmd [[filetype off]]
 cmd [[filetype plugin indent off]]
 
 vim.keymap.set('n', '<F4>', function ()
-		vim.cmd("tabnew | lua OpenVimrc()")
+		vim.cmd("tabnew")
+		vimrc:open()
 		vim.cmd("normal gg")
 end)
 
@@ -30,17 +31,8 @@ cmd [[packadd packer.nvim]]
 require('packer').startup(function(use)
 	-- recompile packer
 	local function packerRecompile()
-		local errMsg = vimlib.reload_vimrc()
-		if not (errMsg == nil) then
-			print('fail: packer recompile. error = ' .. errMsg)
-			return
-		end
-		local success, errMsg = pcall(require('packer').compile)
-		if not success then
-			print('fail: packer recompile. error = ' .. errMsg)
-			return
-		end
-		print('success: packer recompile.')
+		vimrc:load()
+		require('packer').compile()
 	end
 	vim.api.nvim_create_user_command('PackerRecompile', function() packerRecompile() end, {} )
 
@@ -430,7 +422,7 @@ end
 
 vim.keymap.set('n', '<ESC><ESC>', function() cmd('nohlsearch') end, {silent = true})
 vim.keymap.set('n', '<F5>', function ()
-	vimlib.reload_vimrc()
+	vimrc:load()
 end, {silent = true})
 
 vim.cmd [[
