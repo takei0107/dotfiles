@@ -10,7 +10,7 @@ mapping.noremap('n'):silent():bind('<leader>fb', function ()
 		ignore_current_buffer = true,
 	})
 end)
-mapping.noremap('n'):silent():bind('<leader>fg', builtin.help_tags)
+mapping.noremap('n'):silent():bind('<leader>fh', builtin.help_tags)
 mapping.noremap('n'):silent():bind('<leader>rg', builtin.live_grep)
 
 require('telescope').setup({
