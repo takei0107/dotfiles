@@ -27,8 +27,8 @@ if fn.empty(fn.glob(packer_path)) > 0 then
 end
 
 -- packer
-cmd [[packadd packer.nvim]]
-require('packer').startup(function(use)
+cmd('packadd packer.nvim')
+require('packer').startup({function(use)
 	-- recompile packer
 	local function packerRecompile()
 		vimrc:load()
@@ -57,7 +57,7 @@ require('packer').startup(function(use)
 					},
 				}
 			})
-			vim.cmd [[colorscheme nordfox]]
+			vim.cmd('colorscheme nordfox')
 		end,
 	}
 
@@ -83,21 +83,21 @@ require('packer').startup(function(use)
 
 	-- file explorer
 	use {
-		"nvim-neo-tree/neo-tree.nvim",
+		'nvim-neo-tree/neo-tree.nvim',
 		branch = "v2.x",
 		requires = {
-			"nvim-lua/plenary.nvim",
-			"kyazdani42/nvim-web-devicons",
-			"MunifTanjim/nui.nvim",
+			'nvim-lua/plenary.nvim',
+			'kyazdani42/nvim-web-devicons',
+			'MunifTanjim/nui.nvim',
 		},
 		config = function()
 			-- remove duplicated command
-			vim.cmd[[ let g:neo_tree_remove_legacy_commands = 1 ]]
+			vim.g.neo_tree_remove_legacy_commands = 1
 
 			local keymap = vim.keymap
 			local bufopts = { noremap = true, silent = true }
 			keymap.set('n', '<leader>nt', function()
-				vim.cmd [[ Neotree reveal toggle left ]]
+				vim.cmd('Neotree reveal toggle left')
 			end, bufopts)
 
 			require('neo-tree').setup({
@@ -108,8 +108,8 @@ require('packer').startup(function(use)
 					position = 'left',
 					width = 30,
 					mappings = {
-						['s'] = "open_split",
-						['v'] = "open_vsplit"
+						['s'] = 'open_split',
+						['v'] = 'open_vsplit'
 					}
 				},
 				filesystem = {
@@ -126,14 +126,18 @@ require('packer').startup(function(use)
 	-- statusline
 	use {
 		'nvim-lualine/lualine.nvim',
-		requires = { 'kyazdani42/nvim-web-devicons' },
+		requires = {
+			'EdenEast/nightfox.nvim',
+			'kyazdani42/nvim-web-devicons'
+		},
 		after = 'nightfox.nvim',
 		config = function()
 			local vimlib = require('lib.vim')
+			local base_theme = 'nord'
 			require('lualine').setup({
 				options = {
 					icons_enabled = true,
-					theme = 'nord',
+					theme = base_theme,
 				},
 				sections = {
 					lualine_a = {'mode'},
@@ -145,19 +149,19 @@ require('packer').startup(function(use)
 							diagnostics_color = {
 								error = {
 									fg = vimlib.get_hl_by_name('DiagnosticError').fg,
-									bg = require("lualine.themes.nord").normal.b.bg
+									bg = require('lualine.themes.'..base_theme).normal.b.bg
 								},
 								warn = {
 									fg = vimlib.get_hl_by_name('DiagnosticWarn').fg,
-									bg = require("lualine.themes.nord").normal.b.bg
+									bg = require('lualine.themes.'..base_theme).normal.b.bg
 								},
 								info = {
 									fg = vimlib.get_hl_by_name('DiagnosticInfo').fg,
-									bg = require("lualine.themes.nord").normal.b.bg
+									bg = require('lualine.themes.'..base_theme).normal.b.bg
 								},
 								hint = {
 									fg = vimlib.get_hl_by_name('DiagnosticHint').fg,
-									bg = require("lualine.themes.nord").normal.b.bg
+									bg = require('lualine.themes.'..base_theme).normal.b.bg
 								},
 							},
 							symbols = {error = '🚨', warn = '⚠', info = '🔔', hint = '🤔'},
@@ -177,22 +181,25 @@ require('packer').startup(function(use)
 
 	-- tabline
 	use {
-		"nanozuki/tabby.nvim",
+		'nanozuki/tabby.nvim',
+		requires = {
+			'EdenEast/nightfox.nvim',
+			'kyazdani42/nvim-web-devicons'
+		},
 		after = {'nightfox.nvim', 'nvim-web-devicons'},
 		config = function ()
 			local text = require('tabby.text')
 			local vimlib = require('lib.vim')
 			local hl_head = {
-				fg = '#019833',
-				bg = vimlib.get_hl_by_name("TabLine").bg
+				fg = '#019833', -- vim color
+				bg = vimlib.get_hl_by_name('TabLine').bg
 			}
 			local head =  {
 				{ '  ', hl = hl_head },
-				text.separator('', "TabLine", 'TabLineFill'),
+				text.separator('', 'TabLine', 'TabLineFill'),
 			}
-			local tab_only = require("tabby.presets").tab_only
+			local tab_only = require('tabby.presets').tab_only
 			tab_only.head = head
-
 			require("tabby").setup({
 				tabline = tab_only
 			})
@@ -222,14 +229,14 @@ require('packer').startup(function(use)
 			require('telescope').setup({
 				defaults = {
 					vimgrep_arguments = {
-						"rg",
-						"--color=never",
-						"--no-heading",
-						"--with-filename",
-						"--line-number",
-						"--column",
-						"--smart-case",
-						"--hidden",
+						'rg',
+						'--color=never',
+						'--no-heading',
+						'--with-filename',
+						'--line-number',
+						'--column',
+						'--smart-case',
+						'--hidden',
 					},
 					mappings = {
 						i = {
@@ -238,13 +245,15 @@ require('packer').startup(function(use)
 							['<C-b>'] = actions.preview_scrolling_up,
 							['<C-f>'] = actions.preview_scrolling_down,
 							['<C-u>'] = {"<C-u>", type = "command"},
+							['<C-s>'] = actions.select_horizontal
 						},
 						n = {
 							['<Esc>'] = { -- デフォルトのactions.closeだと閉じるのが遅いのでnowaitにする
 								"<cmd>q!<cr>",
-								type = "command",
+								type = 'command',
 								opts = { nowait = true, silent = true }
 							},
+							['<C-s>'] = actions.select_horizontal
 						}
 					}
 				},
@@ -289,7 +298,7 @@ require('packer').startup(function(use)
 		}),
 		snippet = {
 			expand = function(args)
-				vim.fn["vsnip#anonymous"](args.body)
+				vim.fn('vsnip#anonymous')(args.body)
 			end,
 		},
 		mapping = {
@@ -335,6 +344,8 @@ require('packer').startup(function(use)
 		keymap.set('n', '<leader>rn', lsp_buf.rename, bufopts)
 		keymap.set('n', 'K', lsp_buf.hover, bufopts)
 	end
+
+	-- よくわかっていない
 	local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 	require('mason').setup()
 	require('mason-lspconfig').setup()
@@ -379,7 +390,14 @@ require('packer').startup(function(use)
 	if packer_bootstrap then
 		require('packer').sync()
 	end
-end)
+end,
+
+-- packer configurations
+config = {
+	display = {
+		open_fn = require('packer.util').float,
+	}
+}})
 
 opt.hidden = true
 opt.helplang = 'ja'
