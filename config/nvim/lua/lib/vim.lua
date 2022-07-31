@@ -1,7 +1,5 @@
 local M = {}
 
-local cmd = vim.cmd
-local env = vim.env
 local api = vim.api
 
 local util = require('lib.util')
