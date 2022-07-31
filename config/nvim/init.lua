@@ -1,71 +1,14 @@
 local cmd = vim.cmd
-local fn = vim.fn
-local opt = vim.opt
-
-local vimrc = require('vimrc')
-
 vim.g.loaded_tutor_mode_plugin = true
 vim.g.loaded_2html_plugin = true
 vim.g.mapleader = " "
 
-opt.encoding = 'utf-8'
-opt.fileencodings={'ucs-boom', 'utf-8', 'cp932', 'default'}
-
 cmd [[filetype off]]
 cmd [[filetype plugin indent off]]
 
-vim.keymap.set('n', '<F4>', function ()
-		vim.cmd("tabnew")
-		vimrc:open()
-		vim.cmd("normal gg")
-end)
-
--- package
 require('packages')
-
-opt.hidden = true
-opt.helplang = 'ja'
-opt.smartindent = true
-opt.shiftwidth = 0
-opt.softtabstop = -1
-opt.number = true
-opt.belloff = 'all'
-opt.hlsearch = true
-opt.incsearch = true
-opt.ignorecase = true
-opt.smartcase = true
-opt.cursorline = true
-opt.laststatus = 2
-opt.wildmenu = true
-opt.showcmd = true
-opt.display = 'truncate'
-opt.backspace = {'indent', 'eol', 'start'}
-opt.list = true
-opt.updatetime = 555
-opt.splitbelow = true
-opt.splitright = true
-opt.swapfile = false
-opt.backup = false
-opt.completeopt = {'menu', 'menuone', 'noselect'}
-local undoDir = fn.stdpath('cache') .. '/undo'
-if not(fn.isdirectory(undoDir)) then
-	fn.mkdir(undoDir)
-end
-opt.undodir = undoDir
-opt.undofile = true
-if fn.has('unix') then
-	opt.clipboard:prepend{'unnamedplus', 'unnamed'}
-elseif fn.has('mac') then
-	opt.clipboard:append{'unnamde'}
-end
-if fn.has('termguicolors') then
-	opt.termguicolors = true
-end
-
-vim.keymap.set('n', '<ESC><ESC>', function() cmd('nohlsearch') end, {silent = true})
-vim.keymap.set('n', '<F5>', function ()
-	vimrc:load()
-end, {silent = true})
+require('options')
+require('keymaps')
 
 vim.cmd [[
 augroup filetype
@@ -100,4 +43,4 @@ function OrgImports(wait_ms)
 end
 vim.cmd [[autocmd BufWritePre *.go lua OrgImports(1000)]]
 
-cmd[[filetype plugin indent on]]
+cmd [[filetype plugin indent on]]

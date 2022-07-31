@@ -168,8 +168,7 @@ config = {
 
 -- recompile packer
 local function packerRecompile()
-	local vimrc = require('vimrc')
-	vimrc:load()
+	require('vimrc'):load()
 	require('packer').compile()
 end
 vim.api.nvim_create_user_command('PackerRecompile', function() packerRecompile() end, {} )
