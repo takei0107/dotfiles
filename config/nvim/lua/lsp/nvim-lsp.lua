@@ -7,6 +7,7 @@ local on_attach = function(client, bufnr)
 	mapping.noremap('n'):buffer(bufnr):silent():bind('gr', lsp_buf.references)
 	mapping.noremap('n'):buffer(bufnr):silent():bind('<leader>rn', lsp_buf.rename)
 	mapping.noremap('n'):buffer(bufnr):silent():bind('K', lsp_buf.hover)
+	mapping.noremap('n'):buffer(bufnr):silent():bind('<leader>ca', lsp_buf.code_action)
 end
 
 -- よくわかっていない

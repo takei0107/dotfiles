@@ -1,3 +1,5 @@
+-- vimのapiのラッパーとして利用
+
 local M = {}
 
 local api = vim.api

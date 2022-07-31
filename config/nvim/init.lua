@@ -11,6 +11,10 @@ require('keymaps')
 require('packages')
 require('filetype')
 
+cmd [[
+au TermOpen * startinsert
+]]
+
 -- go organizeImports & format
 -- see https://github.com/golang/tools/blob/master/gopls/doc/vim.md#neovim-imports
 function OrgImports(wait_ms)
