@@ -3,7 +3,6 @@ local wezterm = require('wezterm');
 local function basename(s)
   return string.gsub(s, "(.*[/\\])(.*)", "%2")
 end
-
 -- タブの表示
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
   local nerd_icons = {
@@ -15,11 +14,14 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     top = wezterm.nerdfonts.mdi_monitor,
   }
   local pane = tab.active_pane
-  local p_name = basename(pane.foreground_process_name)
-  local icon = nerd_icons[p_name]
+  local process_name = basename(pane.foreground_process_name)
+  local icon = nerd_icons[process_name]
   local index = tab.tab_index + 1
-  local p_name_formated = index .. ": " .. basename(pane.foreground_process_name)
-  local title = icon and icon .. "  " .. p_name_formated or p_name_formated
+	local cwd = basename(pane.current_working_dir)
+	local title = index .. ": " .. cwd .. "  | " .. process_name
+	if icon ~= nil then
+		title = icon .. "  " .. title
+	end
   return {
     {Text=" " .. title .. " "},
   }
