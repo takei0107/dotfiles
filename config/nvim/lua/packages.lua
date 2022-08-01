@@ -137,6 +137,13 @@ require('packer').startup({function(use)
 	}
 	require('lsp.nvim-lsp')
 
+	-- java lsp
+	use {
+		'mfussenegger/nvim-jdtls',
+		-- javaの時だけ読み込みたいが、ftplugin内でrequireするとこのプラグインがロードされておらず失敗するため
+		--ft = {'java'}
+	}
+
 
 	-- git
 	use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
