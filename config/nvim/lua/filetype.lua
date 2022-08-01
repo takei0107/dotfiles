@@ -1,6 +1,7 @@
 vim.cmd [[
 augroup filetype
 	autocmd!
+	autocmd FileType c,cpp setlocal tabstop=4
 	autocmd FileType java setlocal expandtab shiftwidth=4
 	autocmd FileType jsp setlocal expandtab shiftwidth=2
 	autocmd FileType go setlocal tabstop=4

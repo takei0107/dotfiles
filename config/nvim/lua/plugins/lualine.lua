@@ -1,6 +1,8 @@
 local vimlib = require('lib.vim')
 local base_theme = 'nord'
 
+local diagnostics = require('diagnostics')
+
 local setting_diagnostics = {
 	sources = {'nvim_lsp'},
 	diagnostics_color = {
@@ -21,7 +23,7 @@ local setting_diagnostics = {
 			bg = require('lualine.themes.'..base_theme).normal.b.bg
 		},
 	},
-	symbols = {error = '🚨', warn = '⚠', info = '🔔', hint = '🤔'},
+	symbols = {error = diagnostics.Error.symbol, warn = diagnostics.Warn.symbol, info = diagnostics.Info.symbol, hint = diagnostics.Hint.symbol},
 	colored = true,
 	update_in_insert = false,
 	always_visible = false,

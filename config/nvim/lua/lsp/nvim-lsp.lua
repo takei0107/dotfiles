@@ -18,6 +18,9 @@ M.on_attach = function (client, bufnr)
 	mapping.noremap('n'):buffer(bufnr):silent():bind('gr', telescope_builtin.lsp_references)
 	mapping.noremap('n'):buffer(bufnr):silent():bind('<leader>ds', telescope_builtin.diagnostics)
 
+	-- formatting
+	mapping.noremap('n'):buffer(bufnr):silent():bind('<leader><C-f>', lsp_buf.formatting)
+
 	vim.cmd[[
     autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
     autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
