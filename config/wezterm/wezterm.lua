@@ -63,15 +63,15 @@ return {
     {key="8", mods="ALT", action = wezterm.action({ActivateTab=7})},
     {key="9", mods="ALT", action = wezterm.action({ActivateTab=8})},
     {key="a", mods="ALT", action = "ShowTabNavigator"},
-    {key="q", mods="ALT", action = wezterm.action({CloseCurrentTab = {confirm = false}})},
+    {key="q", mods="ALT", action = wezterm.action({CloseCurrentTab = {confirm = true}})},
 
     -- pane actions
-    {key="%", mods="SHIFT|ALT", action = wezterm.action({SplitVertical={domain="CurrentPaneDomain"}})},
-    {key="\"", mods="SHIFT|ALT", action = wezterm.action({SplitHorizontal={domain="CurrentPaneDomain"}})},
-    { key = "h", mods="ALT", action=wezterm.action{ActivatePaneDirection="Left"}},
-    { key = "l", mods="ALT", action=wezterm.action{ActivatePaneDirection="Right"}},
-    { key = "k", mods="ALT", action=wezterm.action{ActivatePaneDirection="Up"}},
-    { key = "j", mods="ALT", action=wezterm.action{ActivatePaneDirection="Down"}},
+    {key = "s", mods="ALT", action = wezterm.action({SplitVertical={domain="CurrentPaneDomain"}})},
+    {key = "v", mods="ALT", action = wezterm.action({SplitHorizontal={domain="CurrentPaneDomain"}})},
+    {key = "h", mods="ALT", action = wezterm.action{ActivatePaneDirection="Left"}},
+    {key = "l", mods="ALT", action = wezterm.action{ActivatePaneDirection="Right"}},
+    {key = "k", mods="ALT", action = wezterm.action{ActivatePaneDirection="Up"}},
+    {key = "j", mods="ALT", action = wezterm.action{ActivatePaneDirection="Down"}},
   },
   --debug_key_events = true,
 }
