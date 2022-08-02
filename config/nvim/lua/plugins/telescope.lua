@@ -12,6 +12,7 @@ mapping.noremap('n'):silent():bind('<leader>fb', function ()
 end)
 mapping.noremap('n'):silent():bind('<leader>fh', builtin.help_tags)
 mapping.noremap('n'):silent():bind('<leader>rg', builtin.live_grep)
+mapping.noremap('n'):silent():bind('<leader>ts', builtin.treesitter)
 
 require('telescope').setup({
 	defaults = {

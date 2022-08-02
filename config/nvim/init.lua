@@ -10,6 +10,7 @@ require('options')
 require('keymaps')
 require('packages')
 require('filetype')
+require('diagnostics')
 
 cmd [[
 au TermOpen * startinsert
