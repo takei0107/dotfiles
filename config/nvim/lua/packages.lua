@@ -124,6 +124,15 @@ require('packer').startup({function(use)
 		'hrsh7th/cmp-nvim-lsp-signature-help'
 	}
 	use {
+		'hrsh7th/cmp-path'
+	}
+	use {
+		'hrsh7th/cmp-buffer'
+	}
+	use {
+		'hrsh7th/cmp-cmdline'
+	}
+	use {
 		'uga-rosa/cmp-dictionary'
 	}
 	require('editor.cmp')

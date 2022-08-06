@@ -36,7 +36,13 @@ cmp.setup({
 		{ name = 'nvim_lsp' },
 		{ name = 'vsnip' },
 		{ name = 'nvim_lsp_signature_help' },
-	}, {
+		{ name = 'path' }
+	},{
+		{
+			name = 'buffer',
+		}
+	},
+	{
 		{
 			name = 'dictionary',
 			keyword_length = 2
@@ -50,6 +56,22 @@ cmp.setup({
 	mapping = mapping,
 	preselect = cmp.PreselectMode.None,
 	completion = {},
+})
+
+cmp.setup.cmdline('/', {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = cmp.config.sources({
+		{ name = 'buffer' }
+	})
+})
+
+cmp.setup.cmdline(':', {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = cmp.config.sources({
+		{ name = 'cmdline' }
+	},{
+		{ name = 'path' }
+	})
 })
 
 local dic = {}
