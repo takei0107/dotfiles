@@ -123,6 +123,9 @@ require('packer').startup({function(use)
 	use {
 		'hrsh7th/cmp-nvim-lsp-signature-help'
 	}
+	use {
+		'uga-rosa/cmp-dictionary'
+	}
 	require('editor.cmp')
 
 	-- lsp
