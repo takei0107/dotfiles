@@ -2,7 +2,7 @@
 vim.g.neo_tree_remove_legacy_commands = 1
 
 local mapping = require('lib.mapping')
-mapping.noremap('n'):bind('<leader>nt', function ()
+mapping.noremap('n'):bind('<leader>nt', function()
 	vim.cmd('Neotree reveal toggle left')
 end)
 
@@ -24,5 +24,13 @@ require('neo-tree').setup({
 			hide_gitignored = false,
 		},
 		follow_current_file = true,
+	},
+	event_handlers = {
+		{
+			event = "file_opened",
+			handler = function(arg)
+				require("neo-tree").close_all()
+			end
+		}
 	}
 })

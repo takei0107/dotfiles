@@ -1,7 +1,7 @@
 local cmp = require('cmp')
 
 local mapping = {
-	['<C-s>'] = function(fallback) 
+	['<C-s>'] = function(fallback)
 		if cmp.visible() then
 			cmp.close()
 		else
@@ -35,7 +35,18 @@ cmp.setup({
 	sources = cmp.config.sources({
 		{ name = 'nvim_lsp' },
 		{ name = 'vsnip' },
-		{ name = 'nvim_lsp_signature_help' }
+		{ name = 'nvim_lsp_signature_help' },
+		{ name = 'path' }
+	},{
+		{
+			name = 'buffer',
+		}
+	},
+	{
+		{
+			name = 'dictionary',
+			keyword_length = 2
+		}
 	}),
 	snippet = {
 		expand = function(args)
@@ -45,4 +56,31 @@ cmp.setup({
 	mapping = mapping,
 	preselect = cmp.PreselectMode.None,
 	completion = {},
+})
+
+cmp.setup.cmdline('/', {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = cmp.config.sources({
+		{ name = 'buffer' }
+	})
+})
+
+cmp.setup.cmdline(':', {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = cmp.config.sources({
+		{ name = 'cmdline' }
+	},{
+		{ name = 'path' }
+	})
+})
+
+local dic = {}
+local dict_en = vim.fn.stdpath('data')..'/dicts/en.dict'
+if vim.fn.filereadable(dict_en) then
+	dic.spelllang = {
+		en = dict_en
+	}
+end
+require('cmp_dictionary').setup({
+	dic = dic
 })

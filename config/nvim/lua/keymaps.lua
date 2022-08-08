@@ -17,5 +17,10 @@ mappings.noremap('n'):silent():bind('<F4>', function ()
   cmd("normal gg")
 end)
 
+mappings.noremap('n'):silent():bind('<Up>', '<C-w>k')
+mappings.noremap('n'):silent():bind('<Down>', '<C-w>j')
+mappings.noremap('n'):silent():bind('<Right>', '<C-w>l')
+mappings.noremap('n'):silent():bind('<Left>', '<C-w>h')
+
 -- tmap
 mappings.noremap('t'):silent():bind('<Esc>', [[<C-\><C-n>]])
