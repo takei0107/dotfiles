@@ -24,7 +24,12 @@ local mapping = {
 	end,
 	['<CR>'] = function(fallback)
 		if cmp.visible() then
-			cmp.confirm()
+			-- 何も選択してないときのエンター
+			if not cmp.get_selected_entry() then
+				cmp.abort()
+			else
+				cmp.confirm()
+			end
 		else
 			fallback()
 		end
