@@ -4,26 +4,27 @@ local base_theme = 'nord'
 local diagnostics = require('diagnostics')
 
 local setting_diagnostics = {
-	sources = {'nvim_lsp'},
+	sources = { 'nvim_lsp' },
 	diagnostics_color = {
 		error = {
 			fg = vimlib.get_hl_by_name('DiagnosticError').fg,
-			bg = require('lualine.themes.'..base_theme).normal.b.bg
+			bg = require('lualine.themes.' .. base_theme).normal.b.bg
 		},
 		warn = {
 			fg = vimlib.get_hl_by_name('DiagnosticWarn').fg,
-			bg = require('lualine.themes.'..base_theme).normal.b.bg
+			bg = require('lualine.themes.' .. base_theme).normal.b.bg
 		},
 		info = {
 			fg = vimlib.get_hl_by_name('DiagnosticInfo').fg,
-			bg = require('lualine.themes.'..base_theme).normal.b.bg
+			bg = require('lualine.themes.' .. base_theme).normal.b.bg
 		},
 		hint = {
 			fg = vimlib.get_hl_by_name('DiagnosticHint').fg,
-			bg = require('lualine.themes.'..base_theme).normal.b.bg
+			bg = require('lualine.themes.' .. base_theme).normal.b.bg
 		},
 	},
-	symbols = {error = diagnostics.Error.symbol, warn = diagnostics.Warn.symbol, info = diagnostics.Info.symbol, hint = diagnostics.Hint.symbol},
+	symbols = { error = diagnostics.Error.symbol, warn = diagnostics.Warn.symbol, info = diagnostics.Info.symbol,
+		hint = diagnostics.Hint.symbol },
 	colored = true,
 	update_in_insert = false,
 	always_visible = false,
@@ -35,7 +36,7 @@ require('lualine').setup({
 		theme = base_theme,
 	},
 	sections = {
-		lualine_a = {'mode'},
+		lualine_a = { 'mode' },
 		lualine_b = {
 			'filename',
 			{
@@ -48,9 +49,9 @@ require('lualine').setup({
 				always_visible = setting_diagnostics.always_visible,
 			}
 		},
-		lualine_c = {'branch', 'diff'},
-		lualine_x = {'filetype'},
-		lualine_y = {'fileformat', 'encoding'},
-		lualine_z = {'location', 'progress'},
+		lualine_c = { 'branch', 'diff' },
+		lualine_x = { 'filetype' },
+		lualine_y = { 'fileformat', 'encoding' },
+		lualine_z = { 'location', 'progress' },
 	},
 })

@@ -42,17 +42,17 @@ cmp.setup({
 		{ name = 'vsnip' },
 		{ name = 'nvim_lsp_signature_help' },
 		{ name = 'path' }
-	},{
+	}, {
 		{
 			name = 'buffer',
 		}
 	},
-	{
 		{
-			name = 'dictionary',
-			keyword_length = 2
-		}
-	}),
+			{
+				name = 'dictionary',
+				keyword_length = 2
+			}
+		}),
 	snippet = {
 		expand = function(args)
 			vim.fn['vsnip#anonymous'](args.body)
@@ -74,13 +74,13 @@ cmp.setup.cmdline(':', {
 	mapping = cmp.mapping.preset.cmdline(),
 	sources = cmp.config.sources({
 		{ name = 'cmdline' }
-	},{
+	}, {
 		{ name = 'path' }
 	})
 })
 
 local dic = {}
-local dict_en = vim.fn.stdpath('data')..'/dicts/en.dict'
+local dict_en = vim.fn.stdpath('data') .. '/dicts/en.dict'
 if vim.fn.filereadable(dict_en) then
 	dic.spelllang = {
 		en = dict_en

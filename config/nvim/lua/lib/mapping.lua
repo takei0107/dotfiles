@@ -3,7 +3,7 @@ local keymap = vim.keymap
 local mapping = {}
 
 function mapping.noremap(mode)
-	local self = setmetatable({}, {__index = mapping})
+	local self = setmetatable({}, { __index = mapping })
 	self._mode = mode
 	self._noremap = true
 	self._remap = false
@@ -13,7 +13,7 @@ function mapping.noremap(mode)
 end
 
 function mapping.map(mode)
-	local self = setmetatable({}, {__index = mapping})
+	local self = setmetatable({}, { __index = mapping })
 	self._mode = mode
 	self._noremap = false
 	self._remap = true

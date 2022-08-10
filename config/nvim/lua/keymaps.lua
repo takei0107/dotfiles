@@ -5,19 +5,19 @@ local mappings = require('lib.mapping')
 ---- ##########################
 --   #          nmap          #
 ---- ##########################
-mappings.noremap('n'):silent():bind('<Esc><Esc>', function ()
+mappings.noremap('n'):silent():bind('<Esc><Esc>', function()
 	vim.cmd('nohlsearch')
 end)
 
-mappings.noremap('n'):silent():bind('<F5>', function ()
+mappings.noremap('n'):silent():bind('<F5>', function()
 	require('vimrc'):load()
 end)
 
 -- F4で別タブでinit.nvimを開く
-mappings.noremap('n'):silent():bind('<F4>', function ()
+mappings.noremap('n'):silent():bind('<F4>', function()
 	cmd("tabnew")
 	require('vimrc'):open()
-  cmd("normal gg")
+	cmd("normal gg")
 end)
 
 
@@ -33,7 +33,7 @@ mappings.noremap('n'):silent():bind('<Left>', '<C-w>h')
 ---- ##########################
 
 -- <C-b>で行末にカーソル移動
-mappings.noremap('i'):bind([[<C-b>]], function ()
+mappings.noremap('i'):bind([[<C-b>]], function()
 	local eol = vim.fn.col('$')
 	vim.fn.cursor(0, eol)
 end)

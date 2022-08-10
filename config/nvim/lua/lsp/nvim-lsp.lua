@@ -2,7 +2,7 @@ local M = {}
 
 local mapping = require('lib.mapping')
 
-M.on_attach = function (client, bufnr)
+M.on_attach = function(client, bufnr)
 	local lsp_buf = vim.lsp.buf
 	--mapping.noremap('n'):buffer(bufnr):silent():bind('gd', lsp_buf.definition)
 	--mapping.noremap('n'):buffer(bufnr):silent():bind('gi', lsp_buf.implementation)
@@ -21,7 +21,7 @@ M.on_attach = function (client, bufnr)
 	-- formatting
 	mapping.noremap('n'):buffer(bufnr):silent():bind('<leader><C-f>', lsp_buf.formatting)
 
-	vim.cmd[[
+	vim.cmd [[
     autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
     autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 	]]
@@ -32,11 +32,12 @@ local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protoco
 require('mason').setup()
 require('mason-lspconfig').setup()
 require('mason-lspconfig').setup_handlers({
-	function (server_name)
-		require('lspconfig')[server_name].setup{
+	function(server_name)
+		require('lspconfig')[server_name].setup {
 			on_attach = M.on_attach,
 			capabilities = capabilities
-		} end
-	})
+		}
+	end
+})
 
 return M

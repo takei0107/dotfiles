@@ -4,7 +4,7 @@ local builtin = require('telescope.builtin')
 local mapping = require('lib.mapping')
 mapping.noremap('n'):silent():bind('<leader>ff', builtin.find_files)
 mapping.noremap('n'):silent():bind('<leader>gf', builtin.git_files)
-mapping.noremap('n'):silent():bind('<leader>fb', function ()
+mapping.noremap('n'):silent():bind('<leader>fb', function()
 	builtin.buffers({
 		only_cwd = true,
 		ignore_current_buffer = true,
@@ -32,17 +32,17 @@ require('telescope').setup({
 				['<C-k>'] = actions.move_selection_previous,
 				['<C-b>'] = actions.preview_scrolling_up,
 				['<C-f>'] = actions.preview_scrolling_down,
-				['<C-u>'] = {"<C-u>", type = "command"},
+				['<C-u>'] = { "<C-u>", type = "command" },
 				['<C-s>'] = actions.select_horizontal
 			},
 			n = {
 				['<Esc>'] = { -- デフォルトのactions.closeだと閉じるのが遅いのでnowaitにする
-				"<cmd>q!<cr>",
-				type = 'command',
-				opts = { nowait = true, silent = true }
-			},
-			['<C-s>'] = actions.select_horizontal
+					"<cmd>q!<cr>",
+					type = 'command',
+					opts = { nowait = true, silent = true }
+				},
+				['<C-s>'] = actions.select_horizontal
+			}
 		}
-	}
-},
+	},
 })

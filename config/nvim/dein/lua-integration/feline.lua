@@ -18,21 +18,21 @@ local vi_modes = {
 	t = "TERMINAL",
 }
 local vi_modes_hl = {
-	n = {fg = fg, bg = 'green'},
-	no = {fg = fg, bg = 'green'},
-	i = {fg = bg, bg = 'red'},
-	v = {fg = fg, bg = 'orange'},
-	V = {fg = fg, bg = 'orange'},
-	[""] = {fg = fg, bg = 'orange'},
-	c = {fg = bg, bg = 'oceanblue'},
-	cv = {fg = bg, bg = 'oceanblue'},
-	ce = {fg = bg, bg = 'oceanblue'},
-	R = {fg = bg, bg = 'red'},
-	Rv = {fg = bg, bg = 'red'},
-	s = {fg = fg, bg = 'skyblue'},
-	S = {fg = fg, bg = 'skyblue'},
-	[""] = {fg = fg, bg = 'skyblue'},
-	t = {fg = fg, bg = 'green'},
+	n = { fg = fg, bg = 'green' },
+	no = { fg = fg, bg = 'green' },
+	i = { fg = bg, bg = 'red' },
+	v = { fg = fg, bg = 'orange' },
+	V = { fg = fg, bg = 'orange' },
+	[""] = { fg = fg, bg = 'orange' },
+	c = { fg = bg, bg = 'oceanblue' },
+	cv = { fg = bg, bg = 'oceanblue' },
+	ce = { fg = bg, bg = 'oceanblue' },
+	R = { fg = bg, bg = 'red' },
+	Rv = { fg = bg, bg = 'red' },
+	s = { fg = fg, bg = 'skyblue' },
+	S = { fg = fg, bg = 'skyblue' },
+	[""] = { fg = fg, bg = 'skyblue' },
+	t = { fg = fg, bg = 'green' },
 }
 local c_dummy = {
 	provider = ''
@@ -67,7 +67,7 @@ local c_dir_name = {
 		str = ' ',
 	},
 	right_sep = {
-		{str = ' ',},
+		{ str = ' ', },
 		{
 			str = 'slant_right_2',
 			hl = {
@@ -97,7 +97,7 @@ local c_file_info = {
 			},
 		}
 	},
-	right_sep ={
+	right_sep = {
 		{
 			str = ' ',
 			hl = {
@@ -221,9 +221,10 @@ local c_line_percentage = {
 		str = ' ',
 	}
 }
-local left_components = {c_vi_mode, c_dir_name, c_file_info, c_git_branch, c_git_diff_added, c_git_diff_changed, c_git_diff_removed, c_dummy}
-local middle_components = {c_diagnostic_errors, c_diagnostic_warnings}
-local right_components = {c_file_type, c_file_format, c_file_encoding, c_position, c_line_percentage}
+local left_components = { c_vi_mode, c_dir_name, c_file_info, c_git_branch, c_git_diff_added, c_git_diff_changed,
+	c_git_diff_removed, c_dummy }
+local middle_components = { c_diagnostic_errors, c_diagnostic_warnings }
+local right_components = { c_file_type, c_file_format, c_file_encoding, c_position, c_line_percentage }
 local components = {
 	active = {},
 	inactive = {}
@@ -233,7 +234,7 @@ table.insert(components.active, middle_components)
 table.insert(components.active, right_components)
 require('feline').setup({
 	components = components,
-	theme = {bg = bg, fg = fg},
+	theme = { bg = bg, fg = fg },
 	force_inactive = {
 		filetypes = {
 			'^fern$',
