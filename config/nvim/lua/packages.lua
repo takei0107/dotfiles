@@ -4,16 +4,16 @@ local fn = vim.fn
 -- install packer.nvim
 local packer_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
 if fn.empty(fn.glob(packer_path)) > 0 then
-  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', packer_path})
+	packer_bootstrap = fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', packer_path })
 end
 
 cmd('packadd packer.nvim')
 
 -- packer startup
-require('packer').startup({function(use)
+require('packer').startup({ function(use)
 
 	-- packer self
-	use {'wbthomason/packer.nvim', opt = true}
+	use { 'wbthomason/packer.nvim', opt = true }
 
 	-- libraries
 	use 'nvim-lua/plenary.nvim'
@@ -66,7 +66,7 @@ require('packer').startup({function(use)
 			'kyazdani42/nvim-web-devicons',
 			'MunifTanjim/nui.nvim',
 		},
-		config = function ()
+		config = function()
 			require('plugins.neotree')
 		end
 	}
@@ -79,7 +79,7 @@ require('packer').startup({function(use)
 			'kyazdani42/nvim-web-devicons'
 		},
 		after = 'nightfox.nvim',
-		config = function ()
+		config = function()
 			require('plugins.lualine')
 		end
 	}
@@ -91,8 +91,8 @@ require('packer').startup({function(use)
 			'EdenEast/nightfox.nvim',
 			'kyazdani42/nvim-web-devicons'
 		},
-		after = {'nightfox.nvim', 'nvim-web-devicons'},
-		config = function ()
+		after = { 'nightfox.nvim', 'nvim-web-devicons' },
+		config = function()
 			require('plugins.tabby')
 		end
 	}
@@ -101,8 +101,8 @@ require('packer').startup({function(use)
 	use {
 		'nvim-telescope/telescope.nvim',
 		branch = '0.1.x',
-		requires = {'nvim-lua/plenary.nvim'},
-		config = function ()
+		requires = { 'nvim-lua/plenary.nvim' },
+		config = function()
 			require('plugins.telescope')
 		end
 	}
@@ -156,7 +156,6 @@ require('packer').startup({function(use)
 		--ft = {'java'}
 	}
 
-
 	-- git
 	use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
 	use {
@@ -172,22 +171,36 @@ require('packer').startup({function(use)
 	-- vim-sandwitch
 	use 'machakann/vim-sandwich'
 
+	-- matchup
+	use 'andymass/vim-matchup'
+
+	-- hop
+	use {
+		'phaazon/hop.nvim',
+		branch = 'v2',
+		config = function()
+			-- see https://github.com/phaazon/hop.nvim#using-packer
+			require 'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
+		end
+	}
+
 	-- sync packer when packer.nvim installed.
 	if packer_bootstrap then
 		require('packer').sync()
 	end
 end,
 
--- packer configurations
-config = {
-	display = {
-		open_fn = require('packer.util').float,
-	}
-}})
+	-- packer configurations
+	config = {
+		display = {
+			open_fn = require('packer.util').float,
+		}
+	} })
 
 -- recompile packer
 local function packerRecompile()
 	require('vimrc'):load()
 	require('packer').compile()
 end
-vim.api.nvim_create_user_command('PackerRecompile', function() packerRecompile() end, {} )
+
+vim.api.nvim_create_user_command('PackerRecompile', function() packerRecompile() end, {})
