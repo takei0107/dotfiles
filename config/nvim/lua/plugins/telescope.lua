@@ -43,6 +43,7 @@ require('telescope').setup({
 				},
 				['<C-s>'] = actions.select_horizontal
 			}
-		}
+		},
+		layout_strategy = 'flex',
 	},
 })
