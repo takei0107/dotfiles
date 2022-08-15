@@ -97,6 +97,11 @@ require('packer').startup({ function(use)
 		end
 	}
 
+	-- [[ navigation ]]
+	use {
+		"SmiteshP/nvim-navic",
+		requires = "neovim/nvim-lspconfig"
+	}
 	-- fuzzy finder
 	use {
 		'nvim-telescope/telescope.nvim',

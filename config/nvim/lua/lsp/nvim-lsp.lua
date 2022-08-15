@@ -1,4 +1,5 @@
 local mapping = require('lib.mapping')
+local navic = require('nvim-navic')
 
 local on_attach = function(client, bufnr)
 	local lsp_buf = vim.lsp.buf
@@ -23,6 +24,9 @@ local on_attach = function(client, bufnr)
     autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
     autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
 	]]
+
+	-- navic
+	navic.attach(client, bufnr)
 end
 
 -- よくわかっていない

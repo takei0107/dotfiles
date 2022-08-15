@@ -1,4 +1,5 @@
 local vimlib = require('lib.vim')
+local navic = require('nvim-navic')
 local base_theme = 'nord'
 
 local diagnostics = require('diagnostics')
@@ -30,6 +31,22 @@ local setting_diagnostics = {
 	always_visible = false,
 }
 
+local function navic_location()
+	local none_display = "🙈🙊🙉"
+	if navic.is_available() then
+		local l = navic.get_location()
+		return (l ~= "") and l or none_display
+	else
+		return none_display
+	end
+end
+
+local winbar = {
+	lualine_a = {
+		{ navic_location }
+	},
+}
+
 require('lualine').setup({
 	options = {
 		icons_enabled = true,
@@ -54,4 +71,5 @@ require('lualine').setup({
 		lualine_y = { 'fileformat', 'encoding' },
 		lualine_z = { 'location', 'progress' },
 	},
+	winbar = winbar,
 })
