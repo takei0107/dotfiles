@@ -79,13 +79,3 @@ cmp.setup.cmdline(':', {
 	})
 })
 
-local dic = {}
-local dict_en = vim.fn.stdpath('data') .. '/dicts/en.dict'
-if vim.fn.filereadable(dict_en) then
-	dic.spelllang = {
-		en = dict_en
-	}
-end
-require('cmp_dictionary').setup({
-	dic = dic
-})

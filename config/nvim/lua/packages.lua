@@ -18,7 +18,11 @@ require('packer').startup({ function(use)
 	-- libraries
 	use 'nvim-lua/plenary.nvim'
 	use 'kyazdani42/nvim-web-devicons'
-	use 'vim-jp/vimdoc-ja'
+
+	-- 日本語help
+	use {
+		'vim-jp/vimdoc-ja',
+	}
 
 	-- color theme
 	use {
@@ -68,7 +72,8 @@ require('packer').startup({ function(use)
 		},
 		config = function()
 			require('plugins.neotree')
-		end
+		end,
+		keys = '<leader>nt',
 	}
 
 	-- statusline
@@ -76,9 +81,10 @@ require('packer').startup({ function(use)
 		'nvim-lualine/lualine.nvim',
 		requires = {
 			'EdenEast/nightfox.nvim',
-			'kyazdani42/nvim-web-devicons'
+			'kyazdani42/nvim-web-devicons',
+			"SmiteshP/nvim-navic"
 		},
-		after = 'nightfox.nvim',
+		after = { 'nightfox.nvim', 'nvim-navic' },
 		config = function()
 			require('plugins.lualine')
 		end
@@ -100,8 +106,9 @@ require('packer').startup({ function(use)
 	-- [[ navigation ]]
 	use {
 		"SmiteshP/nvim-navic",
-		requires = "neovim/nvim-lspconfig"
+		requires = "neovim/nvim-lspconfig",
 	}
+
 	-- fuzzy finder
 	use {
 		'nvim-telescope/telescope.nvim',
@@ -109,38 +116,62 @@ require('packer').startup({ function(use)
 		requires = { 'nvim-lua/plenary.nvim' },
 		config = function()
 			require('plugins.telescope')
-		end
+		end,
 	}
 
 	-- completion
 	use {
 		'hrsh7th/nvim-cmp',
+		config = function()
+			require('editor.cmp')
+		end,
 	}
 	use {
-		'hrsh7th/cmp-nvim-lsp'
+		'hrsh7th/cmp-nvim-lsp',
+		after = 'nvim-cmp'
 	}
 	use {
-		'hrsh7th/cmp-vsnip'
+		'hrsh7th/cmp-vsnip',
+		after = 'nvim-cmp'
 	}
 	use {
-		'hrsh7th/vim-vsnip'
+		'hrsh7th/vim-vsnip',
+		after = 'nvim-cmp'
 	}
 	use {
-		'hrsh7th/cmp-nvim-lsp-signature-help'
+		'hrsh7th/cmp-nvim-lsp-signature-help',
+		after = 'nvim-cmp'
 	}
 	use {
-		'hrsh7th/cmp-path'
+		'hrsh7th/cmp-path',
+		after = 'nvim-cmp'
 	}
 	use {
-		'hrsh7th/cmp-buffer'
+		'hrsh7th/cmp-buffer',
+		after = 'nvim-cmp'
 	}
 	use {
-		'hrsh7th/cmp-cmdline'
+		'uga-rosa/cmp-dictionary',
+		after = 'nvim-cmp',
+		configure = function()
+			local dic = {}
+			local dict_en = vim.fn.stdpath('data') .. '/dicts/en.dict'
+			if vim.fn.filereadable(dict_en) then
+				dic.spelllang = {
+					en = dict_en
+				}
+			end
+			require('cmp_dictionary').setup({
+				dic = dic
+			})
+		end
+
 	}
 	use {
-		'uga-rosa/cmp-dictionary'
+		'hrsh7th/cmp-cmdline',
+		requires = 'hrsh7th/nvim-cmp',
+		event = 'CmdlineEnter *'
 	}
-	require('editor.cmp')
 
 	-- lsp
 	use {
@@ -151,8 +182,11 @@ require('packer').startup({ function(use)
 	}
 	use {
 		'williamboman/mason-lspconfig.nvim',
+		after = { 'nvim-lspconfig', 'mason.nvim', "nvim-navic", 'cmp-nvim-lsp' },
+		config = function()
+			require('lsp.nvim-lsp')
+		end
 	}
-	require('lsp.nvim-lsp')
 
 	-- java lsp
 	use {
@@ -162,7 +196,11 @@ require('packer').startup({ function(use)
 	}
 
 	-- git
-	use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
+	use {
+		'TimUntersberger/neogit',
+		requires = 'nvim-lua/plenary.nvim',
+		cmd = "Neogit",
+	}
 	use {
 		'lewis6991/gitsigns.nvim',
 		config = function()
@@ -171,13 +209,19 @@ require('packer').startup({ function(use)
 	}
 
 	-- lexima
-	use 'cohama/lexima.vim'
+	use {
+		'cohama/lexima.vim',
+		event = 'InsertEnter *'
+	}
 
 	-- vim-sandwitch
 	use 'machakann/vim-sandwich'
 
 	-- matchup
-	use 'andymass/vim-matchup'
+	use {
+		'andymass/vim-matchup',
+		event = 'CursorMoved <buffer>'
+	}
 
 	-- hop
 	use {

@@ -2,6 +2,8 @@ local cmd = vim.cmd
 vim.g.loaded_tutor_mode_plugin = true
 vim.g.loaded_2html_plugin = true
 vim.g.loaded_mathit = true
+vim.g.loaded_netrwPlugin = true
+vim.g.loaded_fzf = true -- fzfがruntimepathにある場合があるので
 vim.g.mapleader = " "
 
 cmd [[filetype off]]
