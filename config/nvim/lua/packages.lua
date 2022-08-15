@@ -128,31 +128,37 @@ require('packer').startup({ function(use)
 	}
 	use {
 		'hrsh7th/cmp-nvim-lsp',
-		after = 'nvim-cmp'
+		event = 'InsertEnter *'
+
 	}
 	use {
 		'hrsh7th/cmp-vsnip',
-		after = 'nvim-cmp'
+		event = 'InsertEnter *'
+
 	}
 	use {
 		'hrsh7th/vim-vsnip',
-		after = 'nvim-cmp'
+		event = 'InsertEnter *'
+
 	}
 	use {
 		'hrsh7th/cmp-nvim-lsp-signature-help',
-		after = 'nvim-cmp'
+		event = 'InsertEnter *'
+
 	}
 	use {
 		'hrsh7th/cmp-path',
-		after = 'nvim-cmp'
+		event = 'InsertEnter *'
+
 	}
 	use {
 		'hrsh7th/cmp-buffer',
-		after = 'nvim-cmp'
+		event = 'InsertEnter *'
+
 	}
 	use {
 		'uga-rosa/cmp-dictionary',
-		after = 'nvim-cmp',
+		event = 'InsertEnter *',
 		configure = function()
 			local dic = {}
 			local dict_en = vim.fn.stdpath('data') .. '/dicts/en.dict'
@@ -169,7 +175,6 @@ require('packer').startup({ function(use)
 	}
 	use {
 		'hrsh7th/cmp-cmdline',
-		requires = 'hrsh7th/nvim-cmp',
 		event = 'CmdlineEnter *'
 	}
 
@@ -215,7 +220,10 @@ require('packer').startup({ function(use)
 	}
 
 	-- vim-sandwitch
-	use 'machakann/vim-sandwich'
+	use {
+		'machakann/vim-sandwich',
+		keys = {'v', 's'},
+	}
 
 	-- matchup
 	use {
