@@ -222,7 +222,7 @@ require('packer').startup({ function(use)
 	-- vim-sandwitch
 	use {
 		'machakann/vim-sandwich',
-		keys = {'v', 's'},
+		keys = { 'v', 's' },
 	}
 
 	-- matchup
@@ -240,6 +240,20 @@ require('packer').startup({ function(use)
 			require 'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
 		end
 	}
+
+	-- terminal
+	use { "akinsho/toggleterm.nvim", tag = 'v2.*', config = function()
+		require("toggleterm").setup({
+			open_mapping = [[<c-x>]],
+			direction = 'horizontal',
+			start_in_insert = true,
+			close_on_exit = true,
+			shade_terminals = false,
+			winbar = {
+				enabled = false,
+			}
+		})
+	end }
 
 	-- sync packer when packer.nvim installed.
 	if packer_bootstrap then
