@@ -102,11 +102,18 @@ if type starship > /dev/null 2>&1; then
 fi
 
 # for ubuntu
-if type fdfind > /dev/null 2>&1; then
+is_fdfind=$(type fdfind > /dev/null 2>&1;echo $?)
+is_batcat=$(type batcat > /dev/null 2>&1;echo $?)
+if [[ $is_fdfind -eq 0 ]] || [[ $is_batcat -eq 0 ]]; then
 	if [[ ! -d ~/.local/bin ]]; then
 		mkdir ~/.local/bin
 	fi
-	ln -fs $(which fdfind) ~/.local/bin/fd
+	if [[ $is_fdfind -eq 0 ]]; then
+		ln -fs $(which fdfind) ~/.local/bin/fd
+	fi
+	if [[ $is_batcat -eq 0 ]]; then
+		ln -fs $(which batcat) ~/.local/bin/bat
+	fi
 fi
 
 typeset -U path # $path にすでにある値は追加されない
