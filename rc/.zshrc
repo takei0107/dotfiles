@@ -101,12 +101,21 @@ if type starship > /dev/null 2>&1; then
 	eval "$(starship init zsh)"
 fi
 
+# for ubuntu
+if type fdfind > /dev/null 2>&1; then
+	if [[ ! -d ~/.local/bin ]]; then
+		mkdir ~/.local/bin
+	fi
+	ln -fs $(which fdfind) ~/.local/bin/fd
+fi
+
 typeset -U path # $path にすでにある値は追加されない
 path=(
 	# volta管理下のnpmでインストールされたツールを利用するために必要
 	$HOME/.volta/bin(N-/)
 	$HOME/go/bin/(N-/)
 	$HOME/.cargo/bin(N-/)
+	$HOME/.local/bin(N-/)
 	$path
 )
 
