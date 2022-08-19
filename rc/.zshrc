@@ -17,7 +17,7 @@ HISTFILE=$HOME/.zsh_history
 
 export TLDR_LANGUAGE="ja"
 
-alias ll='ls -alt'
+alias ll='ls -alt --color'
 alias tailf='tail -f'
 
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
