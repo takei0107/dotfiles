@@ -32,5 +32,6 @@ require('neo-tree').setup({
 				require("neo-tree").close_all()
 			end
 		}
-	}
+	},
+	popup_border_style = 'rounded',
 })
