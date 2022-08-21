@@ -184,6 +184,11 @@ require('packer').startup({ function(use)
 	}
 	use {
 		'williamboman/mason.nvim', -- alternative nvim-lsp-installer
+		require('mason').setup({
+			ui = {
+				border = 'rounded',
+			},
+		})
 	}
 	use {
 		'williamboman/mason-lspconfig.nvim',
