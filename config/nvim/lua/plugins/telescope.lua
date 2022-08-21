@@ -4,6 +4,7 @@ local builtin = require('telescope.builtin')
 local mapping = require('lib.mapping')
 mapping.noremap('n'):silent():bind('<leader>ff', builtin.find_files)
 mapping.noremap('n'):silent():bind('<leader>gf', builtin.git_files)
+mapping.noremap('n'):silent():bind('<leader>gs', builtin.git_status)
 mapping.noremap('n'):silent():bind('<leader>fb', function()
 	builtin.buffers({
 		only_cwd = true,
