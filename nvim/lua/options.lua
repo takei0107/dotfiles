@@ -1,43 +1,104 @@
-local opt = vim.opt
-local fn = vim.fn
+local undoDir = vim.fn.stdpath('cache') .. '/undo'
 
-opt.encoding = 'utf-8'
-opt.fileencodings = { 'ucs-boom', 'utf-8', 'cp932', 'default' }
-opt.hidden = true
-opt.helplang = 'ja'
-opt.smartindent = true
-opt.shiftwidth = 0
-opt.softtabstop = -1
-opt.number = true
-opt.belloff = 'all'
-opt.hlsearch = true
-opt.incsearch = true
-opt.ignorecase = true
-opt.smartcase = true
-opt.cursorline = true
-opt.laststatus = 2
-opt.wildmenu = true
-opt.showcmd = true
-opt.display = 'truncate'
-opt.backspace = { 'indent', 'eol', 'start' }
-opt.list = true
-opt.updatetime = 555
-opt.splitbelow = true
-opt.splitright = true
-opt.swapfile = false
-opt.backup = false
-opt.completeopt = { 'menu', 'menuone', 'noselect' }
-local undoDir = fn.stdpath('cache') .. '/undo'
-if not (fn.isdirectory(undoDir)) then
-	fn.mkdir(undoDir)
+local set_opts = {
+	encoding = 'utf-8',
+	fileencodings = { 'ucs-boom', 'utf-8', 'cp932', 'default' },
+	hidden = true,
+	helplang = 'ja',
+	smartindent = true,
+	shiftwidth = 0,
+	softtabstop = -1,
+	number = true,
+	belloff = 'all',
+	hlsearch = true,
+	incsearch = true,
+	ignorecase = true,
+	smartcase = true,
+	cursorline = true,
+	laststatus = 2,
+	wildmenu = true,
+	showcmd = true,
+	display = 'truncate',
+	backspace = { 'indent', 'eol', 'start' },
+	list = true,
+	updatetime = 555,
+	splitbelow = true,
+	splitright = true,
+	swapfile = false,
+	backup = false,
+	completeopt = { 'menu', 'menuone', 'noselect' },
+}
+set_opts.undodir = {
+	undoDir,
+	prefook = function()
+		require("lib.util").mkdir_if_not_exist(undoDir, "p")
+	end,
+	condition = function()
+		return vim.fn.isdirectory(undoDir)
+	end
+}
+set_opts.undofile = {
+	true,
+	condition = function()
+		return vim.fn.isdirectory(undoDir)
+	end
+}
+set_opts.termguicolors = {
+	true,
+	condition = function()
+		return vim.fn.has('termguicolors')
+	end
+}
+
+local prepend_opts = {}
+prepend_opts.clipboard = {
+	{ 'unnamedplus', 'unnamed' },
+	condition = function()
+		return vim.fn.has('unix')
+	end
+}
+
+local append_opts = {}
+append_opts.clipboard = {
+	{ 'unnamed' },
+	condition = function()
+		return vim.fn.has('mac')
+	end
+}
+
+local function configure(opts_config, setfn)
+	for k, v in pairs(opts_config) do
+		local value = v
+		local condition = nil
+		local prefook = nil
+		if type(v) == "table" and (v["condition"] ~= nil or v["prefook"] ~= nil) then
+			if v["condition"] ~= nil then
+				condition = v["condition"]
+			end
+			if v["prefook"] ~= nil then
+				prefook = v["prefook"]
+			end
+			value = v[1]
+		end
+		setfn(k, value, condition, prefook)
+	end
 end
-opt.undodir = undoDir
-opt.undofile = true
-if fn.has('unix') then
-	opt.clipboard:prepend { 'unnamedplus', 'unnamed' }
-elseif fn.has('mac') then
-	opt.clipboard:append { 'unnamde' }
-end
-if fn.has('termguicolors') then
-	opt.termguicolors = true
+
+local o = require('lib.option')
+local opts_configs = {
+	{
+		opts_config = set_opts,
+		setfn = o.setopt
+	},
+	{
+		opts_config = prepend_opts,
+		setfn = o.prependopt
+	},
+	{
+		opts_config = append_opts,
+		setfn = o.appendopt
+	}
+}
+for _, config in pairs(opts_configs) do
+	configure(config.opts_config, config.setfn)
 end

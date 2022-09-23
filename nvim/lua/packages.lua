@@ -93,17 +93,17 @@ require('packer').startup({ function(use)
 	}
 
 	-- tabline
-	use {
-		'nanozuki/tabby.nvim',
-		requires = {
-			'EdenEast/nightfox.nvim',
-			'kyazdani42/nvim-web-devicons'
-		},
-		after = { 'nightfox.nvim', 'nvim-web-devicons' },
-		config = function()
-			require('plugins.tabby')
-		end
-	}
+	--use {
+	--	'nanozuki/tabby.nvim',
+	--	requires = {
+	--		'EdenEast/nightfox.nvim',
+	--		'kyazdani42/nvim-web-devicons'
+	--	},
+	--	after = { 'nightfox.nvim', 'nvim-web-devicons' },
+	--	config = function()
+	--		require('plugins.tabby')
+	--	end
+	--}
 
 	-- [[ navigation ]]
 	use {
