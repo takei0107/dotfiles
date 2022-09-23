@@ -1,0 +1,7 @@
+{
+	"zshenv" : "~/.zshenv",
+	"zsh" : "~/.config/zsh",
+	"nvim" : "~/.config/nvim",
+	"config/starship.toml" : "~/.config/starship.toml",
+	"wezterm" : "~/.config/wezterm"
+}

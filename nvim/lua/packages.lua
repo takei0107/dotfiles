@@ -35,9 +35,11 @@ require('packer').startup({ function(use)
 					modules = {
 						neotree = true,
 					},
+					transparent = true,
 				}
 			})
 			vim.cmd('colorscheme nordfox')
+			vim.cmd('highlight TabLineFill guibg=NONE')
 		end,
 	}
 
@@ -231,10 +233,10 @@ require('packer').startup({ function(use)
 	}
 
 	-- matchup
-	use {
-		'andymass/vim-matchup',
-		event = 'CursorMoved <buffer>'
-	}
+	--use {
+	--	'andymass/vim-matchup',
+	--	event = 'CursorMoved <buffer>'
+	--}
 
 	-- hop
 	use {

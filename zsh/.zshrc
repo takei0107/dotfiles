@@ -126,4 +126,4 @@ path=(
 	$path
 )
 
-[[ -f $HOME/.zshrc_local ]] && source $HOME/.zshrc_local
+#[[ -f $HOME/.zshrc_local ]] && source $HOME/.zshrc_local
