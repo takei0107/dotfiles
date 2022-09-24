@@ -2,6 +2,7 @@ local cmd = vim.cmd
 local fn = vim.fn
 
 -- install packer.nvim
+-- FIXME
 local packer_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
 if fn.empty(fn.glob(packer_path)) > 0 then
 	packer_bootstrap = fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', packer_path })
@@ -12,38 +13,28 @@ cmd('packadd packer.nvim')
 -- packer startup
 require('packer').startup({ function(use)
 
-	-- packer self
-	use { 'wbthomason/packer.nvim', opt = true }
+	-- [packer self]
+	use {
+		'wbthomason/packer.nvim',
+		opt = true
+	}
 
-	-- libraries
+	-- [utils]
 	use 'nvim-lua/plenary.nvim'
 	use 'kyazdani42/nvim-web-devicons'
 
-	-- 日本語help
+	-- [日本語help]
 	use {
 		'vim-jp/vimdoc-ja',
 	}
 
-	-- color theme
+	-- [color theme]
 	use {
 		'EdenEast/nightfox.nvim',
-		config = function()
-			require('nightfox').setup({
-				options = {
-					dim_inactive = true,
-					terminal_colors = true,
-					modules = {
-						neotree = true,
-					},
-					transparent = true,
-				}
-			})
-			vim.cmd('colorscheme nordfox')
-			vim.cmd('highlight TabLineFill guibg=NONE')
-		end,
+		config = require('plugins.nightfox').configure
 	}
 
-	-- syntax
+	-- [syntax]
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
@@ -273,7 +264,8 @@ end,
 		display = {
 			open_fn = require('packer.util').float,
 		}
-	} })
+	}
+})
 
 -- recompile packer
 local function packerRecompile()

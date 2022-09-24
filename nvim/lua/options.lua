@@ -1,5 +1,6 @@
 local undoDir = vim.fn.stdpath('cache') .. '/undo'
 
+-- :set=
 local set_opts = {
 	encoding = 'utf-8',
 	fileencodings = { 'ucs-boom', 'utf-8', 'cp932', 'default' },
@@ -50,6 +51,7 @@ set_opts.termguicolors = {
 	end
 }
 
+-- :set^=
 local prepend_opts = {}
 prepend_opts.clipboard = {
 	{ 'unnamedplus', 'unnamed' },
@@ -58,6 +60,7 @@ prepend_opts.clipboard = {
 	end
 }
 
+-- :set+=
 local append_opts = {}
 append_opts.clipboard = {
 	{ 'unnamed' },
@@ -67,8 +70,8 @@ append_opts.clipboard = {
 }
 
 local function configure(opts_config, setfn)
-	for k, v in pairs(opts_config) do
-		local value = v
+	for opt_name, v in pairs(opts_config) do
+		local opt_value = v
 		local condition = nil
 		local prefook = nil
 		if type(v) == "table" and (v["condition"] ~= nil or v["prefook"] ~= nil) then
@@ -78,9 +81,9 @@ local function configure(opts_config, setfn)
 			if v["prefook"] ~= nil then
 				prefook = v["prefook"]
 			end
-			value = v[1]
+			opt_value = v[1]
 		end
-		setfn(k, value, condition, prefook)
+		setfn(opt_name, opt_value, condition, prefook)
 	end
 end
 
