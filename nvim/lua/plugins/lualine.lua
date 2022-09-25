@@ -1,75 +1,45 @@
-local vimlib = require('lib.vim')
-local navic = require('nvim-navic')
-local base_theme = 'nord'
+return function()
+	local theme = 'nord'
 
-local diagnostics = require('diagnostics')
-
-local setting_diagnostics = {
-	sources = { 'nvim_lsp' },
-	diagnostics_color = {
-		error = {
-			fg = vimlib.get_hl_by_name('DiagnosticError').fg,
-			bg = require('lualine.themes.' .. base_theme).normal.b.bg
-		},
-		warn = {
-			fg = vimlib.get_hl_by_name('DiagnosticWarn').fg,
-			bg = require('lualine.themes.' .. base_theme).normal.b.bg
-		},
-		info = {
-			fg = vimlib.get_hl_by_name('DiagnosticInfo').fg,
-			bg = require('lualine.themes.' .. base_theme).normal.b.bg
-		},
-		hint = {
-			fg = vimlib.get_hl_by_name('DiagnosticHint').fg,
-			bg = require('lualine.themes.' .. base_theme).normal.b.bg
-		},
-	},
-	symbols = { error = diagnostics.Error.symbol, warn = diagnostics.Warn.symbol, info = diagnostics.Info.symbol,
-		hint = diagnostics.Hint.symbol },
-	colored = true,
-	update_in_insert = false,
-	always_visible = false,
-}
-
-local function navic_location()
-	local none_display = "🙈🙊🙉"
-	if navic.is_available() then
-		local l = navic.get_location()
-		return (l ~= "") and l or none_display
-	else
-		return none_display
+	local function winbar_enable()
+		return not (package.loaded['nvim-navic'])
 	end
-end
 
-local winbar = {
-	lualine_a = {
-		{ navic_location }
-	},
-}
+	local function navic_location()
+		local navic = require('nvim-navic')
+		local none_display = "🙈🙊🙉"
+		if navic.is_available() then
+			local location = navic.get_location()
+			return (location ~= "") and location or none_display
+		else
+			return none_display
+		end
+	end
 
-require('lualine').setup({
-	options = {
-		icons_enabled = true,
-		theme = base_theme,
-	},
-	sections = {
-		lualine_a = { 'mode' },
-		lualine_b = {
-			'filename',
-			{
-				'diagnostics',
-				sources = setting_diagnostics.sources,
-				diagnostics_color = setting_diagnostics.diagnostics_color,
-				symbols = setting_diagnostics.symbols,
-				colored = setting_diagnostics.colored,
-				update_in_insert = setting_diagnostics.update_in_insert,
-				always_visible = setting_diagnostics.always_visible,
-			}
+	local settings = {
+		options = {
+			icons_enabled = true,
+			theme = theme,
 		},
-		lualine_c = { 'branch', 'diff' },
-		lualine_x = { 'filetype' },
-		lualine_y = { 'fileformat', 'encoding' },
-		lualine_z = { 'location', 'progress' },
-	},
-	winbar = winbar,
-})
+		sections = {
+			lualine_a = { 'mode' },
+			lualine_b = {
+				'filename',
+				require 'plugins.lualine.diagnostics' (theme, 'b')
+			},
+			lualine_c = { 'branch', 'diff' },
+			lualine_x = { 'filetype' },
+			lualine_y = { 'fileformat', 'encoding' },
+			lualine_z = { 'location', 'progress' },
+		},
+	}
+	if winbar_enable() then
+		settings.winbar = {
+			lualine_a = {
+				{ navic_location }
+			},
+		}
+	end
+
+	require('lualine').setup(settings)
+end

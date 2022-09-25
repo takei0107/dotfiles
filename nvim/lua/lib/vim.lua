@@ -8,18 +8,10 @@ local util = require('lib.util')
 
 function M.get_hl_by_name(name)
 	local hl = api.nvim_get_hl_by_name(name, true)
-	local r = {}
-	if hl.foreground == nil then
-		r.fg = ""
-	else
-		r.fg = "#" .. util.num_to_hex_string(hl.foreground)
-	end
-	if hl.background == nil then
-		r.bg = ""
-	else
-		r.bg = "#" .. util.num_to_hex_string(hl.background)
-	end
-	return r
+	return {
+		fg = hl.foreground and ('#' .. util.num_to_hex_string(hl.foreground)),
+		bg = hl.background and ('#' .. util.num_to_hex_string(hl.background))
+	}
 end
 
 return M

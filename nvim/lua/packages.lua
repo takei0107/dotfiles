@@ -31,27 +31,14 @@ require('packer').startup({ function(use)
 	-- [color theme]
 	use {
 		'EdenEast/nightfox.nvim',
-		config = require('plugins.nightfox').configure
+		config = require('plugins.nightfox')
 	}
 
 	-- [syntax]
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
-		config = function()
-			require('nvim-treesitter.configs').setup({
-				auto_install = true,
-				ignore_install = {
-					"help"
-				},
-				highlight = {
-					enable = true,
-					disable = {
-						"help"
-					},
-				},
-			})
-		end
+		config = require('plugins.treesitter')
 	}
 
 	-- file explorer
@@ -63,10 +50,7 @@ require('packer').startup({ function(use)
 			'kyazdani42/nvim-web-devicons',
 			'MunifTanjim/nui.nvim',
 		},
-		config = function()
-			require('plugins.neotree')
-		end,
-		keys = '<leader>nt',
+		config = require('plugins.neotree')
 	}
 
 	-- statusline
@@ -78,9 +62,7 @@ require('packer').startup({ function(use)
 			"SmiteshP/nvim-navic"
 		},
 		after = { 'nightfox.nvim', 'nvim-navic' },
-		config = function()
-			require('plugins.lualine')
-		end
+		config = require('plugins.lualine')
 	}
 
 	-- tabline
