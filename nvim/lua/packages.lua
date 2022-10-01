@@ -13,35 +13,35 @@ cmd('packadd packer.nvim')
 -- packer startup
 require('packer').startup({ function(use)
 
-	-- [packer self]
+	-- [[ packer self ]]
 	use {
 		'wbthomason/packer.nvim',
 		opt = true
 	}
 
-	-- [utils]
+	-- [[ utils ]]
 	use 'nvim-lua/plenary.nvim'
 	use 'kyazdani42/nvim-web-devicons'
 
-	-- [日本語help]
+	-- [[ 日本語help ]]
 	use {
 		'vim-jp/vimdoc-ja',
 	}
 
-	-- [color theme]
+	-- [[ color theme ]]
 	use {
 		'EdenEast/nightfox.nvim',
 		config = require('plugins.nightfox')
 	}
 
-	-- [syntax]
+	-- [[ syntax ]]
 	use {
 		'nvim-treesitter/nvim-treesitter',
 		run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
 		config = require('plugins.treesitter')
 	}
 
-	-- file explorer
+	-- [[ file explorer ]]
 	use {
 		'nvim-neo-tree/neo-tree.nvim',
 		branch = "v2.x",
@@ -53,7 +53,13 @@ require('packer').startup({ function(use)
 		config = require('plugins.neotree')
 	}
 
-	-- statusline
+	-- [[ winbar ]]
+	use {
+		"SmiteshP/nvim-navic",
+		requires = "neovim/nvim-lspconfig",
+	}
+
+	-- [[ statusline ]]
 	use {
 		'nvim-lualine/lualine.nvim',
 		requires = {
@@ -65,26 +71,18 @@ require('packer').startup({ function(use)
 		config = require('plugins.lualine')
 	}
 
-	-- tabline
-	--use {
-	--	'nanozuki/tabby.nvim',
-	--	requires = {
-	--		'EdenEast/nightfox.nvim',
-	--		'kyazdani42/nvim-web-devicons'
-	--	},
-	--	after = { 'nightfox.nvim', 'nvim-web-devicons' },
-	--	config = function()
-	--		require('plugins.tabby')
-	--	end
-	--}
-
-	-- [[ navigation ]]
+	-- [[ tabline ]]
 	use {
-		"SmiteshP/nvim-navic",
-		requires = "neovim/nvim-lspconfig",
+		'nanozuki/tabby.nvim',
+		requires = {
+			'EdenEast/nightfox.nvim',
+			'kyazdani42/nvim-web-devicons'
+		},
+		after = { 'nightfox.nvim', 'nvim-web-devicons' },
+		config = require('plugins.tabby')
 	}
 
-	-- fuzzy finder
+	-- [[ fuzzy finder ]]
 	use {
 		'nvim-telescope/telescope.nvim',
 		branch = '0.1.x',
@@ -94,7 +92,7 @@ require('packer').startup({ function(use)
 		end,
 	}
 
-	-- completion
+	-- [[ completion ]]
 	use {
 		'hrsh7th/nvim-cmp',
 		config = function()
@@ -153,7 +151,7 @@ require('packer').startup({ function(use)
 		event = 'CmdlineEnter *'
 	}
 
-	-- lsp
+	-- [[ lsp ]]
 	use {
 		'neovim/nvim-lspconfig',
 	}
@@ -173,14 +171,14 @@ require('packer').startup({ function(use)
 		end
 	}
 
-	-- java lsp
+	-- [[ java lsp ]]
 	use {
 		'mfussenegger/nvim-jdtls',
 		-- javaの時だけ読み込みたいが、ftplugin内でrequireするとこのプラグインがロードされておらず失敗するため
 		--ft = {'java'}
 	}
 
-	-- git
+	-- [[ git ]]
 	use {
 		'TimUntersberger/neogit',
 		requires = 'nvim-lua/plenary.nvim',
@@ -193,25 +191,25 @@ require('packer').startup({ function(use)
 		end
 	}
 
-	-- lexima
+	-- [[ lexima ]]
 	use {
 		'cohama/lexima.vim',
 		event = 'InsertEnter *'
 	}
 
-	-- vim-sandwitch
+	-- [[ vim-sandwitch ]]
 	use {
 		'machakann/vim-sandwich',
 		keys = { 'v', 's' },
 	}
 
-	-- matchup
+	-- [[ matchup ]]
 	--use {
 	--	'andymass/vim-matchup',
 	--	event = 'CursorMoved <buffer>'
 	--}
 
-	-- hop
+	-- [[ hop ]]
 	use {
 		'phaazon/hop.nvim',
 		branch = 'v2',
@@ -221,7 +219,7 @@ require('packer').startup({ function(use)
 		end
 	}
 
-	-- terminal
+	-- [[ terminal ]]
 	use { "akinsho/toggleterm.nvim", tag = 'v2.*', config = function()
 		require("toggleterm").setup({
 			open_mapping = [[<c-x>]],
