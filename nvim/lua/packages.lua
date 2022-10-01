@@ -2,12 +2,16 @@ local cmd = vim.cmd
 local fn = vim.fn
 
 -- install packer.nvim
--- FIXME
-local packer_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
-if fn.empty(fn.glob(packer_path)) > 0 then
-	packer_bootstrap = fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', packer_path })
+local ensure_packer = function()
+	local install_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
+	if fn.empty(fn.glob(install_path)) > 0 then
+		fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+		return true
+	end
+	return false
 end
 
+local packer_bootstrap = ensure_packer()
 cmd('packadd packer.nvim')
 
 -- packer startup
