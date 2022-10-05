@@ -41,7 +41,9 @@ require('packer').startup({ function(use)
 	-- [[ syntax ]]
 	use {
 		'nvim-treesitter/nvim-treesitter',
-		run = function() require('nvim-treesitter.install').update({ with_sync = true }) end,
+		run = function()
+			require('nvim-treesitter.install').update({ with_sync = true })
+		end,
 		config = require('plugins.treesitter')
 	}
 
@@ -91,9 +93,7 @@ require('packer').startup({ function(use)
 		'nvim-telescope/telescope.nvim',
 		branch = '0.1.x',
 		requires = { 'nvim-lua/plenary.nvim' },
-		config = function()
-			require('plugins.telescope')
-		end,
+		config = require('plugins.telescope')
 	}
 
 	-- [[ completion ]]
@@ -106,7 +106,6 @@ require('packer').startup({ function(use)
 	use {
 		'hrsh7th/cmp-nvim-lsp',
 		event = 'InsertEnter *'
-
 	}
 	use {
 		'hrsh7th/cmp-vsnip',

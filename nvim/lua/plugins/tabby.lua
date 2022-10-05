@@ -1,6 +1,6 @@
 return function()
-	--require('tabby.tabline').set(function(line)
-	--	-- vim.o.showtabline = 2 -- allways show tablne
+	vim.o.showtabline = 2 -- allways show tablne
+
 	local vimlib = require('lib.vim')
 
 	-- header highlight

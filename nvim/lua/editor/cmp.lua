@@ -43,16 +43,13 @@ cmp.setup({
 		{ name = 'nvim_lsp_signature_help' },
 		{ name = 'path' }
 	}, {
+		{ name = 'buffer', }
+	}, {
 		{
-			name = 'buffer',
+			name = 'dictionary',
+			keyword_length = 2
 		}
-	},
-		{
-			{
-				name = 'dictionary',
-				keyword_length = 2
-			}
-		}),
+	}),
 	snippet = {
 		expand = function(args)
 			vim.fn['vsnip#anonymous'](args.body)
@@ -78,4 +75,3 @@ cmp.setup.cmdline(':', {
 		{ name = 'path' }
 	})
 })
-
