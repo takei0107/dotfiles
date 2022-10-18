@@ -103,35 +103,35 @@ require('packer').startup({ function(use)
 			require('editor.cmp')
 		end,
 	}
-	use {
-		'hrsh7th/cmp-nvim-lsp',
-		event = 'InsertEnter *'
-	}
-	use {
-		'hrsh7th/cmp-vsnip',
-		event = 'InsertEnter *'
-
-	}
-	use {
-		'hrsh7th/vim-vsnip',
-		event = 'InsertEnter *'
-
-	}
-	use {
-		'hrsh7th/cmp-nvim-lsp-signature-help',
-		event = 'InsertEnter *'
-
-	}
-	use {
-		'hrsh7th/cmp-path',
-		event = 'InsertEnter *'
-
-	}
-	use {
-		'hrsh7th/cmp-buffer',
-		event = 'InsertEnter *'
-
-	}
+	for _, source_cfg in ipairs(
+		{
+			{
+				source = 'hrsh7th/cmp-vsnip',
+				event = 'InsertEnter *'
+			},
+			{
+				source = 'hrsh7th/vim-vsnip',
+				event = 'InsertEnter *'
+			},
+			{
+				source = 'hrsh7th/cmp-nvim-lsp-signature-help',
+				event = 'InsertEnter *'
+			},
+			{
+				source = 'hrsh7th/cmp-path',
+				event = 'InsertEnter *'
+			},
+			{
+				source = 'hrsh7th/cmp-buffer',
+				event = 'InsertEnter *'
+			},
+		}
+	) do
+		use {
+			source_cfg.source,
+			event = source_cfg.event
+		}
+	end
 	use {
 		'uga-rosa/cmp-dictionary',
 		event = 'InsertEnter *',
@@ -139,15 +139,12 @@ require('packer').startup({ function(use)
 			local dic = {}
 			local dict_en = vim.fn.stdpath('data') .. '/dicts/en.dict'
 			if vim.fn.filereadable(dict_en) then
-				dic.spelllang = {
-					en = dict_en
-				}
+				dic["*"] = dict_en
 			end
 			require('cmp_dictionary').setup({
 				dic = dic
 			})
 		end
-
 	}
 	use {
 		'hrsh7th/cmp-cmdline',
