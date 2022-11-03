@@ -114,6 +114,10 @@ require('packer').startup({ function(use)
 				event = 'InsertEnter *'
 			},
 			{
+				source = 'hrsh7th/cmp-nvim-lsp',
+				event = 'InsertEnter *'
+			},
+			{
 				source = 'hrsh7th/cmp-nvim-lsp-signature-help',
 				event = 'InsertEnter *'
 			},
@@ -135,15 +139,16 @@ require('packer').startup({ function(use)
 	use {
 		'uga-rosa/cmp-dictionary',
 		event = 'InsertEnter *',
-		configure = function()
+		config = function()
 			local dic = {}
-			local dict_en = vim.fn.stdpath('data') .. '/dicts/en.dict'
-			if vim.fn.filereadable(dict_en) then
-				dic["*"] = dict_en
+			local words = "/usr/share/dict/words"
+			if vim.fn.filereadable(words) then
+				dic["*"] = { words }
 			end
 			require('cmp_dictionary').setup({
-				dic = dic
+				dic = dic,
 			})
+			require('cmp_dictionary').update()
 		end
 	}
 	use {
