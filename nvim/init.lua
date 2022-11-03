@@ -24,6 +24,7 @@ end)
 _G.pp = function(arg)
 	vim.pretty_print(arg)
 end
+
 _G.termcodes = function(key)
 	return vim.api.nvim_replace_termcodes(key, true, true, true)
 end
@@ -126,8 +127,38 @@ end, {
 	complete = "help",
 })
 
--- luacheck
-local function luacheck(path)
+-- lua
+local _lua = setmetatable({}, {
+	__call = function(self)
+		vim.api.nvim_create_augroup("lua", {})
+		vim.api.nvim_create_autocmd("FileType", {
+			group = "lua",
+			pattern = "lua",
+			callback = function(callback_args)
+				vim.opt_local.tabstop = 2
+				vim.opt_local.shiftwidth = 2
+				vim.api.nvim_buf_create_user_command(callback_args.buf, "LuaCheck", function(opts)
+					self.luacheck(opts.args)
+				end, {
+					nargs = "?",
+					complete = "file",
+				})
+				vim.api.nvim_buf_create_user_command(callback_args.buf, "LuaCheckCurrent", function()
+					self.luacheck(vim.fn.expand("%"))
+				end, {})
+			end,
+		})
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			group = "lua",
+			pattern = "*.lua",
+			callback = function()
+				self.stylua()
+			end,
+		})
+	end,
+})
+
+_lua.luacheck = function(path)
 	if vim.fn.executable("luacheck") ~= 1 then
 		error("luacheck is not installed")
 		return
@@ -161,7 +192,7 @@ local function luacheck(path)
 end
 
 -- stylua
-local function stylua()
+_lua.stylua = function()
 	if vim.fn.executable("stylua") ~= 1 then
 		error("stylua is not installed")
 	end
@@ -175,30 +206,6 @@ local function stylua()
 	vim.api.nvim_buf_set_lines(vim.fn.bufnr(), 0, -1, true, new_lines)
 end
 
--- lua autocmd
-vim.api.nvim_create_augroup("lua", {})
-vim.api.nvim_create_autocmd("FileType", {
-	group = "lua",
-	pattern = "lua",
-	callback = function(callback_args)
-		vim.opt_local.tabstop = 2
-		vim.opt_local.shiftwidth = 2
-		vim.api.nvim_buf_create_user_command(callback_args.buf, "LuaCheck", function(opts)
-			luacheck(opts.args)
-		end, {
-			nargs = "?",
-			complete = "file",
-		})
-		vim.api.nvim_buf_create_user_command(callback_args.buf, "LuaCheckCurrent", function()
-			luacheck(vim.fn.expand("%"))
-		end, {})
-	end,
-})
-vim.api.nvim_create_autocmd("BufWritePre", {
-	group = "lua",
-	pattern = "*.lua",
-	callback = function()
-		stylua()
-	end,
-})
+-- enable/disable language(filetype) settings
+_lua()
 
