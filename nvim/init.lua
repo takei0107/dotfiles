@@ -4,9 +4,12 @@ set.list = true
 set.smartindent = true
 set.undofile = true
 set.splitright = true
+set.splitbelow = true
+set.cursorline = true
+set.cursorlineopt = { "screenline" }
 set.laststatus = 2
 
--- can use <C-L>
+-- same as <C-L>
 -- vim.keymap.set("n", "<ESC><ESC>", "<cmd>nohlsearch<CR><ESC>", { silent = true })
 
 vim.keymap.set("i", "(", "()<ESC>i")
@@ -20,6 +23,10 @@ vim.keymap.set("n", "<F5>", function()
 	vim.cmd("luafile " .. vimrc)
 	print(string.format("%s reloaded", vimrc))
 end)
+
+-- バッファを+レジスタにヤンク
+-- macだと*レジスタかも
+vim.keymap.set("n", "<C-k>c", ":%y +<CR>")
 
 _G.pp = function(arg)
 	vim.pretty_print(arg)
@@ -98,34 +105,28 @@ local function register_surround_pairs()
 end
 register_surround_pairs()
 
--- see :help help-curwin
--- split版は普通のhelpコマンドで良いのでvsplit特化
-local did_open_help = false
-local function help_vsplit(subject)
-	if not subject then
-		error("Argument required")
-	end
-	local mods = "silent noautocmd keepalt"
-	if not did_open_help then
-		vim.api.nvim_command(mods .. " help")
-		vim.api.nvim_command(mods .. " helpclose")
-		did_open_help = true
-	end
-	if vim.fn.empty(vim.fn.getcompletion(subject, "help")) ~= 1 then
-		vim.api.nvim_command("vsplit")
-		vim.api.nvim_command(string.format("%s edit %s", mods, vim.opt.helpfile:get()))
-		vim.opt.buftype = "help"
-	end
-	return "help " .. subject
-end
-
 -- helpをvsplitで開く
 vim.api.nvim_create_user_command("Vhelp", function(opts)
-	vim.api.nvim_command(help_vsplit(opts.args))
+	vim.api.nvim_command("vertical help " .. opts.args)
 end, {
 	nargs = 1,
 	complete = "help",
 })
+
+-- terminal
+vim.api.nvim_create_augroup("terminal", {})
+vim.api.nvim_create_autocmd("TermOpen", {
+	group = "terminal",
+	pattern = "*",
+	callback = function()
+		vim.cmd("startinsert")
+	end,
+})
+--:tnoremap <Esc> <C-\><C-n>
+vim.keymap.set("t", "<ESC>", [[<C-\><C-n>]])
+vim.keymap.set("n", "<C-t>t", ":tabnew +terminal<CR>", { silent = true })
+vim.keymap.set("n", "<C-t>s", ":split <bar> :terminal<CR>", { silent = true })
+vim.keymap.set("n", "<C-t>v", ":vsplit <bar> :terminal<CR>", { silent = true })
 
 -- lua
 local _lua = setmetatable({}, {
@@ -158,6 +159,7 @@ local _lua = setmetatable({}, {
 	end,
 })
 
+-- luacheck
 _lua.luacheck = function(path)
 	if vim.fn.executable("luacheck") ~= 1 then
 		error("luacheck is not installed")
@@ -206,6 +208,22 @@ _lua.stylua = function()
 	vim.api.nvim_buf_set_lines(vim.fn.bufnr(), 0, -1, true, new_lines)
 end
 
+-- C
+local _c = setmetatable({}, {
+	__call = function(self)
+		vim.api.nvim_create_augroup("c", {})
+		vim.api.nvim_create_autocmd("FileType", {
+			group = "c",
+			pattern = "c",
+			callback = function(callback_args)
+				vim.opt_local.tabstop = 4
+				vim.opt_local.shiftwidth = 4
+			end,
+		})
+	end,
+})
+
 -- enable/disable language(filetype) settings
 _lua()
+_c()
 
