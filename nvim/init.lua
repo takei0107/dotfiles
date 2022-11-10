@@ -90,17 +90,11 @@ local function register_surround_pairs()
 		{ l = '"', r = '"' },
 	}
 	for _, pair in ipairs(surround_pairs) do
-		vim.keymap.set(
-			"v",
-			"sa" .. pair.l,
-			--string.format("<ESC>:lua surround({l = '%s', r = '%s'})<CR><ESC>", pair.l, pair.r),
-			function()
-				local mod_lnum, mod_col = surround({ l = pair.l, r = pair.r })
-				vim.fn.cursor(mod_lnum, mod_col)
-				vim.api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
-			end,
-			{ silent = true }
-		)
+		vim.keymap.set("v", "sa" .. pair.l, function()
+			local mod_lnum, mod_col = surround({ l = pair.l, r = pair.r })
+			vim.fn.cursor(mod_lnum, mod_col)
+			vim.api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
+		end, { silent = true })
 	end
 end
 register_surround_pairs()
@@ -122,8 +116,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
 		vim.cmd("startinsert")
 	end,
 })
---:tnoremap <Esc> <C-\><C-n>
-vim.keymap.set("t", "<ESC>", [[<C-\><C-n>]])
+vim.keymap.set("t", "<C-x>", [[<C-\><C-n>]])
 vim.keymap.set("n", "<C-t>t", ":tabnew +terminal<CR>", { silent = true })
 vim.keymap.set("n", "<C-t>s", ":split <bar> :terminal<CR>", { silent = true })
 vim.keymap.set("n", "<C-t>v", ":vsplit <bar> :terminal<CR>", { silent = true })
@@ -170,8 +163,8 @@ _lua.luacheck = function(path)
 	path = ((path == nil) or (string.len(path) == 0)) and "**/*.lua" or path
 	vim.opt.errorformat = { [[%f:%l:%c: %m]], [[%s: %m (couldn't read: No such file or directory)]] }
 	vim.opt.makeprg = string.format("luacheck %s --formatter plain", path)
-	local r, err = pcall(vim.cmd, "make")
-	if r then
+	local ok, err = pcall(vim.cmd, "make")
+	if ok then
 		local need_copen = true
 		local qflist_size = vim.fn.getqflist({ size = 0 }).size
 		if qflist_size == 1 then
@@ -183,12 +176,12 @@ _lua.luacheck = function(path)
 			need_copen = false
 		end
 		if need_copen then
-			r, err = pcall(vim.cmd, "copen")
+			ok, err = pcall(vim.cmd, "copen")
 		end
 	end
 	vim.opt.errorformat = efm_tmp
 	vim.opt.makeprg = mkp_tmp
-	if not r then
+	if not ok then
 		error(err)
 	end
 end
@@ -210,12 +203,12 @@ end
 
 -- C
 local _c = setmetatable({}, {
-	__call = function(self)
+	__call = function(_)
 		vim.api.nvim_create_augroup("c", {})
 		vim.api.nvim_create_autocmd("FileType", {
 			group = "c",
 			pattern = "c",
-			callback = function(callback_args)
+			callback = function(_)
 				vim.opt_local.tabstop = 4
 				vim.opt_local.shiftwidth = 4
 			end,
@@ -226,4 +219,51 @@ local _c = setmetatable({}, {
 -- enable/disable language(filetype) settings
 _lua()
 _c()
+
+-- atcoder
+local _atMakeT = {}
+function _atMakeT.new(makeprg)
+	local t = setmetatable({}, _atMakeT)
+	t.makeprg = makeprg
+	return t
+end
+local function register_at_make_command(atMakeT)
+	if not atMakeT then
+		error("arg:<atMakeT> is nil")
+	end
+	if not atMakeT.makeprg then
+		error("atMakeT.makeprg is nil or false")
+	end
+	vim.api.nvim_create_user_command("AtMake", function()
+		vim.opt_local.makeprg = atMakeT.makeprg
+		vim.api.nvim_command("make|copen")
+	end, {})
+end
+
+local ft_makeprg = {
+	c = "gcc -Wall % -o %<.out",
+}
+local function ft_patterns()
+	local p = {}
+	for ft, _ in pairs(ft_makeprg) do
+		table.insert(p, ft)
+	end
+	return p
+end
+
+vim.api.nvim_create_augroup("atCoder", {})
+vim.api.nvim_create_autocmd("FileType", {
+	group = "atCoder",
+	pattern = ft_patterns(),
+	callback = function(callback_args)
+		local t = {}
+		local makeprg = ft_makeprg[callback_args.match]
+		if makeprg then
+			t = _atMakeT.new(makeprg)
+		end
+		if not vim.tbl_isempty(t) then
+			register_at_make_command(t)
+		end
+	end,
+})
 
