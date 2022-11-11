@@ -1,6 +1,7 @@
 local set = vim.opt
 set.number = true
 set.list = true
+set.scrolloff = 5
 set.smartindent = true
 set.undofile = true
 set.splitright = true
@@ -18,15 +19,18 @@ vim.keymap.set("i", "{", "{}<ESC>i")
 vim.keymap.set("i", '"', '""<ESC>i')
 vim.keymap.set("i", "'", "''<ESC>i")
 
+vim.keymap.set("v", "$", "g_")
+
 vim.keymap.set("n", "<F5>", function()
 	local vimrc = vim.env.MYVIMRC
 	vim.cmd("luafile " .. vimrc)
 	print(string.format("%s reloaded", vimrc))
 end)
 
--- バッファを+レジスタにヤンク
--- macだと*レジスタかも
-vim.keymap.set("n", "<C-k>c", ":%y +<CR>")
+-- <C-k>で+レジスタにモーションを指定してヤンク(macだと*レジスタの方がいいかも)
+vim.keymap.set("n", "<C-k>", '"+y')
+-- <C-k>%で+レジスタにバッファの内容をヤンク
+vim.keymap.set("n", "<C-k>%", ":%y +<CR>")
 
 _G.pp = function(arg)
 	vim.pretty_print(arg)
@@ -118,8 +122,8 @@ vim.api.nvim_create_autocmd("TermOpen", {
 })
 vim.keymap.set("t", "<C-x>", [[<C-\><C-n>]])
 vim.keymap.set("n", "<C-t>t", ":tabnew +terminal<CR>", { silent = true })
-vim.keymap.set("n", "<C-t>s", ":split <bar> :terminal<CR>", { silent = true })
-vim.keymap.set("n", "<C-t>v", ":vsplit <bar> :terminal<CR>", { silent = true })
+vim.keymap.set("n", "<C-t>s", ":new <bar> :terminal<CR>", { silent = true })
+vim.keymap.set("n", "<C-t>v", ":vnew <bar> :terminal<CR>", { silent = true })
 
 -- lua
 local _lua = setmetatable({}, {
@@ -235,8 +239,14 @@ local function register_at_make_command(atMakeT)
 		error("atMakeT.makeprg is nil or false")
 	end
 	vim.api.nvim_create_user_command("AtMake", function()
+		vim.api.nvim_command("cclose")
 		vim.opt_local.makeprg = atMakeT.makeprg
-		vim.api.nvim_command("make|copen")
+		vim.api.nvim_command("make")
+		if vim.tbl_isempty(vim.fn.getqflist()) then
+			print("AtMake: build ok")
+		else
+			vim.api.nvim_command("copen")
+		end
 	end, {})
 end
 
