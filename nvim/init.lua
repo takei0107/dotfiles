@@ -4,6 +4,7 @@ set.list = true
 set.scrolloff = 5
 set.smartindent = true
 set.undofile = true
+set.swapfile = false
 set.splitright = true
 set.splitbelow = true
 set.cursorline = true
@@ -27,9 +28,9 @@ vim.keymap.set("n", "<F5>", function()
 	print(string.format("%s reloaded", vimrc))
 end)
 
--- <C-k>で+レジスタにモーションを指定してヤンク(macだと*レジスタの方がいいかも)
+-- CTRL+kで+レジスタにモーションを指定してヤンク(macだと*レジスタの方がいいかも)
 vim.keymap.set("n", "<C-k>", '"+y')
--- <C-k>%で+レジスタにバッファの内容をヤンク
+-- CTRL+k+%で+レジスタにバッファの内容をヤンク
 vim.keymap.set("n", "<C-k>%", ":%y +<CR>")
 
 _G.pp = function(arg)
@@ -43,6 +44,11 @@ end
 local function _getpos(expr)
 	local pos = vim.fn.getpos(expr)
 	return { bufnum = pos[1], lnum = pos[2], col = pos[3], off = pos[4] }
+end
+
+local function _join_buf_all_lines(bufnr)
+	local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
+	return vim.fn.join(lines, "\n")
 end
 
 local function surround(pair)
@@ -195,8 +201,7 @@ _lua.stylua = function()
 	if vim.fn.executable("stylua") ~= 1 then
 		error("stylua is not installed")
 	end
-	local lines = vim.api.nvim_buf_get_lines(vim.fn.bufnr(), 0, -1, true)
-	local joined = vim.fn.join(lines, "\n")
+	local joined = _join_buf_all_lines(vim.fn.bufnr())
 	local out = vim.fn.system("stylua -", joined)
 	if vim.v.shell_error ~= 0 then
 		error(out)
@@ -238,7 +243,7 @@ local function register_at_make_command(atMakeT)
 	if not atMakeT.makeprg then
 		error("atMakeT.makeprg is nil or false")
 	end
-	vim.api.nvim_create_user_command("AtMake", function()
+	vim.api.nvim_buf_create_user_command(0, "AtMake", function()
 		vim.api.nvim_command("cclose")
 		vim.opt_local.makeprg = atMakeT.makeprg
 		vim.api.nvim_command("make")
@@ -276,4 +281,88 @@ vim.api.nvim_create_autocmd("FileType", {
 		end
 	end,
 })
+
+local function open_scratch_buffer_window(direction)
+	local default_direction = "v"
+	if direction and (direction ~= "v" and direction ~= "s") then
+		error("direction is 'v' or 's' or nil")
+	end
+	if not direction then
+		direction = default_direction
+	end
+	local bufnr = vim.api.nvim_create_buf(false, true)
+	vim.api.nvim_command(direction == "v" and "vnew" or "new")
+	local winnr = vim.api.nvim_win_get_number(0)
+	local winid = vim.fn.win_getid(winnr)
+	vim.api.nvim_win_set_buf(winid, bufnr)
+	return bufnr, winnr
+end
+
+local function exec_ac_test(test_cmd, input)
+	local out = vim.fn.system(test_cmd, input)
+	print("AtTest: out -> " .. out)
+end
+
+local function register_keymaps_for_ac_test(test_cmd, bufnr)
+	if not test_cmd or not bufnr then
+		error("2 arguments required")
+	end
+	vim.keymap.set("c", "w<CR>", function()
+		local input = _join_buf_all_lines(bufnr)
+		exec_ac_test(test_cmd, input)
+	end, { silent = true, buffer = bufnr })
+end
+
+local function create_ac_input_window()
+	local bufnr, winnr = open_scratch_buffer_window("v")
+	vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, { "##### Paste the input for testing #####" })
+	return bufnr, winnr
+end
+
+local function find_test_cmd(test_cmd)
+	if vim.fn.executable(test_cmd) ~= 1 then
+		return string.format("executable file '%s' does not exist", test_cmd)
+	end
+	return nil
+end
+
+local function prompt_for_should_atMake()
+	local done = false
+	vim.ui.input({
+		prompt = "Should run command 'AtTest'? Input [y]es or [n]o.\n> ",
+	}, function(input)
+		if not input then
+			return
+		end
+		if input ~= "y" and input ~= "n" then
+			error("input is [y]es or [n]o")
+		end
+		if input == "n" then
+			return
+		end
+		vim.api.nvim_command("AtMake")
+		done = true
+	end)
+	return done
+end
+
+local function atTest()
+	local test_cmd = vim.fn.expand("%:r") .. ".out"
+	local find_err_msg = find_test_cmd(test_cmd)
+	local can = true
+	if find_err_msg then
+		print(string.format("AtTest: [ERR]%s", find_err_msg))
+		can = prompt_for_should_atMake()
+	end
+	if can then
+		local bufnr, winnr = create_ac_input_window()
+		register_keymaps_for_ac_test(test_cmd, bufnr)
+		local winid = vim.fn.win_getid(winnr)
+		vim.api.nvim_win_set_cursor(winid, { 1, 0 })
+	end
+end
+
+vim.api.nvim_create_user_command("AtTest", function()
+	atTest()
+end, {})
 
