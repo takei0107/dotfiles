@@ -1,4 +1,5 @@
 local set = vim.opt
+local setlocal = vim.opt_local
 set.number = true
 set.list = true
 set.scrolloff = 5
@@ -142,6 +143,16 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	end,
 })
 
+-- keywordprg for lua-vimrc
+vim.api.nvim_create_augroup("lua-help", {})
+vim.api.nvim_create_autocmd("BufRead", {
+	group = "lua-help",
+	pattern = "*.lua",
+	callback = function(args)
+		setlocal.keywordprg = vim.fn.exists(":Vhelp") and ":Vhelp" or ":help"
+	end,
+})
+
 -- terminal
 vim.api.nvim_create_augroup("terminal", {})
 vim.api.nvim_create_autocmd("TermOpen", {
@@ -164,8 +175,8 @@ local _lua = setmetatable({}, {
 			group = "lua",
 			pattern = "lua",
 			callback = function(callback_args)
-				vim.opt_local.tabstop = 2
-				vim.opt_local.shiftwidth = 2
+				setlocal.tabstop = 2
+				setlocal.shiftwidth = 2
 				vim.api.nvim_buf_create_user_command(callback_args.buf, "LuaCheck", function(opts)
 					self.luacheck(opts.args)
 				end, {
@@ -243,9 +254,9 @@ local _c = setmetatable({}, {
 			group = "c",
 			pattern = "c",
 			callback = function(_)
-				vim.opt_local.tabstop = 4
-				vim.opt_local.shiftwidth = 4
-				vim.opt_local.complete:append("i")
+				setlocal.tabstop = 4
+				setlocal.shiftwidth = 4
+				setlocal.complete:append("i")
 			end,
 		})
 	end,
@@ -271,7 +282,7 @@ local function register_at_make_command(atMakeT)
 	end
 	vim.api.nvim_buf_create_user_command(0, "AtMake", function()
 		vim.api.nvim_command("cclose")
-		vim.opt_local.makeprg = atMakeT.makeprg
+		setlocal.makeprg = atMakeT.makeprg
 		vim.api.nvim_command("make")
 		if vim.tbl_isempty(vim.fn.getqflist()) then
 			print("AtMake: build ok")
