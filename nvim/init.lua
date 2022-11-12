@@ -117,6 +117,31 @@ end, {
 	complete = "help",
 })
 
+-- auto-mkdir
+-- see https://vim-jp.org/vim-users-jp/2011/02/20/Hack-202.html
+local function confirm_should_mkdir(dir)
+	local r = false
+	vim.ui.input({
+		prompt = string.format('"%s" does not exist. Create? [y/n]\n> ', dir),
+	}, function(input)
+		r = input == "y"
+	end)
+	return r
+end
+local function auto_mkdir(dir, force)
+	if vim.fn.isdirectory(dir) ~= 1 and (force or confirm_should_mkdir(dir)) then
+		vim.fn.mkdir(dir, "p")
+	end
+end
+vim.api.nvim_create_augroup("auto-mkdir", {})
+vim.api.nvim_create_autocmd("BufWritePre", {
+	group = "auto-mkdir",
+	pattern = "*",
+	callback = function(args)
+		auto_mkdir(vim.fn.fnamemodify(args.file, ":p:h"), vim.v.cmdbang == 1)
+	end,
+})
+
 -- terminal
 vim.api.nvim_create_augroup("terminal", {})
 vim.api.nvim_create_autocmd("TermOpen", {
@@ -220,6 +245,7 @@ local _c = setmetatable({}, {
 			callback = function(_)
 				vim.opt_local.tabstop = 4
 				vim.opt_local.shiftwidth = 4
+				vim.opt_local.complete:append("i")
 			end,
 		})
 	end,
@@ -355,10 +381,12 @@ local function atTest()
 		can = prompt_for_should_atMake()
 	end
 	if can then
-		local bufnr, winnr = create_ac_input_window()
-		register_keymaps_for_ac_test(test_cmd, bufnr)
-		local winid = vim.fn.win_getid(winnr)
-		vim.api.nvim_win_set_cursor(winid, { 1, 0 })
+		if not find_test_cmd(test_cmd) then
+			local bufnr, winnr = create_ac_input_window()
+			register_keymaps_for_ac_test(test_cmd, bufnr)
+			local winid = vim.fn.win_getid(winnr)
+			vim.api.nvim_win_set_cursor(winid, { 1, 0 })
+		end
 	end
 end
 
