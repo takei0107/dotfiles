@@ -10,6 +10,7 @@ set.splitright = true
 set.splitbelow = true
 set.cursorline = true
 set.cursorlineopt = { "screenline" }
+set.virtualedit = "block"
 set.laststatus = 2
 
 -- same as <C-L>
@@ -148,7 +149,7 @@ vim.api.nvim_create_augroup("lua-help", {})
 vim.api.nvim_create_autocmd("BufRead", {
 	group = "lua-help",
 	pattern = "*.lua",
-	callback = function(args)
+	callback = function(_)
 		setlocal.keywordprg = vim.fn.exists(":Vhelp") and ":Vhelp" or ":help"
 	end,
 })
@@ -319,19 +320,67 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
-local function open_scratch_buffer_window(direction)
-	local default_direction = "v"
-	if direction and (direction ~= "v" and direction ~= "s") then
+local ac_input_buffer = {}
+function ac_input_buffer.new(bufnr, name, ishide)
+	local new = setmetatable({}, ac_input_buffer)
+	new.bufnr = bufnr
+	new.name = name
+	new.ishide = ishide
+	return new
+end
+local ac_input_buffer_cache = setmetatable({}, {
+	__call = function(self, name)
+		for _, v in ipairs(self) do
+			if v.name == name then
+				return v
+			end
+		end
+		return nil
+	end,
+})
+
+vim.api.nvim_create_augroup("ac-input-buffer", {})
+vim.api.nvim_create_autocmd({ "BufHidden" }, {
+	group = "ac-input-buffer",
+	pattern = "*",
+	callback = function(args)
+		local cached = ac_input_buffer_cache(args.file)
+		if cached then
+			cached.ishide = true
+		end
+	end,
+})
+
+local function open_scratch_buffer_window(cfg)
+	assert(cfg, "args:<cfg> required")
+	if cfg.direction and (cfg.direction ~= "v" and cfg.direction ~= "s") then
 		error("direction is 'v' or 's' or nil")
 	end
-	if not direction then
-		direction = default_direction
+	local buffer = nil
+	local bufnr = 0
+	local cached = ac_input_buffer_cache(cfg.name)
+	if cached then
+		buffer = cached
+		bufnr = cached.bufnr
+	else
+		bufnr = vim.api.nvim_create_buf(false, true)
+		buffer = ac_input_buffer.new(bufnr, cfg.name, true)
+		table.insert(ac_input_buffer_cache, buffer)
+		if cfg.name then
+			vim.api.nvim_buf_set_name(bufnr, cfg.name)
+		end
 	end
-	local bufnr = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_command(direction == "v" and "vnew" or "new")
-	local winnr = vim.api.nvim_win_get_number(0)
-	local winid = vim.fn.win_getid(winnr)
-	vim.api.nvim_win_set_buf(winid, bufnr)
+	local winnr = 0
+	if buffer.ishide then
+		local direction = cfg.direction or "v"
+		vim.api.nvim_command(direction == "v" and "vnew" or "new")
+		winnr = vim.api.nvim_win_get_number(0)
+		local winid = vim.fn.win_getid(winnr)
+		vim.api.nvim_win_set_buf(winid, bufnr)
+		buffer.ishide = false
+	else
+		winnr = vim.fn.bufwinnr(bufnr)
+	end
 	return bufnr, winnr
 end
 
@@ -350,8 +399,12 @@ local function register_keymaps_for_ac_test(test_cmd, bufnr)
 	end, { silent = true, buffer = bufnr })
 end
 
-local function create_ac_input_window()
-	local bufnr, winnr = open_scratch_buffer_window("v")
+local function create_ac_input_window(test_cmd)
+	assert(test_cmd, "args:<test_cmd> is required")
+	local bufnr, winnr = open_scratch_buffer_window({
+		direction = "v",
+		name = string.format("AtTestInput[%s]", test_cmd),
+	})
 	vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, { "##### Paste the input for testing #####" })
 	return bufnr, winnr
 end
@@ -384,7 +437,7 @@ local function prompt_for_should_atMake()
 end
 
 local function atTest()
-	local test_cmd = vim.fn.expand("%:r") .. ".out"
+	local test_cmd = vim.fn.expand("%:p:r") .. ".out"
 	local find_err_msg = find_test_cmd(test_cmd)
 	local can = true
 	if find_err_msg then
@@ -393,9 +446,10 @@ local function atTest()
 	end
 	if can then
 		if not find_test_cmd(test_cmd) then
-			local bufnr, winnr = create_ac_input_window()
+			local bufnr, winnr = create_ac_input_window(test_cmd)
 			register_keymaps_for_ac_test(test_cmd, bufnr)
 			local winid = vim.fn.win_getid(winnr)
+			vim.fn.win_gotoid(winid)
 			vim.api.nvim_win_set_cursor(winid, { 1, 0 })
 		end
 	end
