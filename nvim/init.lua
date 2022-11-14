@@ -1,5 +1,6 @@
 local set = vim.opt
 local setlocal = vim.opt_local
+
 set.number = true
 set.list = true
 set.scrolloff = 5
@@ -12,6 +13,7 @@ set.cursorline = true
 set.cursorlineopt = { "screenline" }
 set.virtualedit = "block"
 set.laststatus = 2
+set.matchpairs:append("<:>")
 
 -- same as <C-L>
 -- vim.keymap.set("n", "<ESC><ESC>", "<cmd>nohlsearch<CR><ESC>", { silent = true })
@@ -397,6 +399,7 @@ local function register_keymaps_for_ac_test(test_cmd, bufnr)
 		local input = _join_buf_all_lines(bufnr)
 		exec_ac_test(test_cmd, input)
 	end, { silent = true, buffer = bufnr })
+	vim.keymap.set("n", "p", 'gg<S-v>G"+p', { buffer = bufnr })
 end
 
 local function create_ac_input_window(test_cmd)
