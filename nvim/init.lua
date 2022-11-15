@@ -55,6 +55,22 @@ local function _join_buf_all_lines(bufnr)
 	return vim.fn.join(lines, "\n")
 end
 
+local function create_scratch_buffer()
+	-- return bufnr
+	return vim.api.nvim_create_buf(false, true)
+end
+
+local function open_split_win_with_buf(bufnr, direction)
+	if not direction then
+		direction = "v"
+	end
+	assert(direction == "v" or direction == "s", "args:<direction> is 'v(split)' or s(plit)")
+	vim.api.nvim_command(direction == "v" and "vnew" or "new")
+	local winid = vim.fn.win_getid(vim.api.nvim_win_get_number(0))
+	vim.api.nvim_win_set_buf(winid, bufnr)
+	return winid
+end
+
 local function surround(pair)
 	if not pair then
 		error("pair required")
@@ -323,69 +339,16 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
-local ac_input_buffer = {}
-function ac_input_buffer.new(bufnr, name, ishide)
-	local new = setmetatable({}, ac_input_buffer)
-	new.bufnr = bufnr
-	new.name = name
-	new.ishide = ishide
-	return new
-end
-local ac_input_buffer_cache = setmetatable({}, {
-	__call = function(self, name)
-		for _, v in ipairs(self) do
-			if v.name == name then
-				return v
+local ac_input_buffers = setmetatable({}, {
+	__index = function(self, name)
+		for _, bufnr in ipairs(self) do
+			if name == vim.fn.bufname(bufnr) then
+				return bufnr
 			end
 		end
-		return nil
+		return -1
 	end,
 })
-
-vim.api.nvim_create_augroup("ac-input-buffer", {})
-vim.api.nvim_create_autocmd({ "BufHidden" }, {
-	group = "ac-input-buffer",
-	pattern = "*",
-	callback = function(args)
-		local cached = ac_input_buffer_cache(args.file)
-		if cached then
-			cached.ishide = true
-		end
-	end,
-})
-
-local function open_scratch_buffer_window(cfg)
-	assert(cfg, "args:<cfg> required")
-	if cfg.direction and (cfg.direction ~= "v" and cfg.direction ~= "s") then
-		error("direction is 'v' or 's' or nil")
-	end
-	local buffer = nil
-	local bufnr = 0
-	local cached = ac_input_buffer_cache(cfg.name)
-	if cached then
-		buffer = cached
-		bufnr = cached.bufnr
-	else
-		bufnr = vim.api.nvim_create_buf(false, true)
-		buffer = ac_input_buffer.new(bufnr, cfg.name, true)
-		table.insert(ac_input_buffer_cache, buffer)
-		if cfg.name then
-			vim.api.nvim_buf_set_name(bufnr, cfg.name)
-		end
-	end
-	local winnr = 0
-	if buffer.ishide then
-		local direction = cfg.direction or "v"
-		vim.api.nvim_command(direction == "v" and "vnew" or "new")
-		winnr = vim.api.nvim_win_get_number(0)
-		local winid = vim.fn.win_getid(winnr)
-		vim.api.nvim_win_set_buf(winid, bufnr)
-		buffer.ishide = false
-	else
-		winnr = vim.fn.bufwinnr(bufnr)
-	end
-	return bufnr, winnr
-end
 
 local function exec_ac_test(test_cmd, input)
 	local out = vim.fn.system(test_cmd, input)
@@ -403,14 +366,17 @@ local function register_keymaps_for_ac_test(test_cmd, bufnr)
 	vim.keymap.set("n", "p", 'gg<S-v>G"+p', { buffer = bufnr })
 end
 
-local function create_ac_input_window(test_cmd)
+local function create_or_reuse_ac_input_buffer(test_cmd)
 	assert(test_cmd, "args:<test_cmd> is required")
-	local bufnr, winnr = open_scratch_buffer_window({
-		direction = "v",
-		name = string.format("AtTestInput[%s]", test_cmd),
-	})
-	vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, { "##### Paste the input for testing #####" })
-	return bufnr, winnr
+	local name = string.format("AtTestInput[%s]", test_cmd)
+	local bufnr = ac_input_buffers[name]
+	if bufnr == -1 then
+		bufnr = create_scratch_buffer()
+		vim.api.nvim_buf_set_name(bufnr, name)
+		vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, { "##### Paste the input for testing #####" })
+		table.insert(ac_input_buffers, bufnr)
+	end
+	return bufnr
 end
 
 local function find_test_cmd(test_cmd)
@@ -450,9 +416,12 @@ local function atTest()
 	end
 	if can then
 		if not find_test_cmd(test_cmd) then
-			local bufnr, winnr = create_ac_input_window(test_cmd)
+			local bufnr = create_or_reuse_ac_input_buffer(test_cmd)
 			register_keymaps_for_ac_test(test_cmd, bufnr)
-			local winid = vim.fn.win_getid(winnr)
+			local winid = vim.fn.bufwinid(bufnr)
+			if winid == -1 then
+				winid = open_split_win_with_buf(bufnr, "v")
+			end
 			vim.fn.win_gotoid(winid)
 			vim.api.nvim_win_set_cursor(winid, { 1, 0 })
 		end
