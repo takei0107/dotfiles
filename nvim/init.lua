@@ -166,9 +166,10 @@ vim.api.nvim_create_autocmd("TermOpen", {
 	end,
 })
 vim.keymap.set("t", "<C-x>", [[<C-\><C-n>]])
-vim.keymap.set("n", "<C-t>t", ":tabnew +terminal<CR>", { silent = true })
-vim.keymap.set("n", "<C-t>s", ":new <bar> :terminal<CR>", { silent = true })
-vim.keymap.set("n", "<C-t>v", ":vnew <bar> :terminal<CR>", { silent = true })
+local terminal_key_prefix = "<C-t>"
+vim.keymap.set("n", terminal_key_prefix .. "t", ":tabnew +terminal<CR>", { silent = true })
+vim.keymap.set("n", terminal_key_prefix .. "s", ":new <bar> :terminal<CR>", { silent = true })
+vim.keymap.set("n", terminal_key_prefix .. "v", ":vnew <bar> :terminal<CR>", { silent = true })
 
 -- lua
 local _lua = setmetatable({}, {
