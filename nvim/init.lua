@@ -345,6 +345,8 @@ local ac_input_buffers = setmetatable({}, {
 			if _bufname == bufname then
 				if vim.api.nvim_buf_is_valid(bufnr) then
 					return bufnr
+				else
+					self[bufnr] = nil
 				end
 			end
 		end
