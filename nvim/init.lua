@@ -313,7 +313,7 @@ local function register_at_make_command(atMakeT)
 end
 
 local ft_makeprg = {
-	c = "gcc -Wall % -o %<.out",
+	c = "gcc -Wall % -o %<.out -lm",
 }
 local function ft_patterns()
 	local p = {}
