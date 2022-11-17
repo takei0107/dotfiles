@@ -340,10 +340,12 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 local ac_input_buffers = setmetatable({}, {
-	__index = function(self, name)
-		for _, bufnr in ipairs(self) do
-			if name == vim.fn.bufname(bufnr) then
-				return bufnr
+	__index = function(self, _bufname) -- '変数[バッファ名]'でbufnr取得可能
+		for bufnr, bufname in pairs(self) do
+			if _bufname == bufname then
+				if vim.api.nvim_buf_is_valid(bufnr) then
+					return bufnr
+				end
 			end
 		end
 		return -1
@@ -368,13 +370,19 @@ end
 
 local function create_or_reuse_ac_input_buffer(test_cmd)
 	assert(test_cmd, "args:<test_cmd> is required")
-	local name = string.format("AtTestInput[%s]", test_cmd)
-	local bufnr = ac_input_buffers[name]
+	local bufname = string.format("AtTestInput[%s]", test_cmd)
+	local bufnr = ac_input_buffers[bufname]
 	if bufnr == -1 then
-		bufnr = create_scratch_buffer()
-		vim.api.nvim_buf_set_name(bufnr, name)
-		vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, { "##### Paste the input for testing #####" })
-		table.insert(ac_input_buffers, bufnr)
+		-- init.luaを再読込した際にバッファ名が被るのを避ける
+		local _bufnr = vim.fn.bufnr(vim.fn.bufnr(bufname))
+		if vim.fn.bufexists(_bufnr) == 1 then
+			bufnr = _bufnr
+		else
+			bufnr = create_scratch_buffer()
+			vim.api.nvim_buf_set_name(bufnr, bufname)
+			vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, { "##### Paste the input for testing #####" })
+		end
+		ac_input_buffers[bufnr] = bufname
 	end
 	return bufnr
 end
