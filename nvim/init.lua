@@ -339,7 +339,7 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
-local ac_input_buffers = setmetatable({}, {
+local buffer_cache_table = setmetatable({}, {
 	__index = function(self, _bufname) -- '変数[バッファ名]'でbufnr取得可能
 		for bufnr, bufname in pairs(self) do
 			if _bufname == bufname then
@@ -353,6 +353,10 @@ local ac_input_buffers = setmetatable({}, {
 		return -1
 	end,
 })
+function buffer_cache_table:new()
+	return setmetatable({}, getmetatable(self))
+end
+local ac_input_buffers = buffer_cache_table:new()
 
 local function exec_ac_test(test_cmd, input)
 	local out = vim.fn.system(test_cmd, input)
