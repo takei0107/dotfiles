@@ -190,11 +190,10 @@ local buffer_cache_table = setmetatable({}, {
 function buffer_cache_table:new()
 	return setmetatable({}, getmetatable(self))
 end
-local ac_input_buffers = buffer_cache_table:new()
 
 -- terminal
 vim.api.nvim_create_augroup("terminal", {})
-vim.api.nvim_create_autocmd("TermOpen", {
+vim.api.nvim_create_autocmd({ "TermOpen" }, {
 	group = "terminal",
 	pattern = "*",
 	callback = function()
@@ -270,13 +269,13 @@ end
 
 vim.keymap.set("t", "<C-x>", [[<C-\><C-n>]])
 local terminal_key_prefix = "<C-t>"
-vim.keymap.set("n", terminal_key_prefix .. "t", function()
+vim.keymap.set("n", terminal_key_prefix .. "v", function()
 	open_terminal(false, "v")
 end, { silent = true })
 vim.keymap.set("n", terminal_key_prefix .. "s", function()
 	open_terminal(false, "s")
 end, { silent = true })
-vim.keymap.set("n", terminal_key_prefix .. "v", ":vnew <bar> :terminal<CR>", { silent = true })
+vim.keymap.set("n", terminal_key_prefix .. "t", ":tab +terminal<CR>", { silent = true })
 
 -- lua
 local _lua = setmetatable({}, {
@@ -377,7 +376,7 @@ local _c = setmetatable({}, {
 _lua()
 _c()
 
--- atcoder
+-- atCoder
 local _atMakeT = {}
 function _atMakeT.new(makeprg)
 	local t = setmetatable({}, _atMakeT)
@@ -414,6 +413,7 @@ local function ft_patterns()
 	return p
 end
 
+local ac_input_buffers = buffer_cache_table:new()
 vim.api.nvim_create_augroup("atCoder", {})
 vim.api.nvim_create_autocmd("FileType", {
 	group = "atCoder",
