@@ -64,7 +64,7 @@ local function open_split_win_with_buf(bufnr, direction)
 	if not direction then
 		direction = "v"
 	end
-	assert(direction == "v" or direction == "s", "args:<direction> is 'v(split)' or s(plit)")
+	assert(direction == "v" or direction == "s", "args 'direction' is 'v' or 's'")
 	vim.api.nvim_command(direction == "v" and "vnew" or "new")
 	local winid = vim.fn.win_getid(vim.api.nvim_win_get_number(0))
 	vim.api.nvim_win_set_buf(winid, bufnr)
@@ -172,6 +172,26 @@ vim.api.nvim_create_autocmd("BufRead", {
 	end,
 })
 
+-- 再利用可能なバッファのテーブル
+local buffer_cache_table = setmetatable({}, {
+	__index = function(self, _bufname) -- '変数[バッファ名]'でbufnr取得可能
+		for bufnr, bufname in pairs(self) do
+			if _bufname == bufname then
+				if vim.api.nvim_buf_is_valid(bufnr) then
+					return bufnr
+				else
+					self[bufnr] = nil
+				end
+			end
+		end
+		return -1
+	end,
+})
+function buffer_cache_table:new()
+	return setmetatable({}, getmetatable(self))
+end
+local ac_input_buffers = buffer_cache_table:new()
+
 -- terminal
 vim.api.nvim_create_augroup("terminal", {})
 vim.api.nvim_create_autocmd("TermOpen", {
@@ -272,7 +292,7 @@ local _c = setmetatable({}, {
 		vim.api.nvim_create_augroup("c", {})
 		vim.api.nvim_create_autocmd("FileType", {
 			group = "c",
-			pattern = "c",
+			pattern = { "c", "cpp" },
 			callback = function(_)
 				setlocal.tabstop = 4
 				setlocal.shiftwidth = 4
@@ -295,7 +315,7 @@ function _atMakeT.new(makeprg)
 end
 local function register_at_make_command(atMakeT)
 	if not atMakeT then
-		error("arg:<atMakeT> is nil")
+		error("arg 'atMakeT' is nil")
 	end
 	if not atMakeT.makeprg then
 		error("atMakeT.makeprg is nil or false")
@@ -339,25 +359,6 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
-local buffer_cache_table = setmetatable({}, {
-	__index = function(self, _bufname) -- '変数[バッファ名]'でbufnr取得可能
-		for bufnr, bufname in pairs(self) do
-			if _bufname == bufname then
-				if vim.api.nvim_buf_is_valid(bufnr) then
-					return bufnr
-				else
-					self[bufnr] = nil
-				end
-			end
-		end
-		return -1
-	end,
-})
-function buffer_cache_table:new()
-	return setmetatable({}, getmetatable(self))
-end
-local ac_input_buffers = buffer_cache_table:new()
-
 local function exec_ac_test(test_cmd, input)
 	local out = vim.fn.system(test_cmd, input)
 	print("AtTest: out -> " .. out)
@@ -375,7 +376,7 @@ local function register_keymaps_for_ac_test(test_cmd, bufnr)
 end
 
 local function create_or_reuse_ac_input_buffer(test_cmd)
-	assert(test_cmd, "args:<test_cmd> is required")
+	assert(test_cmd, "args 'test_cmd' is required")
 	local bufname = string.format("AtTestInput[%s]", test_cmd)
 	local bufnr = ac_input_buffers[bufname]
 	if bufnr == -1 then
