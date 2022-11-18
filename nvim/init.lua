@@ -201,10 +201,81 @@ vim.api.nvim_create_autocmd("TermOpen", {
 		vim.cmd("startinsert")
 	end,
 })
+
+local function get_terminal_buffer_list()
+	local l = {}
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
+			table.insert(l, bufnr)
+		end
+	end
+	return l
+end
+
+local function select_for_open_terminal(terminal_buffer_list)
+	local item_for_new = "n"
+	local selections = setmetatable({}, {
+		__call = function(self)
+			local items = {}
+			table.insert(items, item_for_new)
+			for item, _ in pairs(self) do
+				table.insert(items, item)
+			end
+			return items
+		end,
+	})
+	for i, bufnr in ipairs(terminal_buffer_list) do
+		local term_title = vim.api.nvim_buf_get_var(bufnr, "term_title")
+		local cmd = string.match(term_title, "term://.*//%d+:(.*)")
+		selections[i] = cmd
+	end
+	local r = -1
+	vim.ui.select(selections(), {
+		prompt = "select for open(or create) terminal:",
+		format_item = function(item)
+			if item == item_for_new then
+				return "create new terminal buffer"
+			end
+			return string.format("%s", selections[item])
+		end,
+	}, function(choice)
+		if choice ~= item_for_new then
+			r = terminal_buffer_list[choice]
+		end
+	end)
+	return r
+end
+
+local function open_terminal(isTab, direction)
+	local terminal_buf_list = get_terminal_buffer_list()
+	local bufnr = -1
+	if not vim.tbl_isempty(terminal_buf_list) then
+		bufnr = select_for_open_terminal(terminal_buf_list)
+	end
+	local isNew = false
+	if bufnr == -1 then
+		isNew = true
+		bufnr = vim.api.nvim_create_buf(true, false)
+	end
+	local winid = vim.fn.bufwinid(bufnr)
+	if winid == -1 then
+		winid = open_split_win_with_buf(bufnr, direction)
+		if isNew then
+			vim.api.nvim_command("terminal")
+			return
+		end
+	end
+	vim.fn.win_gotoid(winid)
+end
+
 vim.keymap.set("t", "<C-x>", [[<C-\><C-n>]])
 local terminal_key_prefix = "<C-t>"
-vim.keymap.set("n", terminal_key_prefix .. "t", ":tabnew +terminal<CR>", { silent = true })
-vim.keymap.set("n", terminal_key_prefix .. "s", ":new <bar> :terminal<CR>", { silent = true })
+vim.keymap.set("n", terminal_key_prefix .. "t", function()
+	open_terminal(false, "v")
+end, { silent = true })
+vim.keymap.set("n", terminal_key_prefix .. "s", function()
+	open_terminal(false, "s")
+end, { silent = true })
 vim.keymap.set("n", terminal_key_prefix .. "v", ":vnew <bar> :terminal<CR>", { silent = true })
 
 -- lua
