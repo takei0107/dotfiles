@@ -201,6 +201,14 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
 	end,
 })
 
+local terminal_key_prefix = "<C-t>"
+local function register_keymaps_for_hide_term(bufnr)
+	if not bufnr then
+		error("arg 'bufnr' is required")
+	end
+	vim.keymap.set("n", terminal_key_prefix .. "x", "<cmd>hide<CR>", { silent = true, buffer = bufnr })
+end
+
 local function get_terminal_buffer_list()
 	local l = {}
 	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
@@ -261,6 +269,7 @@ local function open_terminal(isTab, direction)
 		winid = open_split_win_with_buf(bufnr, direction)
 		if isNew then
 			vim.api.nvim_command("terminal")
+			register_keymaps_for_hide_term(bufnr)
 			return
 		end
 	end
@@ -268,14 +277,13 @@ local function open_terminal(isTab, direction)
 end
 
 vim.keymap.set("t", "<C-x>", [[<C-\><C-n>]])
-local terminal_key_prefix = "<C-t>"
 vim.keymap.set("n", terminal_key_prefix .. "v", function()
 	open_terminal(false, "v")
 end, { silent = true })
 vim.keymap.set("n", terminal_key_prefix .. "s", function()
 	open_terminal(false, "s")
 end, { silent = true })
-vim.keymap.set("n", terminal_key_prefix .. "t", ":tab +terminal<CR>", { silent = true })
+vim.keymap.set("n", terminal_key_prefix .. "t", ":tabnew +terminal<CR>", { silent = true })
 
 -- lua
 local _lua = setmetatable({}, {
