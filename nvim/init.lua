@@ -26,6 +26,13 @@ vim.keymap.set("i", "'", "''<ESC>i")
 
 vim.keymap.set("v", "$", "g_")
 
+vim.keymap.set("o", 'a"', '2i"')
+vim.keymap.set("x", 'a"', '2i"')
+vim.keymap.set("o", "a'", "2i'")
+vim.keymap.set("x", "a'", "2i'")
+vim.keymap.set("o", "a`", "2i`")
+vim.keymap.set("x", "a`", "2i`")
+
 vim.keymap.set("n", "<F5>", function()
 	local vimrc = vim.env.MYVIMRC
 	vim.cmd("luafile " .. vimrc)
