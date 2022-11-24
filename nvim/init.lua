@@ -1,6 +1,7 @@
 local set = vim.opt
 local setlocal = vim.opt_local
 
+set.belloff = "all"
 set.number = true
 set.list = true
 set.scrolloff = 5
@@ -196,16 +197,48 @@ function buffer_cache_table:new()
 end
 
 -- terminal
+local terminal_key_prefix = "<C-t>"
+
+local before_open_term = {}
 vim.api.nvim_create_augroup("terminal", {})
 vim.api.nvim_create_autocmd({ "TermOpen" }, {
 	group = "terminal",
 	pattern = "*",
-	callback = function()
+	callback = function(callback_args)
 		vim.cmd("startinsert")
 	end,
 })
+vim.api.nvim_create_autocmd({ "TermClose" }, {
+	group = "terminal",
+	pattern = "*",
+	callback = function(callback_args)
+		if not vim.tbl_isempty(before_open_term) then
+			if before_open_term.bufnr then
+				if callback_args.buf == before_open_term.bufnr then
+					before_open_term = {}
+				end
+			end
+		end
+	end,
+})
 
-local terminal_key_prefix = "<C-t>"
+local function toggle_term()
+	if vim.tbl_isempty(before_open_term) then
+		print("no terminal buffer is available")
+		return
+	end
+	if before_open_term.bufnr then
+		local winid = vim.fn.bufwinid(before_open_term.bufnr)
+		if winid == -1 then
+			winid = open_split_win_with_buf(before_open_term.bufnr, before_open_term.direction or "v")
+		end
+		vim.fn.win_gotoid(winid)
+	end
+end
+
+vim.keymap.set("n", terminal_key_prefix .. "x", function()
+	toggle_term()
+end, { silent = true })
 local function register_keymaps_for_hide_term(bufnr)
 	if not bufnr then
 		error("arg 'bufnr' is required")
@@ -269,6 +302,7 @@ local function open_terminal(isTab, direction)
 		bufnr = vim.api.nvim_create_buf(true, false)
 	end
 	local winid = vim.fn.bufwinid(bufnr)
+	before_open_term = { bufnr = bufnr, direction = direction or "v" }
 	if winid == -1 then
 		winid = open_split_win_with_buf(bufnr, direction)
 		if isNew then
