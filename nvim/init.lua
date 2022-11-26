@@ -1,5 +1,6 @@
 local set = vim.opt
 local setlocal = vim.opt_local
+local S = vim.env
 
 -- options {{{
 set.belloff = "all"
@@ -35,7 +36,7 @@ vim.keymap.set({ "o", "x" }, "a'", "2i'")
 vim.keymap.set({ "o", "x" }, "a`", "2i`")
 
 vim.keymap.set("n", "<F5>", function()
-	local vimrc = vim.env.MYVIMRC
+	local vimrc = S.MYVIMRC
 	vim.cmd("luafile " .. vimrc)
 	print(string.format("%s reloaded", vimrc))
 end)
@@ -155,7 +156,7 @@ end, {
 -- }}}
 
 -- {{{ fold vimrc
-local vimrc_dir = vim.fn.fnamemodify(vim.env.MYVIMRC, ":p:h")
+local vimrc_dir = vim.fn.fnamemodify(S.MYVIMRC, ":p:h")
 vim.api.nvim_create_augroup("fold-method", {})
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	group = "fold-method",
