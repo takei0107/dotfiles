@@ -1,6 +1,7 @@
 local set = vim.opt
 local setlocal = vim.opt_local
 
+-- options {{{
 set.belloff = "all"
 set.number = true
 set.list = true
@@ -15,7 +16,9 @@ set.cursorlineopt = { "screenline" }
 set.virtualedit = "block"
 set.laststatus = 2
 set.matchpairs:append("<:>")
+-- }}}
 
+-- {{{ keymaps
 -- same as <C-L>
 -- vim.keymap.set("n", "<ESC><ESC>", "<cmd>nohlsearch<CR><ESC>", { silent = true })
 
@@ -41,7 +44,9 @@ end)
 vim.keymap.set("n", "<C-k>", '"+y')
 -- CTRL+k+%で+レジスタにバッファの内容をヤンク
 vim.keymap.set("n", "<C-k>%", ":%y +<CR>")
+-- }}}
 
+-- {{{ _G functions
 _G.pp = function(arg)
 	vim.pretty_print(arg)
 end
@@ -49,7 +54,9 @@ end
 _G.termcodes = function(key)
 	return vim.api.nvim_replace_termcodes(key, true, true, true)
 end
+-- }}}
 
+-- {{{ local functions
 local function _getpos(expr)
 	local pos = vim.fn.getpos(expr)
 	return { bufnum = pos[1], lnum = pos[2], col = pos[3], off = pos[4] }
@@ -75,7 +82,9 @@ local function open_split_win_with_buf(bufnr, direction)
 	vim.api.nvim_win_set_buf(winid, bufnr)
 	return winid
 end
+-- }}}
 
+-- {{{ surround
 local function surround(pair)
 	if not pair then
 		error("pair required")
@@ -133,7 +142,9 @@ local function register_surround_pairs()
 	end
 end
 register_surround_pairs()
+-- }}}
 
+-- {{{ help
 -- helpをvsplitで開く
 vim.api.nvim_create_user_command("Vhelp", function(opts)
 	vim.api.nvim_command("vertical help " .. opts.args)
@@ -141,8 +152,21 @@ end, {
 	nargs = 1,
 	complete = "help",
 })
+-- }}}
 
--- auto-mkdir
+-- {{{ fold vimrc
+local vimrc_dir = vim.fn.fnamemodify(vim.env.MYVIMRC, ":p:h")
+vim.api.nvim_create_augroup("fold-method", {})
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+	group = "fold-method",
+	pattern = { vimrc_dir .. "/*.lua", vimrc_dir .. "/*/*.lua" },
+	callback = function()
+		set.foldmethod = "marker"
+	end,
+})
+-- }}}
+
+--  {{{ auto-mkdir
 -- see https://vim-jp.org/vim-users-jp/2011/02/20/Hack-202.html
 local function confirm_should_mkdir(dir)
 	local r = false
@@ -166,8 +190,9 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		auto_mkdir(vim.fn.fnamemodify(args.file, ":p:h"), vim.v.cmdbang == 1)
 	end,
 })
+-- }}}
 
--- keywordprg for lua-vimrc
+-- {{{ keywordprg for lua-vimrc
 vim.api.nvim_create_augroup("lua-help", {})
 vim.api.nvim_create_autocmd("BufRead", {
 	group = "lua-help",
@@ -176,7 +201,9 @@ vim.api.nvim_create_autocmd("BufRead", {
 		setlocal.keywordprg = vim.fn.exists(":Vhelp") and ":Vhelp" or ":help"
 	end,
 })
+-- }}}
 
+-- {{{ buffer
 -- 再利用可能なバッファのテーブル
 local buffer_cache_table = setmetatable({}, {
 	__index = function(self, _bufname) -- '変数[バッファ名]'でbufnr取得可能
@@ -195,8 +222,9 @@ local buffer_cache_table = setmetatable({}, {
 function buffer_cache_table:new()
 	return setmetatable({}, getmetatable(self))
 end
+-- }}}
 
--- terminal
+--  {{{ terminal
 local terminal_key_prefix = "<C-t>"
 
 local before_open_term = {}
@@ -322,8 +350,9 @@ vim.keymap.set("n", terminal_key_prefix .. "s", function()
 	open_terminal(false, "s")
 end, { silent = true })
 vim.keymap.set("n", terminal_key_prefix .. "t", ":tabnew +terminal<CR>", { silent = true })
+-- }}}
 
--- lua
+--  {{{1 lua
 local _lua = setmetatable({}, {
 	__call = function(self)
 		vim.api.nvim_create_augroup("lua", {})
@@ -354,7 +383,7 @@ local _lua = setmetatable({}, {
 	end,
 })
 
--- luacheck
+-- {{{2 luacheck
 _lua.luacheck = function(path)
 	if vim.fn.executable("luacheck") ~= 1 then
 		error("luacheck is not installed")
@@ -387,8 +416,9 @@ _lua.luacheck = function(path)
 		error(err)
 	end
 end
+-- }}}2
 
--- stylua
+-- {{{2 stylua
 _lua.stylua = function()
 	if vim.fn.executable("stylua") ~= 1 then
 		error("stylua is not installed")
@@ -401,8 +431,10 @@ _lua.stylua = function()
 	local new_lines = vim.split(out, "\n")
 	vim.api.nvim_buf_set_lines(vim.fn.bufnr(), 0, -1, true, new_lines)
 end
+-- }}}2
+-- }}}1
 
--- C
+-- {{{ C
 local _c = setmetatable({}, {
 	__call = function(_)
 		vim.api.nvim_create_augroup("c", {})
@@ -417,12 +449,14 @@ local _c = setmetatable({}, {
 		})
 	end,
 })
+-- }}}
 
--- enable/disable language(filetype) settings
+-- {{{ enable/disable language(filetype) settings
 _lua()
 _c()
+-- }}}
 
--- atCoder
+-- {{{ atCoder
 local _atMakeT = {}
 function _atMakeT.new(makeprg)
 	local t = setmetatable({}, _atMakeT)
@@ -563,4 +597,5 @@ end
 vim.api.nvim_create_user_command("AtTest", function()
 	atTest()
 end, {})
+-- }}}
 
