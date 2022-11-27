@@ -8,6 +8,7 @@ set.number = true
 set.list = true
 set.scrolloff = 5
 set.smartindent = true
+set.smarttab = true
 set.undofile = true
 set.swapfile = false
 set.splitright = true
@@ -161,7 +162,7 @@ vim.api.nvim_create_augroup("fold-method", {})
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	group = "fold-method",
 	pattern = { vimrc_dir .. "/*.lua", vimrc_dir .. "/*/*.lua" },
-	callback = function()
+	callback = function(_)
 		set.foldmethod = "marker"
 	end,
 })
@@ -207,9 +208,9 @@ vim.api.nvim_create_autocmd("BufRead", {
 -- {{{ buffer
 -- 再利用可能なバッファのテーブル
 local buffer_cache_table = setmetatable({}, {
-	__index = function(self, _bufname) -- '変数[バッファ名]'でbufnr取得可能
+	__index = function(self, name) -- '変数[バッファ名]'でbufnr取得可能
 		for bufnr, bufname in pairs(self) do
-			if _bufname == bufname then
+			if name == bufname then
 				if vim.api.nvim_buf_is_valid(bufnr) then
 					return bufnr
 				else
@@ -233,7 +234,7 @@ vim.api.nvim_create_augroup("terminal", {})
 vim.api.nvim_create_autocmd({ "TermOpen" }, {
 	group = "terminal",
 	pattern = "*",
-	callback = function(callback_args)
+	callback = function(_)
 		vim.cmd("startinsert")
 	end,
 })
@@ -353,39 +354,9 @@ end, { silent = true })
 vim.keymap.set("n", terminal_key_prefix .. "t", ":tabnew +terminal<CR>", { silent = true })
 -- }}}
 
---  {{{1 lua
-local _lua = setmetatable({}, {
-	__call = function(self)
-		vim.api.nvim_create_augroup("lua", {})
-		vim.api.nvim_create_autocmd("FileType", {
-			group = "lua",
-			pattern = "lua",
-			callback = function(callback_args)
-				setlocal.tabstop = 2
-				setlocal.shiftwidth = 2
-				vim.api.nvim_buf_create_user_command(callback_args.buf, "LuaCheck", function(opts)
-					self.luacheck(opts.args)
-				end, {
-					nargs = "?",
-					complete = "file",
-				})
-				vim.api.nvim_buf_create_user_command(callback_args.buf, "LuaCheckCurrent", function()
-					self.luacheck(vim.fn.expand("%"))
-				end, {})
-			end,
-		})
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = "lua",
-			pattern = "*.lua",
-			callback = function()
-				self.stylua()
-			end,
-		})
-	end,
-})
-
+-- {{{1 lua
 -- {{{2 luacheck
-_lua.luacheck = function(path)
+local luacheck = function(path)
 	if vim.fn.executable("luacheck") ~= 1 then
 		error("luacheck is not installed")
 		return
@@ -420,7 +391,7 @@ end
 -- }}}2
 
 -- {{{2 stylua
-_lua.stylua = function()
+local stylua = function()
 	if vim.fn.executable("stylua") ~= 1 then
 		error("stylua is not installed")
 	end
@@ -435,26 +406,80 @@ end
 -- }}}2
 -- }}}1
 
--- {{{ C
-local _c = setmetatable({}, {
-	__call = function(_)
-		vim.api.nvim_create_augroup("c", {})
-		vim.api.nvim_create_autocmd("FileType", {
-			group = "c",
-			pattern = { "c", "cpp" },
-			callback = function(_)
-				setlocal.tabstop = 4
-				setlocal.shiftwidth = 4
-				setlocal.complete:append("i")
+-- {{{ lang settings
+local lang_settings = setmetatable({
+	expandtab = false,
+	tabstop = 2,
+	shiftwidth = 0,
+	callback = nil,
+}, {
+	__call = function(self, args)
+		setlocal.expandtab = self.expandtab
+		setlocal.tabstop = self.tabstop
+		setlocal.shiftwidth = self.shiftwidth
+		if self.callback then
+			self.callback(args)
+		end
+	end,
+})
+function lang_settings:new(override)
+	local new = vim.tbl_extend("force", self, override)
+	setmetatable(new, getmetatable(self))
+	return new
+end
+local langs = setmetatable({
+	["*"] = lang_settings:new({}),
+}, {
+	__index = function(self)
+		return self["*"]
+	end,
+	__newindex = function(self, key, value)
+		if type(key) == "string" then
+			rawset(self, key, value)
+		elseif type(key) == "table" then
+			for _, v in ipairs(key) do
+				rawset(self, v, value)
+			end
+		end
+	end,
+})
+
+langs["lua"] = lang_settings:new({
+	callback = function(args)
+		vim.api.nvim_buf_create_user_command(args.buf, "LuaCheck", function(opts)
+			luacheck(opts.args)
+		end, {
+			nargs = "?",
+			complete = "file",
+		})
+		vim.api.nvim_buf_create_user_command(args.buf, "LuaCheckCurrent", function()
+			luacheck(vim.fn.expand("%"))
+		end, {})
+		vim.api.nvim_create_augroup("stylua", {})
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			group = "stylua",
+			pattern = "*.lua",
+			callback = function()
+				stylua()
 			end,
 		})
 	end,
 })
--- }}}
+langs[{ "c", "cpp" }] = lang_settings:new({
+	tabstop = 4,
+	callback = function(args)
+		setlocal.complete:append("i")
+	end,
+})
 
--- {{{ enable/disable language(filetype) settings
-_lua()
-_c()
+vim.api.nvim_create_augroup("lang", {})
+vim.api.nvim_create_autocmd("Filetype", {
+	group = "lang",
+	pattern = "*",
+	callback = function(args)
+		langs[args.match](args)
+	end,
+})
 -- }}}
 
 -- {{{ atCoder
