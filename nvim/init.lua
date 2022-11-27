@@ -406,7 +406,7 @@ end
 -- }}}2
 -- }}}1
 
--- {{{ lang settings
+-- {{{1 lang settings
 local lang_settings = setmetatable({
 	expandtab = false,
 	tabstop = 2,
@@ -444,6 +444,8 @@ local langs = setmetatable({
 	end,
 })
 
+-- {{{2 langs
+-- {{{3 lua
 langs["lua"] = lang_settings:new({
 	callback = function(args)
 		vim.api.nvim_buf_create_user_command(args.buf, "LuaCheck", function(opts)
@@ -465,12 +467,16 @@ langs["lua"] = lang_settings:new({
 		})
 	end,
 })
+-- }}}3
+-- {{{3 c, cpp
 langs[{ "c", "cpp" }] = lang_settings:new({
 	tabstop = 4,
 	callback = function(args)
 		setlocal.complete:append("i")
 	end,
 })
+-- }}}
+-- }}}2
 
 vim.api.nvim_create_augroup("lang", {})
 vim.api.nvim_create_autocmd("Filetype", {
@@ -480,7 +486,7 @@ vim.api.nvim_create_autocmd("Filetype", {
 		langs[args.match](args)
 	end,
 })
--- }}}
+-- }}}1
 
 -- {{{ atCoder
 local _atMakeT = {}
