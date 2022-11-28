@@ -6,6 +6,7 @@ local S = vim.env
 set.belloff = "all"
 set.number = true
 set.list = true
+set.relativenumber = true
 set.scrolloff = 5
 set.smartindent = true
 set.smarttab = true
@@ -411,14 +412,14 @@ local lang_settings = setmetatable({
 	expandtab = false,
 	tabstop = 2,
 	shiftwidth = 0,
-	callback = nil,
+	configure = nil,
 }, {
 	__call = function(self, args)
 		setlocal.expandtab = self.expandtab
 		setlocal.tabstop = self.tabstop
 		setlocal.shiftwidth = self.shiftwidth
-		if self.callback then
-			self.callback(args)
+		if self.configure then
+			self.configure(args)
 		end
 	end,
 })
@@ -427,18 +428,17 @@ function lang_settings:new(override)
 	setmetatable(new, getmetatable(self))
 	return new
 end
-local langs = setmetatable({
-	["*"] = lang_settings:new({}),
-}, {
+local langs = setmetatable({}, {
 	__index = function(self)
-		return self["*"]
+		return lang_settings
 	end,
 	__newindex = function(self, key, value)
+		local settings = lang_settings:new(value)
 		if type(key) == "string" then
-			rawset(self, key, value)
+			rawset(self, key, settings)
 		elseif type(key) == "table" then
 			for _, v in ipairs(key) do
-				rawset(self, v, value)
+				rawset(self, v, settings)
 			end
 		end
 	end,
@@ -446,8 +446,8 @@ local langs = setmetatable({
 
 -- {{{2 langs
 -- {{{3 lua
-langs["lua"] = lang_settings:new({
-	callback = function(args)
+langs["lua"] = {
+	configure = function(args)
 		vim.api.nvim_buf_create_user_command(args.buf, "LuaCheck", function(opts)
 			luacheck(opts.args)
 		end, {
@@ -466,15 +466,15 @@ langs["lua"] = lang_settings:new({
 			end,
 		})
 	end,
-})
+}
 -- }}}3
 -- {{{3 c, cpp
-langs[{ "c", "cpp" }] = lang_settings:new({
+langs[{ "c", "cpp" }] = {
 	tabstop = 4,
-	callback = function(args)
+	configure = function(_)
 		setlocal.complete:append("i")
 	end,
-})
+}
 -- }}}
 -- }}}2
 
