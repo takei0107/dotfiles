@@ -49,6 +49,17 @@ vim.keymap.set("n", "<C-k>", '"+y')
 vim.keymap.set("n", "<C-k>%", ":%y +<CR>")
 -- }}}
 
+-- popup-menuが出ているときに<CR>で選択する
+vim.keymap.set("i", "<CR>", function()
+	if vim.fn.pumvisible() == 1 then
+		return "<C-Y>"
+	else
+		return "<CR>"
+	end
+end, {
+	expr = true,
+})
+
 -- {{{ _G functions
 _G.pp = function(arg)
 	vim.pretty_print(arg)
