@@ -41,7 +41,7 @@ vim.keymap.set({ "o", "x" }, "a`", "2i`")
 
 -- 'f'の後ろからバージョン
 -- ';'対応
-vim.keymap.set({ "n" }, "<leader>f", function()
+vim.keymap.set({ "n", "x" }, "<leader>f", function()
 	local c = vim.fn.getcharstr()
 	vim.cmd(string.format("normal F%s<CR>", c)) -- ';'でリピートできるように
 	local cursor_pos = vim.api.nvim_win_get_cursor(0)
