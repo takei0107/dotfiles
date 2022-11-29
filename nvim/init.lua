@@ -2,6 +2,8 @@ local set = vim.opt
 local setlocal = vim.opt_local
 local S = vim.env
 
+vim.g.mapleader = " "
+
 -- options {{{
 set.belloff = "all"
 set.number = true
@@ -37,6 +39,26 @@ vim.keymap.set({ "o", "x" }, 'a"', '2i"')
 vim.keymap.set({ "o", "x" }, "a'", "2i'")
 vim.keymap.set({ "o", "x" }, "a`", "2i`")
 
+-- 'f'の後ろからバージョン
+-- ';'対応
+vim.keymap.set({ "n" }, "<leader>f", function()
+	local c = vim.fn.getcharstr()
+	vim.cmd(string.format("normal F%s<CR>", c)) -- ';'でリピートできるように
+	local cursor_pos = vim.api.nvim_win_get_cursor(0)
+	local row = cursor_pos[1] - 1
+	local col_start = cursor_pos[2] + 1
+	local col_end = vim.fn.col("$") - 1
+	if col_start >= col_end then
+		return
+	end
+	local searched = vim.api.nvim_buf_get_text(vim.fn.bufnr(), row, col_start, row, col_end, {})[1]:reverse()
+	local index, _ = searched:find(c, 1, true)
+	if index then
+		vim.api.nvim_win_set_cursor(0, { cursor_pos[1], col_end - index })
+	end
+end)
+
+-- reload vimrc
 vim.keymap.set("n", "<F5>", function()
 	local vimrc = S.MYVIMRC
 	vim.cmd("luafile " .. vimrc)
@@ -47,7 +69,6 @@ end)
 vim.keymap.set("n", "<C-k>", '"+y')
 -- CTRL+k+%で+レジスタにバッファの内容をヤンク
 vim.keymap.set("n", "<C-k>%", ":%y +<CR>")
--- }}}
 
 -- popup-menuが出ているときに<CR>で選択する
 vim.keymap.set("i", "<CR>", function()
@@ -59,6 +80,7 @@ vim.keymap.set("i", "<CR>", function()
 end, {
 	expr = true,
 })
+-- }}}
 
 -- {{{ _G functions
 _G.pp = function(arg)
