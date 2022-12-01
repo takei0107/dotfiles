@@ -108,6 +108,22 @@ local function create_scratch_buffer()
 	return vim.api.nvim_create_buf(false, true)
 end
 
+-- {1,2},{"hoge", "fuga"} => {1,2,"hoge","fuga"}
+local function tbl_merge_simple(...)
+	local r = setmetatable({}, {
+		__concat = function(self, other)
+			for _, v in ipairs(other) do
+				table.insert(self, v)
+			end
+			return self
+		end,
+	})
+	for i = 1, select("#", ...) do
+		r = r .. select(i, ...)
+	end
+	return setmetatable(r, nil)
+end
+
 local function open_split_win_with_buf(bufnr, direction)
 	if not direction then
 		direction = "v"
@@ -126,7 +142,6 @@ local function surround(pair)
 		error("pair required")
 	end
 	if not pair.l or not pair.r then
-		pp(pair)
 		error("pair must be a table ( { l, r } ).")
 	end
 	local v_start = _getpos("v")
@@ -178,6 +193,89 @@ local function register_surround_pairs()
 	end
 end
 register_surround_pairs()
+
+local surrounder = {
+	exec = function(self, lines)
+		if not lines then
+			error("arg:<lines> is nil")
+		end
+		if not self.pair then
+			error("property:<pair> is nil")
+		end
+		local e = #lines
+		if e < 1 then
+			error("at least 1 line required (arg:<lines>)")
+		end
+		local surrounded = {}
+		for i, line in ipairs(lines) do
+			if i == 1 then
+				line = self.pair.l .. line
+			end
+			if i == e then
+				line = line .. self.pair.r
+			end
+			table.insert(surrounded, line)
+		end
+		return surrounded
+	end,
+}
+surrounder.new = function(self, pair)
+	if not pair then
+		error("arg:<pair> is nil")
+	end
+	local obj = setmetatable({
+		pair = pair,
+	}, { __index = surrounder })
+	return obj
+end
+local surrounders = {
+	register = function(self, l, r)
+		self[l] = surrounder:new({ l = l, r = r })
+	end,
+	exists = function(self, l)
+		return vim.tbl_contains(vim.tbl_keys(self), l)
+	end,
+}
+surrounders:register("(", ")")
+surrounders:register("<", ">")
+
+local function surround_exec(input, lines)
+	if not input then
+		error("arg:<input> is nil")
+	end
+	if not lines then
+		error("arg:<lines> is nil")
+	end
+	if not surrounders:exists(input) then
+		return
+	end
+	return surrounders[input]:exec(lines)
+end
+
+function get_moved_positions()
+	local start_row, start_col, end_row, end_col =
+		unpack(tbl_merge_simple(vim.api.nvim_buf_get_mark(0, "["), vim.api.nvim_buf_get_mark(0, "]")))
+	return start_row - 1, start_col, end_row - 1, end_col
+end
+function surround2(type)
+	if not type then
+		setlocal.opfunc = "v:lua.surround2"
+		return "g@"
+	end
+	setlocal.opfunc = ""
+	local start_row, start_col, end_row, end_col = get_moved_positions()
+	local lines = vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col + 1, {})
+	local l = vim.fn.getcharstr()
+	if not surrounders:exists(l) then
+		return
+	end
+	local surrounded = surround_exec(l, lines)
+	vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col + 1, surrounded)
+end
+vim.keymap.set("n", "sa", function()
+	return surround2()
+end, { expr = true })
+
 -- }}}
 
 -- {{{ help
