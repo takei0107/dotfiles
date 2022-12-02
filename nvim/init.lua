@@ -30,6 +30,7 @@ set.matchpairs:append("<:>")
 vim.keymap.set("i", "(", "()<ESC>i")
 vim.keymap.set("i", "[", "[]<ESC>i")
 vim.keymap.set("i", "{", "{}<ESC>i")
+vim.keymap.set("i", "<", "<><ESC>i")
 vim.keymap.set("i", '"', '""<ESC>i')
 vim.keymap.set("i", "'", "''<ESC>i")
 
@@ -119,9 +120,15 @@ local function tbl_merge_simple(...)
 		end,
 	})
 	for i = 1, select("#", ...) do
-		r = r .. select(i, ...)
+		r = r .. (select(i, ...))
 	end
 	return setmetatable(r, nil)
+end
+
+local function get_marked_range(mark_start, mark_end)
+	local start_row, start_col, end_row, end_col =
+		unpack(tbl_merge_simple(vim.api.nvim_buf_get_mark(0, mark_start), vim.api.nvim_buf_get_mark(0, mark_end)))
+	return start_row - 1, start_col, end_row - 1, end_col
 end
 
 local function open_split_win_with_buf(bufnr, direction)
@@ -137,63 +144,6 @@ end
 -- }}}
 
 -- {{{ surround
-local function surround(pair)
-	if not pair then
-		error("pair required")
-	end
-	if not pair.l or not pair.r then
-		error("pair must be a table ( { l, r } ).")
-	end
-	local v_start = _getpos("v")
-	local v_end = _getpos(".")
-	local start_relative_lnum = 1
-	local end_relative_lnum = v_end.lnum - v_start.lnum + 1
-	local lines =
-		vim.api.nvim_buf_get_text(vim.fn.bufnr(), v_start.lnum - 1, v_start.col - 1, v_end.lnum - 1, v_end.col, {})
-	if vim.tbl_isempty(lines) then
-		error("lines is empty")
-	end
-	local surroundes_lines = {}
-	for i, line in ipairs(lines) do
-		if i == start_relative_lnum then
-			line = pair.l .. line
-		end
-		if i == end_relative_lnum then
-			line = line .. pair.r
-		end
-		table.insert(surroundes_lines, line)
-	end
-	vim.api.nvim_buf_set_text(
-		vim.fn.bufnr(),
-		v_start.lnum - 1,
-		v_start.col - 1,
-		v_end.lnum - 1,
-		v_end.col,
-		surroundes_lines
-	)
-	-- return modiefied position
-	return v_end.lnum, (v_start.lnum == v_end.lnum) and v_end.col + 2 or v_end.col + 1
-end
-
-local function register_surround_pairs()
-	local surround_pairs = {
-		{ l = "(", r = ")" },
-		{ l = "{", r = "}" },
-		{ l = "[", r = "]" },
-		{ l = "<", r = ">" },
-		{ l = "'", r = "'" },
-		{ l = '"', r = '"' },
-	}
-	for _, pair in ipairs(surround_pairs) do
-		vim.keymap.set("v", "sa" .. pair.l, function()
-			local mod_lnum, mod_col = surround({ l = pair.l, r = pair.r })
-			vim.fn.cursor(mod_lnum, mod_col)
-			vim.api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
-		end, { silent = true })
-	end
-end
-register_surround_pairs()
-
 local surrounder = {
 	exec = function(self, lines)
 		if not lines then
@@ -219,7 +169,7 @@ local surrounder = {
 		return surrounded
 	end,
 }
-surrounder.new = function(self, pair)
+surrounder.new = function(_, pair)
 	if not pair then
 		error("arg:<pair> is nil")
 	end
@@ -237,7 +187,11 @@ local surrounders = {
 	end,
 }
 surrounders:register("(", ")")
+surrounders:register("[", "]")
+surrounders:register("{", "}")
 surrounders:register("<", ">")
+surrounders:register("'", "'")
+surrounders:register('"', '"')
 
 local function surround_exec(input, lines)
 	if not input then
@@ -251,30 +205,44 @@ local function surround_exec(input, lines)
 	end
 	return surrounders[input]:exec(lines)
 end
-
-function get_moved_positions()
-	local start_row, start_col, end_row, end_col =
-		unpack(tbl_merge_simple(vim.api.nvim_buf_get_mark(0, "["), vim.api.nvim_buf_get_mark(0, "]")))
-	return start_row - 1, start_col, end_row - 1, end_col
+local function get_visualed_range()
+	local start_pos = _getpos("v")
+	local end_pos = _getpos(".")
+	return start_pos.lnum - 1, start_pos.col - 1, end_pos.lnum - 1, end_pos.col - 1
 end
-function surround2(type)
-	if not type then
-		setlocal.opfunc = "v:lua.surround2"
-		return "g@"
+local function surround(is_opfunc)
+	local get_range_fn = get_visualed_range
+	if is_opfunc then
+		setlocal.opfunc = ""
+		_G.surround = nil
+		get_range_fn = function()
+			return get_marked_range("[", "]")
+		end
 	end
-	setlocal.opfunc = ""
-	local start_row, start_col, end_row, end_col = get_moved_positions()
+	local start_row, start_col, end_row, end_col = get_range_fn()
 	local lines = vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col + 1, {})
 	local l = vim.fn.getcharstr()
 	if not surrounders:exists(l) then
 		return
 	end
 	local surrounded = surround_exec(l, lines)
+	--print(("start_row = %d, start_col = %d, end_row = %d, end_col = %d"):format(start_row, start_col, end_row, end_col))
 	vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col + 1, surrounded)
 end
+local function issue_opfunc()
+	_G.surround = surround
+	setlocal.opfunc = "v:lua.surround"
+	return "g@"
+end
 vim.keymap.set("n", "sa", function()
-	return surround2()
+	return issue_opfunc()
 end, { expr = true })
+vim.keymap.set("x", "sa", function()
+	surround(nil)
+	vim.api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
+	local start_pos = _getpos("v")
+	vim.api.nvim_win_set_cursor(vim.fn.bufwinid(vim.api.nvim_win_get_buf(0)), { start_pos.lnum, start_pos.col - 1 })
+end)
 
 -- }}}
 
