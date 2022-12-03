@@ -94,6 +94,7 @@ end
 -- }}}
 
 -- {{{ local functions
+-- vimscriptの関数呼び出しなので1-indexed
 local function _getpos(expr)
 	local pos = vim.fn.getpos(expr)
 	return { bufnum = pos[1], lnum = pos[2], col = pos[3], off = pos[4] }
@@ -145,6 +146,12 @@ end
 
 -- {{{ surround
 local surrounder = {
+	get_left = function(self)
+		return self.pair.l
+	end,
+	get_right = function(self)
+		return self.pair.r
+	end,
 	exec = function(self, lines)
 		if not lines then
 			error("arg:<lines> is nil")
@@ -168,6 +175,26 @@ local surrounder = {
 		end
 		return surrounded
 	end,
+	delete = function(self, lines)
+		local end_line = lines[#lines]
+		local end_line_len = (end_line):len()
+		local start_str, end_str = lines[1]:sub(1, 1), end_line:sub(end_line_len, end_line_len)
+		local deleted = {}
+		if start_str == self:get_left() and end_str == self:get_right() then
+			for i, line in ipairs(lines) do
+				if i == 1 then
+					line = (line):sub(2)
+				end
+				if i == #lines then
+					line = (line):sub(0, (line):len() - 1)
+				end
+				table.insert(deleted, line)
+			end
+			return deleted
+		else
+			return nil
+		end
+	end,
 }
 surrounder.new = function(_, pair)
 	if not pair then
@@ -184,6 +211,12 @@ local surrounders = {
 	end,
 	exists = function(self, l)
 		return vim.tbl_contains(vim.tbl_keys(self), l)
+	end,
+	is_pair_match = function(self, l, r)
+		if self.l == l and self.r == r then
+			return true
+		end
+		return false
 	end,
 }
 surrounders:register("(", ")")
@@ -242,6 +275,18 @@ vim.keymap.set("x", "sa", function()
 	vim.api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
 	local start_pos = _getpos("v")
 	vim.api.nvim_win_set_cursor(vim.fn.bufwinid(vim.api.nvim_win_get_buf(0)), { start_pos.lnum, start_pos.col - 1 })
+end)
+vim.keymap.set("x", "sd", function()
+	local l = vim.fn.getcharstr()
+	if surrounders:exists(l) then
+		local start_row, start_col, end_row, end_col = get_visualed_range()
+		local lines = vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col + 1, {})
+		local deleted = surrounders[l]:delete(lines)
+		if deleted then
+			vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col + 1, deleted)
+		end
+	end
+	vim.api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
 end)
 
 -- }}}
