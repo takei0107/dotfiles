@@ -145,6 +145,7 @@ end
 -- }}}
 
 -- {{{ surround
+
 local surrounder = {
 	get_left = function(self)
 		return self.pair.l
@@ -152,71 +153,68 @@ local surrounder = {
 	get_right = function(self)
 		return self.pair.r
 	end,
-	exec = function(self, lines)
-		if not lines then
-			error("arg:<lines> is nil")
+}
+function surrounder:new(pair)
+	assert(pair, "bad argument 'pair'. table expected, but nil")
+	assert(pair.l, "bad property 'pair.l'. value required, but nil")
+	assert(pair.r, "bad property 'pair.r'. value required, but nil")
+	return setmetatable({
+		pair = pair,
+	}, {
+		__index = self,
+	})
+end
+surrounder.exec = function(self, lines)
+	local surrounded = {}
+	local e = #lines
+	for i, line in ipairs(lines) do
+		if i == 1 then
+			line = self:get_left() .. line
 		end
-		if not self.pair then
-			error("property:<pair> is nil")
+		if i == e then
+			line = line .. self:get_right()
 		end
-		local e = #lines
-		if e < 1 then
-			error("at least 1 line required (arg:<lines>)")
-		end
-		local surrounded = {}
+		table.insert(surrounded, line)
+	end
+	return surrounded
+end
+surrounder.delete = function(self, lines)
+	local end_line = lines[#lines]
+	local end_line_len = (end_line):len()
+	local start_str, end_str = lines[1]:sub(1, 1), end_line:sub(end_line_len, end_line_len)
+	local deleted = {}
+	if start_str == self:get_left() and end_str == self:get_right() then
 		for i, line in ipairs(lines) do
 			if i == 1 then
-				line = self.pair.l .. line
+				line = (line):sub(2)
 			end
-			if i == e then
-				line = line .. self.pair.r
+			if i == #lines then
+				line = (line):sub(0, (line):len() - 1)
 			end
-			table.insert(surrounded, line)
+			table.insert(deleted, line)
 		end
-		return surrounded
-	end,
-	delete = function(self, lines)
-		local end_line = lines[#lines]
-		local end_line_len = (end_line):len()
-		local start_str, end_str = lines[1]:sub(1, 1), end_line:sub(end_line_len, end_line_len)
-		local deleted = {}
-		if start_str == self:get_left() and end_str == self:get_right() then
-			for i, line in ipairs(lines) do
-				if i == 1 then
-					line = (line):sub(2)
-				end
-				if i == #lines then
-					line = (line):sub(0, (line):len() - 1)
-				end
-				table.insert(deleted, line)
-			end
-			return deleted
-		else
-			return nil
-		end
-	end,
-}
-surrounder.new = function(_, pair)
-	if not pair then
-		error("arg:<pair> is nil")
+		return deleted
+	else
+		return nil
 	end
-	local obj = setmetatable({
-		pair = pair,
-	}, { __index = surrounder })
-	return obj
 end
+surrounder.replace = function(self, lines, surrounders)
+	local start_str = lines[1]:sub(1, 1)
+	if surrounders:exists(start_str) then
+		local deleted = surrounders[start_str]:delete(lines)
+		if deleted then
+			return self:exec(deleted)
+		end
+	end
+	return nil
+end
+
 local surrounders = {
 	register = function(self, l, r)
 		self[l] = surrounder:new({ l = l, r = r })
 	end,
 	exists = function(self, l)
 		return vim.tbl_contains(vim.tbl_keys(self), l)
-	end,
-	is_pair_match = function(self, l, r)
-		if self.l == l and self.r == r then
-			return true
-		end
-		return false
 	end,
 }
 surrounders:register("(", ")")
@@ -284,6 +282,28 @@ vim.keymap.set("x", "sd", function()
 		local deleted = surrounders[l]:delete(lines)
 		if deleted then
 			vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col + 1, deleted)
+			local start_pos = _getpos("v")
+			vim.api.nvim_win_set_cursor(
+				vim.fn.bufwinid(vim.api.nvim_win_get_buf(0)),
+				{ start_pos.lnum, start_pos.col - 1 }
+			)
+		end
+	end
+	vim.api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
+end)
+vim.keymap.set("x", "sr", function()
+	local l = vim.fn.getcharstr()
+	if surrounders:exists(l) then
+		local start_row, start_col, end_row, end_col = get_visualed_range()
+		local lines = vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col + 1, {})
+		local replaced = surrounders[l]:replace(lines, surrounders)
+		if replaced then
+			vim.api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col + 1, replaced)
+			local start_pos = _getpos("v")
+			vim.api.nvim_win_set_cursor(
+				vim.fn.bufwinid(vim.api.nvim_win_get_buf(0)),
+				{ start_pos.lnum, start_pos.col - 1 }
+			)
 		end
 	end
 	vim.api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
