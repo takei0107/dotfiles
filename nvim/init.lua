@@ -567,6 +567,15 @@ local stylua = function()
 	if vim.fn.executable("stylua") ~= 1 then
 		error("stylua is not installed")
 	end
+	local bufnr = vim.fn.bufnr()
+	local wins = {}
+	for _, winid in ipairs(vim.api.nvim_list_wins()) do
+		local win_bufnr = vim.api.nvim_win_get_buf(winid)
+		if bufnr == win_bufnr then
+			local row, col = unpack(vim.api.nvim_win_get_cursor(winid))
+			wins[winid] = { row = row, col = col }
+		end
+	end
 	local joined = _join_buf_all_lines(vim.fn.bufnr())
 	local out = vim.fn.system("stylua -", joined)
 	if vim.v.shell_error ~= 0 then
@@ -574,6 +583,9 @@ local stylua = function()
 	end
 	local new_lines = vim.split(out, "\n")
 	vim.api.nvim_buf_set_lines(vim.fn.bufnr(), 0, -1, true, new_lines)
+	for winid, pos in pairs(wins) do
+		vim.api.nvim_win_set_cursor(winid, { pos.row, pos.col })
+	end
 end
 -- }}}2
 -- }}}1
