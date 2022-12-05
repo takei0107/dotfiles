@@ -27,13 +27,6 @@ set.matchpairs:append("<:>")
 -- same as <C-L>
 -- vim.keymap.set("n", "<ESC><ESC>", "<cmd>nohlsearch<CR><ESC>", { silent = true })
 
-vim.keymap.set("i", "(", "()<ESC>i")
-vim.keymap.set("i", "[", "[]<ESC>i")
-vim.keymap.set("i", "{", "{}<ESC>i")
-vim.keymap.set("i", "<", "<><ESC>i")
-vim.keymap.set("i", '"', '""<ESC>i')
-vim.keymap.set("i", "'", "''<ESC>i")
-
 vim.keymap.set("v", "$", "g_")
 
 vim.keymap.set({ "o", "x" }, 'a"', '2i"')
@@ -209,9 +202,12 @@ surrounder.replace = function(self, lines, surrounders)
 	return nil
 end
 
+local function register_pair_completion(l, r) end
+
 local surrounders = {
 	register = function(self, l, r)
 		self[l] = surrounder:new({ l = l, r = r })
+		vim.keymap.set("i", l, ("%s%s<ESC>i"):format(l, r))
 	end,
 	exists = function(self, l)
 		return vim.tbl_contains(vim.tbl_keys(self), l)
