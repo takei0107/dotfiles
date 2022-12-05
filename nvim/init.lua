@@ -148,16 +148,16 @@ end
 
 local surrounder = {
 	get_left = function(self)
-		return self.pair.l
+		return self.pair.l or self.pair.left
 	end,
 	get_right = function(self)
-		return self.pair.r
+		return self.pair.r or self.pair.right
 	end,
 }
 function surrounder:new(pair)
 	assert(pair, "bad argument 'pair'. table expected, but nil")
-	assert(pair.l, "bad property 'pair.l'. value required, but nil")
-	assert(pair.r, "bad property 'pair.r'. value required, but nil")
+	assert(pair.l or pair.left, "bad property 'pair.l'. value required, but nil")
+	assert(pair.r or pair.right, "bad property 'pair.r'. value required, but nil")
 	return setmetatable({
 		pair = pair,
 	}, {
@@ -225,12 +225,6 @@ surrounders:register("'", "'")
 surrounders:register('"', '"')
 
 local function surround_exec(input, lines)
-	if not input then
-		error("arg:<input> is nil")
-	end
-	if not lines then
-		error("arg:<lines> is nil")
-	end
 	if not surrounders:exists(input) then
 		return
 	end
@@ -241,6 +235,23 @@ local function get_visualed_range()
 	local end_pos = _getpos(".")
 	return start_pos.lnum - 1, start_pos.col - 1, end_pos.lnum - 1, end_pos.col - 1
 end
+local function correct_range(start_row, start_col, end_row, end_col)
+	if start_row > end_row then
+		local tmp = start_row
+		start_row = end_row
+		end_row = tmp
+	end
+	if start_col > end_col then
+		local tmp = start_col
+		start_col = end_col
+		end_col = tmp
+	end
+	local end_line = vim.api.nvim_buf_get_lines(0, end_row, end_row + 1, true)[1]
+	if end_col > #end_line - 1 then
+		end_col = #end_line - 1
+	end
+	return start_row, start_col, end_row, end_col
+end
 local function surround(is_opfunc)
 	local get_range_fn = get_visualed_range
 	if is_opfunc then
@@ -250,7 +261,7 @@ local function surround(is_opfunc)
 			return get_marked_range("[", "]")
 		end
 	end
-	local start_row, start_col, end_row, end_col = get_range_fn()
+	local start_row, start_col, end_row, end_col = correct_range(get_range_fn())
 	local lines = vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col + 1, {})
 	local l = vim.fn.getcharstr()
 	if not surrounders:exists(l) then
@@ -277,7 +288,7 @@ end)
 vim.keymap.set("x", "sd", function()
 	local l = vim.fn.getcharstr()
 	if surrounders:exists(l) then
-		local start_row, start_col, end_row, end_col = get_visualed_range()
+		local start_row, start_col, end_row, end_col = correct_range(get_visualed_range())
 		local lines = vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col + 1, {})
 		local deleted = surrounders[l]:delete(lines)
 		if deleted then
@@ -294,7 +305,7 @@ end)
 vim.keymap.set("x", "sr", function()
 	local l = vim.fn.getcharstr()
 	if surrounders:exists(l) then
-		local start_row, start_col, end_row, end_col = get_visualed_range()
+		local start_row, start_col, end_row, end_col = correct_range(get_visualed_range())
 		local lines = vim.api.nvim_buf_get_text(0, start_row, start_col, end_row, end_col + 1, {})
 		local replaced = surrounders[l]:replace(lines, surrounders)
 		if replaced then
