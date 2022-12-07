@@ -51,6 +51,10 @@ vim.g.mapleader = " "
 -- same as <C-L>
 -- vim.keymap.set("n", "<ESC><ESC>", "<cmd>nohlsearch<CR><ESC>", { silent = true })
 
+-- '*','#'による検索で次の一致に自動的に飛ばないようにする
+keymap.set("n", "*", "m`*``")
+keymap.set("n", "#", "m`#``")
+
 keymap.set("x", "$", "g_")
 
 keymap.set({ "o", "x" }, 'a"', '2i"')
@@ -63,7 +67,7 @@ keymap.set({ "n", "x" }, "S", '"_s')
 keymap.set({ "n", "x" }, "S", '"_S')
 
 -- 'f'の後ろからバージョン
--- ';'対応
+-- ';'リピート対応
 keymap.set({ "n", "x" }, "<leader>f", function()
 	local c = fn.getcharstr()
 	vim.cmd(string.format("normal F%s<CR>", c)) -- ';'でリピートできるように
