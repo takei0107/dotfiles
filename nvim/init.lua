@@ -24,6 +24,8 @@ set.cursorlineopt = { "screenline" }
 set.virtualedit = "block"
 set.laststatus = 2
 set.signcolumn = "yes"
+set.cmdheight = 0
+set.completeopt = "menu"
 set.matchpairs:append("<:>")
 set.nrformats:append("unsigned")
 -- }}}
@@ -178,6 +180,7 @@ local function open_split_win_with_buf(bufnr, direction)
 	api.nvim_win_set_buf(winid, bufnr)
 	return winid
 end
+
 -- }}}
 
 -- {{{ surround
@@ -587,6 +590,7 @@ local luacheck = function(path)
 		elseif qflist_size == 0 then
 			need_copen = false
 		end
+		-- TODO :cwindowに変える
 		if need_copen then
 			ok, err = pcall(vim.cmd, "copen")
 		end
@@ -896,5 +900,26 @@ for _, lsp_setting in ipairs(lsp_settings) do
 		end,
 	})
 end
+-- TODO lspが動いているバッファローカルにしたい
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
+	callback = function(args)
+		local diagnostics = args.data.diagnostics
+		local qflist = vim.diagnostic.toqflist(diagnostics)
+		-- severity -> line -> columnでqflistをソート
+		table.sort(qflist, function(t1, t2)
+			if vim.diagnostic.severity[t1.type] == vim.diagnostic.severity[t2.type] then
+				if t1.lnum == t2.lnum then
+					return t1.col < t2.col
+				else
+					return t1.lnum < t2.lnum
+				end
+			end
+			return vim.diagnostic.severity[t1.type] < vim.diagnostic.severity[t2.type]
+		end)
+		-- TODO setqflistのactionを考える
+		fn.setqflist(qflist, "r")
+		vim.cmd("cwindow")
+	end,
+})
 -- }}}
 
