@@ -23,13 +23,19 @@ set.cursorline = true
 set.cursorlineopt = { "screenline" }
 set.virtualedit = "block"
 set.laststatus = 2
+set.signcolumn = "yes"
 set.matchpairs:append("<:>")
 set.nrformats:append("unsigned")
 -- }}}
 
+-- highlight{{{
+vim.cmd("hi SignColumn ctermbg=none")
+vim.cmd("hi SignColumn guibg=none")
+-- }}}
+
 -- {{{ keymaps
 
--- see ":h map-tables"
+-- see ":h map-table"
 ----------------------------------------------------------------------
 --          Mode  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |
 -- Command        +------+-----+-----+-----+-----+-----+------+------+
@@ -52,10 +58,14 @@ vim.g.mapleader = " "
 -- vim.keymap.set("n", "<ESC><ESC>", "<cmd>nohlsearch<CR><ESC>", { silent = true })
 
 -- '*','#'による検索で次の一致に自動的に飛ばないようにする
-keymap.set("n", "*", "m`*``")
-keymap.set("n", "#", "m`#``")
+-- see ':h restore-position'
+keymap.set("n", "*", "msHmt`s*'tzt`s")
+keymap.set("n", "#", "msHmt`s#'tzt`s")
 
 keymap.set("x", "$", "g_")
+
+-- ビジュアルの'p'で無名レジスタ更新しない
+keymap.set("x", "p", "P")
 
 keymap.set({ "o", "x" }, 'a"', '2i"')
 keymap.set({ "o", "x" }, "a'", "2i'")
@@ -839,5 +849,52 @@ end
 api.nvim_create_user_command("AtTest", function()
 	atTest()
 end, {})
+-- }}}
+
+-- {{{lsp
+
+-- check client capabilities
+-- :lua =vim.lsp.get_active_clients()[1].server_capabilities
+
+-- check handlers
+-- :lua pp(vim.tlb_keys(vim.lsp.handlers))
+
+-- experimental
+local lsp = {}
+function lsp:new(ft, config)
+	return setmetatable({
+		ft = ft,
+		config = config,
+	}, {
+		__index = lsp,
+	})
+end
+local lsp_settings = {}
+local function register_lsp_settings(ft, config)
+	local l = lsp:new(ft, config)
+	table.insert(lsp_settings, l)
+end
+register_lsp_settings("lua", {
+	name = "lua-language-server",
+	cmd = {
+		vim.fn.fnamemodify("./lsp/boot/lua.sh", ":p"),
+	},
+	root_dir = { ".stylua.toml", ".luacheckrc" },
+})
+local lsp_ag_id = vim.api.nvim_create_augroup("lsp", {})
+for _, lsp_setting in ipairs(lsp_settings) do
+	vim.api.nvim_create_autocmd("FileType", {
+		group = lsp_ag_id,
+		pattern = lsp_setting.ft,
+		callback = function()
+			vim.lsp.start({
+				name = lsp_setting.config.name,
+				cmd = lsp_setting.config.cmd,
+				root_dir = vim.fs.dirname(vim.fs.find(lsp_setting.config.root_dir)[1]),
+				on_attach = lsp_setting.config.on_attach,
+			})
+		end,
+	})
+end
 -- }}}
 
