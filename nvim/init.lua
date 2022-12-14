@@ -13,6 +13,7 @@ set.number = true
 set.list = true
 set.relativenumber = true
 set.scrolloff = 5
+set.smartcase = true
 set.smartindent = true
 set.smarttab = true
 set.undofile = true
@@ -262,7 +263,6 @@ local surrounders = {
 surrounders:register("(", ")")
 surrounders:register("[", "]")
 surrounders:register("{", "}")
-surrounders:register("<", ">")
 surrounders:register("'", "'")
 surrounders:register('"', '"')
 
@@ -884,6 +884,9 @@ register_lsp_settings("lua", {
 		vim.fn.fnamemodify("./lsp/boot/lua.sh", ":p"),
 	},
 	root_dir = { ".stylua.toml", ".luacheckrc" },
+	settings = {
+		Lua = {},
+	},
 })
 local lsp_ag_id = vim.api.nvim_create_augroup("lsp", {})
 for _, lsp_setting in ipairs(lsp_settings) do
@@ -891,35 +894,39 @@ for _, lsp_setting in ipairs(lsp_settings) do
 		group = lsp_ag_id,
 		pattern = lsp_setting.ft,
 		callback = function()
+			vim.diagnostic.config({
+				severity_sort = true,
+			})
 			vim.lsp.start({
 				name = lsp_setting.config.name,
 				cmd = lsp_setting.config.cmd,
 				root_dir = vim.fs.dirname(vim.fs.find(lsp_setting.config.root_dir)[1]),
+				settings = lsp_setting.config.settings,
 				on_attach = lsp_setting.config.on_attach,
 			})
 		end,
 	})
 end
 -- TODO lspが動いているバッファローカルにしたい
-vim.api.nvim_create_autocmd("DiagnosticChanged", {
-	callback = function(args)
-		local diagnostics = args.data.diagnostics
-		local qflist = vim.diagnostic.toqflist(diagnostics)
-		-- severity -> line -> columnでqflistをソート
-		table.sort(qflist, function(t1, t2)
-			if vim.diagnostic.severity[t1.type] == vim.diagnostic.severity[t2.type] then
-				if t1.lnum == t2.lnum then
-					return t1.col < t2.col
-				else
-					return t1.lnum < t2.lnum
-				end
-			end
-			return vim.diagnostic.severity[t1.type] < vim.diagnostic.severity[t2.type]
-		end)
-		-- TODO setqflistのactionを考える
-		fn.setqflist(qflist, "r")
-		vim.cmd("cwindow")
-	end,
-})
+--vim.api.nvim_create_autocmd("DiagnosticChanged", {
+--	callback = function(args)
+--		local diagnostics = args.data.diagnostics
+--		local qflist = vim.diagnostic.toqflist(diagnostics)
+--		-- severity -> line -> columnでqflistをソート
+--		table.sort(qflist, function(t1, t2)
+--			if vim.diagnostic.severity[t1.type] == vim.diagnostic.severity[t2.type] then
+--				if t1.lnum == t2.lnum then
+--					return t1.col < t2.col
+--				else
+--					return t1.lnum < t2.lnum
+--				end
+--			end
+--			return vim.diagnostic.severity[t1.type] < vim.diagnostic.severity[t2.type]
+--		end)
+--		-- TODO setqflistのactionを考える
+--		fn.setqflist(qflist, "r")
+--		vim.cmd("cwindow")
+--	end,
+--})
 -- }}}
 
