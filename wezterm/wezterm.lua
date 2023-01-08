@@ -50,6 +50,7 @@ return {
 	font_size = e_font_size,
 	color_scheme = "FishTank",
 	window_background_opacity = 0.8,
+	audible_bell = "Disabled",
 	keys = {
 		-- tab actions
 		{ key = "t", mods = "ALT", action = wezterm.action({ SpawnTab = "CurrentPaneDomain" }) },
