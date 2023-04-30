@@ -159,8 +159,8 @@ local function tbl_merge_simple(...)
 			return self
 		end,
 	})
-	for i = 1, select("#", ...) do
-		r = r .. (select(i, ...))
+	for _, v in ipairs({ ... }) do
+		r = r .. v
 	end
 	return setmetatable(r, nil)
 end
@@ -194,16 +194,19 @@ local surrounder = {
 		return self.pair.r or self.pair.right
 	end,
 }
+
 function surrounder:new(pair)
 	assert(pair, "bad argument 'pair'. table expected, but nil")
 	assert(pair.l or pair.left, "bad property 'pair.l'. value required, but nil")
 	assert(pair.r or pair.right, "bad property 'pair.r'. value required, but nil")
+
 	return setmetatable({
 		pair = pair,
 	}, {
 		__index = self,
 	})
 end
+
 surrounder.exec = function(self, lines)
 	local surrounded = {}
 	local e = #lines
@@ -218,6 +221,7 @@ surrounder.exec = function(self, lines)
 	end
 	return surrounded
 end
+
 surrounder.delete = function(self, lines)
 	local end_line = lines[#lines]
 	local end_line_len = (end_line):len()
@@ -238,6 +242,7 @@ surrounder.delete = function(self, lines)
 		return nil
 	end
 end
+
 surrounder.replace = function(self, lines, surrounders)
 	local start_str = lines[1]:sub(1, 1)
 	if surrounders:exists(start_str) then
@@ -248,8 +253,6 @@ surrounder.replace = function(self, lines, surrounders)
 	end
 	return nil
 end
-
-local function register_pair_completion(l, r) end
 
 local surrounders = {
 	register = function(self, l, r)
@@ -272,11 +275,13 @@ local function surround_exec(input, lines)
 	end
 	return surrounders[input]:exec(lines)
 end
+
 local function get_visualed_range()
 	local start_pos = _getpos("v")
 	local end_pos = _getpos(".")
 	return start_pos.lnum - 1, start_pos.col - 1, end_pos.lnum - 1, end_pos.col - 1
 end
+
 local function correct_range(start_row, start_col, end_row, end_col)
 	if start_row > end_row then
 		local tmp = start_row
@@ -294,6 +299,7 @@ local function correct_range(start_row, start_col, end_row, end_col)
 	end
 	return start_row, start_col, end_row, end_col
 end
+
 local function surround(is_opfunc)
 	local get_range_fn = get_visualed_range
 	if is_opfunc then
@@ -313,20 +319,24 @@ local function surround(is_opfunc)
 	--print(("start_row = %d, start_col = %d, end_row = %d, end_col = %d"):format(start_row, start_col, end_row, end_col))
 	api.nvim_buf_set_text(0, start_row, start_col, end_row, end_col + 1, surrounded)
 end
+
 local function issue_opfunc()
 	_G.surround = surround
 	setlocal.opfunc = "v:lua.surround"
 	return "g@"
 end
+
 keymap.set("n", "sa", function()
 	return issue_opfunc()
 end, { expr = true })
+
 keymap.set("x", "sa", function()
 	surround(nil)
 	api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
 	local start_pos = _getpos("v")
 	api.nvim_win_set_cursor(fn.bufwinid(api.nvim_win_get_buf(0)), { start_pos.lnum, start_pos.col - 1 })
 end)
+
 keymap.set("x", "sd", function()
 	local l = fn.getcharstr()
 	if surrounders:exists(l) then
@@ -341,6 +351,7 @@ keymap.set("x", "sd", function()
 	end
 	api.nvim_feedkeys(termcodes("<ESC>"), "v", false)
 end)
+
 keymap.set("x", "sr", function()
 	local l = fn.getcharstr()
 	if surrounders:exists(l) then
@@ -881,13 +892,25 @@ end
 register_lsp_settings("lua", {
 	name = "lua-language-server",
 	cmd = {
-		vim.fn.fnamemodify("./lsp/boot/lua.sh", ":p"),
+		vim.fn.fnamemodify("/home/takei0107/ghq/github.com/takei0107/dotfiles/lsp/boot/lua.sh", ":p"),
 	},
 	root_dir = { ".stylua.toml", ".luacheckrc" },
 	settings = {
 		Lua = {},
 	},
 })
+local function lsp_start(config)
+	vim.lsp.start({
+		name = config.name,
+		cmd = config.cmd,
+		root_dir = vim.fs.dirname(vim.fs.find(config.root_dir)[1]),
+		settings = config.settings,
+		on_attach = config.on_attach,
+	})
+	if vim.bo.omnifunc == "" then
+		vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
+	end
+end
 local lsp_ag_id = vim.api.nvim_create_augroup("lsp", {})
 for _, lsp_setting in ipairs(lsp_settings) do
 	vim.api.nvim_create_autocmd("FileType", {
@@ -897,16 +920,33 @@ for _, lsp_setting in ipairs(lsp_settings) do
 			vim.diagnostic.config({
 				severity_sort = true,
 			})
-			vim.lsp.start({
-				name = lsp_setting.config.name,
-				cmd = lsp_setting.config.cmd,
-				root_dir = vim.fs.dirname(vim.fs.find(lsp_setting.config.root_dir)[1]),
-				settings = lsp_setting.config.settings,
-				on_attach = lsp_setting.config.on_attach,
-			})
+			lsp_start(lsp_setting.config)
 		end,
 	})
 end
+local function stop_lsp_client(bufnr, name)
+	if not bufnr then
+		bufnr = fn.bufnr()
+	end
+	local filter = {
+		bufnr = bufnr,
+	}
+	if name then
+		filter[name] = name
+	end
+	local clients = vim.lsp.get_active_clients(filter)
+	if vim.tbl_isempty(clients) then
+		print(("lsp client doesn't attached. bufnr = %d"):format(bufnr))
+		return
+	end
+	for _, client in ipairs(clients) do
+		vim.lsp.stop_client(client.id, true)
+	end
+end
+api.nvim_create_user_command("LspStop", function()
+	stop_lsp_client()
+end, {})
+
 -- TODO lspが動いているバッファローカルにしたい
 --vim.api.nvim_create_autocmd("DiagnosticChanged", {
 --	callback = function(args)
