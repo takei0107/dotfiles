@@ -79,6 +79,10 @@ keymap.set({ "n", "x" }, "X", '"_X')
 keymap.set({ "n", "x" }, "S", '"_s')
 keymap.set({ "n", "x" }, "S", '"_S')
 
+-- コマンドラインの履歴補完でマッチした文字から始まる履歴でフィルタリングする
+keymap.set({ "c" }, "<C-p>", "<Up>")
+keymap.set({ "c" }, "<C-n>", "<Down>")
+
 -- 'f'の後ろからバージョン
 -- ';'リピート対応
 keymap.set({ "n", "x" }, "<leader>f", function()
