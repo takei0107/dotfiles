@@ -76,7 +76,7 @@ keymap.set({ "o", "x" }, "a`", "2i`")
 
 keymap.set({ "n", "x" }, "x", '"_x')
 keymap.set({ "n", "x" }, "X", '"_X')
-keymap.set({ "n", "x" }, "S", '"_s')
+keymap.set({ "n", "x" }, "s", '"_s')
 keymap.set({ "n", "x" }, "S", '"_S')
 
 -- 'f'の後ろからバージョン
@@ -100,6 +100,10 @@ end)
 
 -- reload vimrc
 keymap.set("n", "<F5>", function()
+	-- "plugins"モジュールがrequire済みなら再ロードする
+	if package.loaded["plugins"] then
+		package.loaded["plugins"] = nil
+	end
 	local vimrc = S.MYVIMRC
 	vim.cmd("luafile " .. vimrc)
 	print(string.format("%s reloaded", vimrc))
@@ -577,6 +581,27 @@ end, { silent = true })
 keymap.set("n", terminal_key_prefix .. "t", ":tabnew +terminal<CR>", { silent = true })
 -- }}}
 
+-- {{{1 load plugins
+local function load_plugins()
+	local ok, modOrErr = pcall(require, "plugins")
+	if not ok then
+		print(modOrErr)
+		return
+	end
+	local ok, err = pcall(modOrErr.initManager)
+	if not ok then
+		print(err)
+		return
+	end
+	local ok, err = pcall(modOrErr.initSetup)
+	if not ok then
+		print(err)
+		return
+	end
+end
+load_plugins()
+-- }}}
+
 -- {{{1 lua
 -- {{{2 luacheck
 local luacheck = function(path)
@@ -683,23 +708,23 @@ local langs = setmetatable({}, {
 -- {{{3 lua
 langs["lua"] = {
 	configure = function(args)
-		api.nvim_buf_create_user_command(args.buf, "LuaCheck", function(opts)
-			luacheck(opts.args)
-		end, {
-			nargs = "?",
-			complete = "file",
-		})
-		api.nvim_buf_create_user_command(args.buf, "LuaCheckCurrent", function()
-			luacheck(fn.expand("%"))
-		end, {})
-		api.nvim_create_augroup("stylua", {})
-		api.nvim_create_autocmd("BufWritePre", {
-			group = "stylua",
-			pattern = "*.lua",
-			callback = function()
-				stylua()
-			end,
-		})
+		--api.nvim_buf_create_user_command(args.buf, "LuaCheck", function(opts)
+		--	luacheck(opts.args)
+		--end, {
+		--	nargs = "?",
+		--	complete = "file",
+		--})
+		--api.nvim_buf_create_user_command(args.buf, "LuaCheckCurrent", function()
+		--	luacheck(fn.expand("%"))
+		--end, {})
+		--api.nvim_create_augroup("stylua", {})
+		--api.nvim_create_autocmd("BufWritePre", {
+		--	group = "stylua",
+		--	pattern = "*.lua",
+		--	callback = function()
+		--		stylua()
+		--	end,
+		--})
 	end,
 }
 -- }}}3
@@ -912,18 +937,18 @@ local function lsp_start(config)
 	end
 end
 local lsp_ag_id = vim.api.nvim_create_augroup("lsp", {})
-for _, lsp_setting in ipairs(lsp_settings) do
-	vim.api.nvim_create_autocmd("FileType", {
-		group = lsp_ag_id,
-		pattern = lsp_setting.ft,
-		callback = function()
-			vim.diagnostic.config({
-				severity_sort = true,
-			})
-			lsp_start(lsp_setting.config)
-		end,
-	})
-end
+--for _, lsp_setting in ipairs(lsp_settings) do
+--	vim.api.nvim_create_autocmd("FileType", {
+--		group = lsp_ag_id,
+--		pattern = lsp_setting.ft,
+--		callback = function()
+--			vim.diagnostic.config({
+--				severity_sort = true,
+--			})
+--			lsp_start(lsp_setting.config)
+--		end,
+--	})
+--end
 local function stop_lsp_client(bufnr, name)
 	if not bufnr then
 		bufnr = fn.bufnr()
