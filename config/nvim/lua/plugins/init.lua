@@ -17,8 +17,11 @@ end
 
 local function setup_lazy()
 	local lazy = require("lazy")
+	if not lazy then
+		error("lazy didn't loaded.")
+	end
 	-- see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-	lazy.setup("plugins.spec")
+	lazy.setup("plugins.spec", {})
 end
 
 return {

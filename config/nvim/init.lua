@@ -128,7 +128,7 @@ end, {
 
 -- {{{ _G functions
 _G.pp = function(arg)
-	vim.pretty_print(arg)
+	vim.print(arg)
 end
 
 _G.termcodes = function(key)

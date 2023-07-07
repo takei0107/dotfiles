@@ -1,4 +1,4 @@
-local sources = require("cmp.nvim-cmp-sources")
+local sources = require("plugins.cmp.nvim-cmp-sources")
 
 local function resolve_deps()
 	local deps = {"L3MON4D3/LuaSnip"}
@@ -61,6 +61,7 @@ return {
 				end, {'i'})
 			},
 			sources = sources(),
+			-- :h cmp-config.formatting.format
 			formatting = {
 				format = function(entry, vim_item)
 					local source = sources[entry.source.name]
