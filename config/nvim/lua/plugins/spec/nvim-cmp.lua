@@ -1,6 +1,7 @@
+local sources = require("cmp.nvim-cmp-sources")
+
 local function resolve_deps()
 	local deps = {"L3MON4D3/LuaSnip"}
-	local sources = require("cmp.nvim-cmp-sources")
 	for _, source in ipairs(sources) do
 		local spec = {
 			[1] = source.name,
@@ -59,11 +60,12 @@ return {
 					end
 				end, {'i'})
 			},
-			sources = require("cmp.nvim-cmp-sources")(),
+			sources = sources(),
 			formatting = {
 				format = function(entry, vim_item)
-					if entry.source.name == "buffer" then
-						vim_item.kind = "buffer"
+					local source = sources[entry.source.name]
+					if source and source.format then
+						return source.format(vim_item)
 					end
 					return vim_item
 				end
