@@ -25,14 +25,14 @@ local function setup_lazy()
 end
 
 local function setup_colorscheme()
-	local colorschme = require("plugins.colorscheme")
-	if colorschme then
-		vim.cmd(string.format("colorscheme %s", colorschme.schemeName))
-
-		local highlight_handler = colorschme:getHighLightHandler()
-		if highlight_handler then
-			highlight_handler()
+	local colorscheme = require("plugins.colorscheme")
+	if not colorscheme.skipSetup then
+		if colorscheme.setup then
+			colorscheme:setup()
 		end
+	end
+	if colorscheme.transparent_enable then
+		colorscheme.transparent()
 	end
 end
 
