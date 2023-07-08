@@ -15,7 +15,7 @@ local settings = {
 		force_install = true,
 		lspconfig_handler = function(lspconfig)
 			lspconfig.setup({})
-		end
+		end,
 	},
 }
 
@@ -24,14 +24,14 @@ setmetatable(settings, {
 	---@param server_name string lspconfigで使われるLS名
 	---@return rc.LspSetting|nil
 	-- LS名から設定を逆引き
-	__index = function (self, server_name)
+	__index = function(self, server_name)
 		for _, setting in ipairs(self) do
 			if server_name == setting.ls_name then
 				return setting
 			end
 			return nil
 		end
-	end
+	end,
 })
 
 return settings

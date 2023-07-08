@@ -13,16 +13,16 @@ local sources = {
 		format = function(vim_item)
 			vim_item.kind = "lsp"
 			return vim_item
-		end
+		end,
 	},
 	{
-		name = "hrsh7th/cmp-buffer" ,
+		name = "hrsh7th/cmp-buffer",
 		sourceName = "buffer",
 		option = {},
 		format = function(vim_item)
 			vim_item.kind = "buffer"
 			return vim_item
-		end
+		end,
 	},
 }
 
@@ -35,7 +35,7 @@ setmetatable(sources, {
 		local t = {}
 		for _, source in ipairs(self) do
 			---@type cmp.SourceConfig
-			local s = {name = source.sourceName}
+			local s = { name = source.sourceName }
 			if source.option then
 				s.option = source.option
 			end
@@ -55,7 +55,7 @@ setmetatable(sources, {
 			end
 		end
 		return nil
-	end
+	end,
 })
 
 return sources

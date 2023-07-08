@@ -6,7 +6,7 @@ local M = require("plugins.colorscheme.colorscheme").new({
 		require("monokai").setup({})
 	end,
 	transparent_enable = true,
-	skipSetup = true
+	skipSetup = true,
 })
 
 return M

@@ -3,7 +3,7 @@ local M = require("plugins.colorscheme.colorscheme").new({
 	schemeName = "one-nvim",
 	lazyPriority = 1000,
 	lazy = true,
-	transparent = true
+	transparent = true,
 })
 
 return M

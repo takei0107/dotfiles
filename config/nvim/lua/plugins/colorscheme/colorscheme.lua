@@ -42,9 +42,9 @@ colorscheme.new = function(config)
 		lazy = config.lazy or false,
 		config = config.config,
 		skipSetup = config.skipSetup or false,
-		transparent_enable = config.transparent_enable or false
+		transparent_enable = config.transparent_enable or false,
 	}, {
-		__index = colorscheme
+		__index = colorscheme,
 	})
 end
 

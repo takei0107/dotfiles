@@ -4,7 +4,7 @@ local sources = require("plugins.cmp.nvim-cmp-sources") or {}
 ---@return LazySpec[]
 local function resolve_deps()
 	---@type table<string, LazySpec>
-	local deps = {"L3MON4D3/LuaSnip"}
+	local deps = { "L3MON4D3/LuaSnip" }
 	for _, source in ipairs(sources) do
 		---@type LazySpec
 		local spec = {
@@ -36,8 +36,8 @@ return {
 				---@type fun(args: cmp.SnippetExpansionParams)
 				---@param args cmp.SnippetExpansionParams
 				expand = function(args)
-					require('luasnip').lsp_expand(args.body)
-				end
+					require("luasnip").lsp_expand(args.body)
+				end,
 			},
 
 			---@type table<string, cmp.Mapping>
@@ -45,50 +45,50 @@ return {
 				-- 'ctrl-n' to select next item
 				---@param fallback function
 				---@diagnostic disable-next-line: unused-local
-				['<C-n>'] = cmp.mapping(function(fallback)
+				["<C-n>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
 					else
 						cmp.complete()
 					end
-				end, {'i'}),
+				end, { "i" }),
 
 				-- 'ctrl-p' to select prev item
 				---@param fallback function
 				---@diagnostic disable-next-line: unused-local
-				['<C-p>'] = cmp.mapping(function(fallback)
+				["<C-p>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						cmp.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert })
 					else
 						cmp.complete()
 					end
-				end, {'i'}),
+				end, { "i" }),
 
 				-- 'enter' to accept item
 				---@param fallback function
-				['<CR>'] = cmp.mapping(function(fallback)
+				["<CR>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
-						cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace})
+						cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
 					else
 						fallback()
 					end
-				end, {'i'}),
+				end, { "i" }),
 
 				-- 'ESC/ctrl-[' to abort completion
 				---@param fallback function
-				['<C-[>'] = cmp.mapping(function(fallback)
+				["<C-[>"] = cmp.mapping(function(fallback)
 					if cmp.visible() then
 						if cmp.get_selected_entry() then
-							cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace})
-							vim.api.nvim_feedkeys(termcodes("<Esc>"), 'n', false)
+							cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
+							vim.api.nvim_feedkeys(termcodes("<Esc>"), "n", false)
 						else
 							cmp.abort()
-							vim.api.nvim_feedkeys(termcodes("<Esc>"), 'n', false)
+							vim.api.nvim_feedkeys(termcodes("<Esc>"), "n", false)
 						end
 					else
 						fallback()
 					end
-				end, {'i'})
+				end, { "i" }),
 			},
 
 			---@type cmp.SourceConfig[]
@@ -104,9 +104,8 @@ return {
 						return source.format(vim_item)
 					end
 					return vim_item
-				end
-			}
-
+				end,
+			},
 		})
-	end
+	end,
 }

@@ -37,22 +37,22 @@ return {
 	---@type LazySpec[]
 	dependencies = {
 		"williamboman/mason.nvim",
-		"neovim/nvim-lspconfig"
+		"neovim/nvim-lspconfig",
 	},
 	---@type fun(self:LazyPlugin, opts:table)|true
 	config = function()
 		require("mason-lspconfig").setup({
 			-- see: ":h mason-lspconfig-default-settings"
-			ensure_installed = ensure_installed()
+			ensure_installed = ensure_installed(),
 		})
 
 		-- see: ":h mason-lspconfig.setup_handlers()"
-		require("mason-lspconfig").setup_handlers {
+		require("mason-lspconfig").setup_handlers({
 			function(server_name)
 				invoke_lspconfig_handler(server_name)
 			end,
-		}
+		})
 
 		require("lsp.keymap").register()
-	end
+	end,
 }

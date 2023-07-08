@@ -5,5 +5,5 @@ return {
 	---@type fun(self:LazyPlugin, opts:table)|true
 	config = function()
 		require("mason").setup()
-	end
+	end,
 }
