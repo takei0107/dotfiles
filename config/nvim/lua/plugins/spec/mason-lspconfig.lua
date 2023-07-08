@@ -1,9 +1,14 @@
 local lsp_settings = require("lsp.settings") or {}
 
+local function is_setting_enable(setting)
+	-- 明示的にfalseを設定しない限り有効
+	return (setting.enable ~= false) or false
+end
+
 local function ensure_installed()
 	local r = {}
 	for _, setting in ipairs(lsp_settings) do
-		if setting.enable and setting.force_install then
+		if is_setting_enable(setting) and setting.force_install then
 			if setting.mason_ls_name then
 				table.insert(r, setting.mason_ls_name)
 			end
@@ -14,7 +19,7 @@ end
 
 local function invoke_lspconfig_handler(server_name)
 	local setting = lsp_settings[server_name]
-	if setting and ((setting.enable ~= false) or false) then
+	if setting and is_setting_enable(setting) then
 		if setting.lspconfig_handler then
 			setting.lspconfig_handler(require("lspconfig")[server_name])
 		end

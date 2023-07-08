@@ -7,6 +7,7 @@ local settings = {
 		mason_ls_name = "lua_ls",
 		-- 明示的にfalseを設定しない限り有効
 		enable = true,
+		-- trueの時のみインストール強制する
 		force_install = true,
 		-- see: ":h mason-lspconfig.setup_handlers()"
 		lspconfig_handler = function(lspconfig)
