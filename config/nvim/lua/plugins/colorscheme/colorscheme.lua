@@ -13,8 +13,25 @@ local function ui_tranparent()
 	end
 end
 
+-- 'lazy'がtrueかつ、'skipSetup'がtrue以外の時
+-- ':colorscheme {schemeName}'がsetupメソッドで実行されるタイミングで
+-- 対象のカラースキームのプラグインがlazyによってロードされる。
+--
+-- カラースキームの中にはプラグイン内でカラースキームの指定をしている場合があるので
+-- その場合は、'skipSetup'をtrueに設定し、'config'を設定した上で、
+-- lazyの読み込み時にプラグインが提供している初期化手順を実行する。
+---@class rc.colorscheme
+---@field repo string lazy.nvimで使うリポジトリ名
+---@field schemeName string カラースキーム名
+---@field lazyPriority integer|nil lazyの優先度 lazyのヘルプの'COLORSCHEMES'参照
+---@field lazy boolean
+---@field config fun(self:LazyPlugin, opts:table)|true|nil
+---@field skipSetup boolean trueの時、setupメソッドをスキップする
+---@field transparent_enable boolean 背景透過させるかどうか
 local colorscheme = {}
 
+---@param config rc.colorscheme
+---@return rc.colorscheme
 colorscheme.new = function(config)
 	return setmetatable({
 		repo = config.repo,
@@ -35,13 +52,16 @@ function colorscheme:setup()
 	vim.cmd(string.format("colorscheme %s", self.schemeName))
 end
 
+---@return LazySpec
 function colorscheme:toLazySpec()
+	---@type LazySpec
 	return {
 		[1] = self.repo,
+		---@type integer|nil
 		priority = self.lazyPriority,
-		-- auto load when doing 'colorscheme {scheme}'
 		lazy = self.lazy,
-		config = self.config
+		---@type fun(self:LazyPlugin, opts:table)|true|nil
+		config = self.config,
 	}
 end
 
