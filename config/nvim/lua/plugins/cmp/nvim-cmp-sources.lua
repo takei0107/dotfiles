@@ -4,6 +4,15 @@ local sources = {
 	-- option: nvim-cmpの各ソースのオプション
 	-- format: ":h cmp-config.formatting.format"
 	{
+		name = "hrsh7th/cmp-nvim-lsp",
+		sourceName = "nvim_lsp",
+		option = {},
+		format = function(vim_item)
+			vim_item.kind = "lsp"
+			return vim_item
+		end
+	},
+	{
 		name = "hrsh7th/cmp-buffer" ,
 		sourceName = "buffer",
 		option = {
@@ -23,7 +32,7 @@ setmetatable(sources, {
 		for _, source in ipairs(self) do
 			local s = {name = source.sourceName}
 			if source.option then
-				s.option = option
+				s.option = source.option
 			end
 			table.insert(t, s)
 		end
