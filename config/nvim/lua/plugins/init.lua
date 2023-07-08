@@ -24,11 +24,24 @@ local function setup_lazy()
 	lazy.setup("plugins.spec", {})
 end
 
+local function setup_colorscheme()
+	local colorschme = require("plugins.colorscheme")
+	if colorschme then
+		vim.cmd(string.format("colorscheme %s", colorschme.schemeName))
+
+		local highlight_handler = colorschme.highlight_handlers[colorschme.schemeName]
+		if highlight_handler then
+			highlight_handler()
+		end
+	end
+end
+
 return {
 	initManager = function()
 		init_lazy()
 	end,
 	initSetup = function()
 		setup_lazy()
+		setup_colorscheme()
 	end
 }
