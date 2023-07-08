@@ -13,13 +13,6 @@ local function ui_tranparent()
 	end
 end
 
--- 'lazy'がtrueかつ、'skipSetup'がtrue以外の時
--- ':colorscheme {schemeName}'がsetupメソッドで実行されるタイミングで
--- 対象のカラースキームのプラグインがlazyによってロードされる。
---
--- カラースキームの中にはプラグイン内でカラースキームの指定をしている場合があるので
--- その場合は、'skipSetup'をtrueに設定し、'config'を設定した上で、
--- lazyの読み込み時にプラグインが提供している初期化手順を実行する。
 ---@class rc.colorscheme
 ---@field repo string lazy.nvimで使うリポジトリ名
 ---@field schemeName string カラースキーム名
@@ -28,6 +21,15 @@ end
 ---@field config fun(self:LazyPlugin, opts:table)|true|nil
 ---@field skipSetup boolean trueの時、setupメソッドをスキップする
 ---@field transparent_enable boolean 背景透過させるかどうか
+---
+-- 'lazy'がtrueかつ、'skipSetup'がtrue以外の時
+-- ':colorscheme {schemeName}'がsetupメソッドで実行されるタイミングで
+-- 対象のカラースキームのプラグインがlazyによってロードされる。
+--
+-- カラースキームの中にはプラグイン内でカラースキームの指定をしている場合があるので
+-- その場合は、'skipSetup'をtrueに設定し、'config'を設定した上で、
+-- lazyの読み込み時にプラグインが提供している初期化手順を実行する。
+--
 local colorscheme = {}
 
 ---@param config rc.colorscheme

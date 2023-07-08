@@ -45,5 +45,5 @@ return {
 	initSetup = function()
 		setup_lazy()
 		setup_colorscheme()
-	end
+	end,
 }
