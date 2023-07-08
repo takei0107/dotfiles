@@ -29,7 +29,7 @@ local function setup_colorscheme()
 	if colorschme then
 		vim.cmd(string.format("colorscheme %s", colorschme.schemeName))
 
-		local highlight_handler = colorschme.highlight_handlers[colorschme.schemeName]
+		local highlight_handler = colorschme:getHighLightHandler()
 		if highlight_handler then
 			highlight_handler()
 		end

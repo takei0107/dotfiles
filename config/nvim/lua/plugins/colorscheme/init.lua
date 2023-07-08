@@ -22,4 +22,8 @@ function colorscheme:toLazySpec()
 	}
 end
 
+function colorscheme:getHighLightHandler()
+	return self.highlight_handlers[self.schemeName]
+end
+
 return colorscheme
