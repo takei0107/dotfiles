@@ -16,6 +16,8 @@ local sources = {
 }
 
 setmetatable(sources, {
+	-- nvim-cmpのセットアップ時に設定する'sources'の値を取得できる
+	-- return { name="nvim-cmpのソース名", option=nil|table}
 	__call = function(self)
 		local t = {}
 		for _, source in ipairs(self) do
@@ -27,6 +29,8 @@ setmetatable(sources, {
 		end
 		return t
 	end,
+
+	-- nvim-cmpのソース名でインデックスできる
 	__index = function(self, sourceName)
 		for _, source in ipairs(self) do
 			if source.sourceName == sourceName then
