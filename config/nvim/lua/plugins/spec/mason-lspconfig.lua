@@ -44,5 +44,7 @@ return {
 				invoke_lspconfig_handler(server_name)
 			end,
 		}
+
+		require("lsp.keymap").register()
 	end
 }
