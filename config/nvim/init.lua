@@ -100,10 +100,6 @@ end)
 
 -- reload vimrc
 keymap.set("n", "<F5>", function()
-	-- "plugins"モジュールがrequire済みなら再ロードする
-	if package.loaded["plugins"] then
-		package.loaded["plugins"] = nil
-	end
 	local vimrc = S.MYVIMRC
 	vim.cmd("luafile " .. vimrc)
 	print(string.format("%s reloaded", vimrc))
@@ -124,6 +120,13 @@ keymap.set("i", "<CR>", function()
 end, {
 	expr = true,
 })
+-- }}}
+
+-- {{{ commands
+
+-- ":Of オプション名" で設定値表示
+vim.cmd([[command! -nargs=1 -complete=option Of execute("echo &"..expand("<args>"))]])
+
 -- }}}
 
 -- {{{ _G functions
@@ -994,4 +997,3 @@ end, {})
 --	end,
 --})
 -- }}}
-

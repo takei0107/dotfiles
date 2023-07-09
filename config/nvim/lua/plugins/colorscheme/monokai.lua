@@ -1,11 +1,14 @@
 local M = require("plugins.colorscheme.colorscheme").new({
 	repo = "tanvirtin/monokai.nvim",
-	schemeName = "monokai",
+	schemeName = "monokai_soda",
 	lazyPriority = 1000,
 	config = function()
-		require("monokai").setup({})
+		require("monokai").setup({
+			palette = require("monokai").soda,
+			italics = false,
+		})
 	end,
-	transparent_enable = true,
+	transparent_enable = false,
 	skipSetup = true,
 })
 
