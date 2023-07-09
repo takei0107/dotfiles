@@ -34,8 +34,8 @@ local e_font = "JetBrains Mono" -- 組み込みフォント(デフォルト)
 local e_font_size = 12.0
 if wezterm.target_triple == "x86_64-unknown-linux-gnu" then
 	-- linux
-	e_font = "RobotoMono Nerd Font"
-	e_font_size = 14.0
+	e_font = "FiraCode Nerd Font"
+	e_font_size = 13.0
 elseif wezterm.target_triple == "aarch64-apple-darwin" then
 	-- mac
 	e_font = "BitstreamVeraSansMono Nerd Font"
@@ -76,4 +76,3 @@ return {
 	},
 	--debug_key_events = true,
 }
-
