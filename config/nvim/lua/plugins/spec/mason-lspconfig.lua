@@ -13,8 +13,8 @@ local function ensure_installed()
 	local r = {}
 	for _, setting in ipairs(lsp_settings) do
 		if is_setting_enable(setting) and setting.force_install then
-			if setting.mason_ls_name then
-				table.insert(r, setting.mason_ls_name)
+			if setting.ls_name then
+				table.insert(r, setting.ls_name)
 			end
 		end
 	end

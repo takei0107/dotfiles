@@ -17,6 +17,15 @@ local settings = {
 			lspconfig.setup({})
 		end,
 	},
+	{
+		ls_name = "bashls",
+		mason_ls_name = "bash-language-server",
+		enable = true,
+		force_install = true,
+		lspconfig_handler = function(lspconfig)
+			lspconfig.setup({})
+		end,
+	},
 }
 
 setmetatable(settings, {
@@ -29,8 +38,8 @@ setmetatable(settings, {
 			if server_name == setting.ls_name then
 				return setting
 			end
-			return nil
 		end
+		return nil
 	end,
 })
 
