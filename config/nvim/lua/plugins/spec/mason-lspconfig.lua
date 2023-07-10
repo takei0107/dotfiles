@@ -49,6 +49,7 @@ return {
 		-- see: ":h mason-lspconfig.setup_handlers()"
 		require("mason-lspconfig").setup_handlers({
 			function(server_name)
+				print(("[debug] LSP server:%s is ready for setup."):format(server_name))
 				invoke_lspconfig_handler(server_name)
 			end,
 		})
