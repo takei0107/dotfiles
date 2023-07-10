@@ -122,10 +122,22 @@ end, {
 })
 -- }}}
 
--- {{{ commands
+-- {{{1 commands
 
 -- ":Of オプション名" で設定値表示
 vim.cmd([[command! -nargs=1 -complete=option Of execute("echo &"..expand("<args>"))]])
+
+-- {{{2 lua commands
+local lua_ag_id = api.nvim_create_augroup("MyLuaCommand", {})
+api.nvim_create_autocmd({ "FileType" }, {
+	group = lua_ag_id,
+	pattern = { "lua" },
+	callback = function()
+		-- 現在行のluaコマンドを実行する
+		api.nvim_buf_create_user_command(0, "LuaExecLine", ".luado assert(loadstring(line))()", { nargs = 0 })
+	end,
+})
+-- }}}
 
 -- }}}
 
