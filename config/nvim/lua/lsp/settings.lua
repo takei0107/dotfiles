@@ -1,7 +1,6 @@
 ---@class rc.LspSetting
 ---@field ls_name string lspconfigで使われるLS名
 ---@field mason_ls_name string masonで使われるLS名
----@field ft string|string[] mason-lspconfiをlazyでロードするファイルタイプ
 ---@field enable boolean|nil lspサーバーを有効化する 明示的にfalseを設定しない限り有効
 ---@field force_install boolean|nil lspサーバーの強制インストール trueの時のみ強制する
 ---@field lspconfig_handler fun(lspconfig: any)|nil ":h mason-lspconfig.setup_handlers()"
@@ -12,7 +11,6 @@ local settings = {
 	{
 		ls_name = "lua_ls",
 		mason_ls_name = "lua_ls",
-		ft = { "lua" },
 		enable = true,
 		force_install = true,
 		lspconfig_handler = function(lspconfig)
@@ -22,7 +20,6 @@ local settings = {
 	{
 		ls_name = "bashls",
 		mason_ls_name = "bash-language-server",
-		ft = { "bash", "sh" },
 		enable = true,
 		force_install = true,
 		lspconfig_handler = function(lspconfig)
