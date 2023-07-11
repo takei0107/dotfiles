@@ -48,6 +48,7 @@ set.cmdheight = 0
 set.completeopt = "menu"
 set.matchpairs:append("<:>")
 set.nrformats:append("unsigned")
+set.path:append(S.PWD .. "/**")
 -- }}}
 
 -- highlight{{{
