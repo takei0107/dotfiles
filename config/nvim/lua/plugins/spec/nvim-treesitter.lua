@@ -4,6 +4,7 @@ return {
 	build = function()
 		require("nvim-treesitter.install").update({ with_sync = true })
 	end,
+	ft = { "lua" },
 	---@type fun(self:LazyPlugin, opts:table)|true
 	config = function()
 		require("nvim-treesitter.configs").setup({

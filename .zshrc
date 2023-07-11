@@ -79,10 +79,6 @@ function workdir () {
 	echo change dir to \'`pwd`\'
 }
 
-if type volta > /dev/null 2>&1; then
-	export VOLTA_HOME="$HOME/.volta"
-fi
-
 if type scrot > /dev/null 2>&1; then
 	if [[ ! -d $HOME/Pictures/screenshots ]]; then
 		mkdir $HOME/Pictures/screenshots
@@ -94,11 +90,6 @@ fi
 if [[ -d "$HOME/.sdkman" ]]; then
 	export SDKMAN_DIR="$HOME/.sdkman"
 	[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
-fi
-
-# Starship
-if type starship > /dev/null 2>&1; then
-	eval "$(starship init zsh)"
 fi
 
 # for ubuntu
@@ -123,7 +114,18 @@ path=(
 	$HOME/go/bin/(N-/)
 	$HOME/.cargo/bin(N-/)
 	$HOME/.local/bin(N-/)
+	/opt/homebrew/bin(N-/)
 	$path
 )
 
-#[[ -f $HOME/.zshrc_local ]] && source $HOME/.zshrc_local
+# Starship
+if type starship > /dev/null 2>&1; then
+	eval "$(starship init zsh)"
+fi
+
+# volta
+if type volta > /dev/null 2>&1; then
+	export VOLTA_HOME="$HOME/.volta"
+fi
+
+[[ -f $HOME/.zshrc_local ]] && source $HOME/.zshrc_local

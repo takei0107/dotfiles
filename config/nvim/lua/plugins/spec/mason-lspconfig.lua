@@ -31,6 +31,22 @@ local function invoke_lspconfig_handler(server_name)
 	end
 end
 
+---@return string[]
+local function getLazyLoadFileTypes()
+	local fts = {}
+	for _, setting in ipairs(lsp_settings) do
+		local ft = setting.ft
+		if type(ft) == "table" then
+			for _, t in ipairs(ft) do
+				table.insert(fts, t)
+			end
+		elseif type(ft) == "string" then
+			table.insert(fts, ft)
+		end
+	end
+	return fts
+end
+
 ---@type LazySpec
 return {
 	"williamboman/mason-lspconfig.nvim",
@@ -39,6 +55,8 @@ return {
 		"williamboman/mason.nvim",
 		"neovim/nvim-lspconfig",
 	},
+	---@type string[]
+	ft = getLazyLoadFileTypes(),
 	---@type fun(self:LazyPlugin, opts:table)|true
 	config = function()
 		require("mason-lspconfig").setup({
