@@ -8,6 +8,15 @@ vim.g.loaded_zipPlugin = 1
 vim.g.loaded_spellfile_plugin = 1
 --- }}}
 
+-- gitのcommitメッセージで開いた場合 {{{
+local isGitCommitMsg = false
+for _, arg in ipairs(vim.v.argv) do
+	if string.match(arg, "COMMIT_EDITMSG") then
+		isGitCommitMsg = true
+	end
+end
+-- }}}
+
 -- alias {{{
 local set = vim.opt
 local setlocal = vim.opt_local
@@ -39,6 +48,7 @@ set.cmdheight = 0
 set.completeopt = "menu"
 set.matchpairs:append("<:>")
 set.nrformats:append("unsigned")
+set.path:append(S.PWD .. "/**")
 -- }}}
 
 -- highlight{{{
@@ -132,10 +142,22 @@ end, {
 })
 -- }}}
 
--- {{{ commands
+-- {{{1 commands
 
 -- ":Of オプション名" で設定値表示
 vim.cmd([[command! -nargs=1 -complete=option Of execute("echo &"..expand("<args>"))]])
+
+-- {{{2 lua commands
+local lua_ag_id = api.nvim_create_augroup("MyLuaCommand", {})
+api.nvim_create_autocmd({ "FileType" }, {
+	group = lua_ag_id,
+	pattern = { "lua" },
+	callback = function()
+		-- 現在行のluaコマンドを実行する
+		api.nvim_buf_create_user_command(0, "LuaExprLine", ".luado assert(loadstring(line))()", { nargs = 0 })
+	end,
+})
+-- }}}
 
 -- }}}
 
@@ -606,7 +628,7 @@ local function load_plugins()
 		print(err)
 		return
 	end
-	local ok, err = pcall(modOrErr.initSetup)
+	local ok, err = pcall(modOrErr.initSetup, isGitCommitMsg)
 	if not ok then
 		print(err)
 		return

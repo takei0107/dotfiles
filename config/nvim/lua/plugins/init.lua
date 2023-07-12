@@ -16,13 +16,18 @@ local function init_lazy()
 end
 
 -- setup lazy.nvim
+---@param disableInstallMissing boolean
 ---@see https://github.com/folke/lazy.nvim#-structuring-your-plugins
-local function setup_lazy()
+local function setup_lazy(disableInstallMissing)
 	local lazy = require("lazy")
 	if not lazy then
 		error("lazy didn't loaded.")
 	end
-	lazy.setup("plugins.spec", {})
+	lazy.setup("plugins.spec", {
+		install = {
+			missing = not disableInstallMissing
+		}
+	})
 end
 
 -- setup colorscheme
@@ -42,8 +47,9 @@ return {
 	initManager = function()
 		init_lazy()
 	end,
-	initSetup = function()
-		setup_lazy()
+	---@param disableInstallMissing boolean
+	initSetup = function(disableInstallMissing)
+		setup_lazy(disableInstallMissing)
 		setup_colorscheme()
 	end,
 }
