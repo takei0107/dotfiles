@@ -16,17 +16,42 @@ local function init_lazy()
 end
 
 -- setup lazy.nvim
----@param disableInstallMissing boolean
 ---@see https://github.com/folke/lazy.nvim#-structuring-your-plugins
-local function setup_lazy(disableInstallMissing)
+local function setup_lazy()
 	local lazy = require("lazy")
 	if not lazy then
-		error("lazy didn't loaded.")
+		error("require('lazy') return nil")
 	end
-	lazy.setup("plugins.spec", {
+	lazy.setup("plugins.spec", {})
+end
+
+-- setup lazy.nvim for mini mode
+-- 必要最低限のプラグインのみロードする
+local function setup_lazy_minimode()
+	local lazy = require("lazy")
+	if not lazy then
+		error("require('lazy') return nil")
+	end
+	local mini_mode_specs = {
+		require("plugins.spec"),
+		require("plugins.spec.LuaSnip"),
+		require("plugins.spec.lightline"),
+		require("plugins.spec.nvim-cmp"),
+	}
+	lazy.setup(mini_mode_specs, {
+		root = vim.fn.stdpath("data") .. "/lazy-mini-mode",
+		lockfile = vim.fn.stdpath("config") .. "/lazy-mini-mode-lock.json",
 		install = {
-			missing = not disableInstallMissing
-		}
+			missing = true,
+		},
+		change_detection = {
+			enabled = false,
+			notify = false,
+		},
+		readme = {
+			enabled = false,
+		},
+		state = vim.fn.stdpath("state") .. "/lazy-mini-mode/state.json",
 	})
 end
 
@@ -47,9 +72,13 @@ return {
 	initManager = function()
 		init_lazy()
 	end,
-	---@param disableInstallMissing boolean
-	initSetup = function(disableInstallMissing)
-		setup_lazy(disableInstallMissing)
+	---@param isMiniMode boolean
+	initSetup = function(isMiniMode)
+		if isMiniMode then
+			setup_lazy_minimode()
+		else
+			setup_lazy()
+		end
 		setup_colorscheme()
 	end,
 }

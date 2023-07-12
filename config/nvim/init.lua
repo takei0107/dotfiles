@@ -8,15 +8,6 @@ vim.g.loaded_zipPlugin = 1
 vim.g.loaded_spellfile_plugin = 1
 --- }}}
 
--- gitのcommitメッセージで開いた場合 {{{
-local isGitCommitMsg = false
-for _, arg in ipairs(vim.v.argv) do
-	if string.match(arg, "COMMIT_EDITMSG") then
-		isGitCommitMsg = true
-	end
-end
--- }}}
-
 -- alias {{{
 local set = vim.opt
 local setlocal = vim.opt_local
@@ -617,6 +608,24 @@ keymap.set("n", terminal_key_prefix .. "t", ":tabnew +terminal<CR>", { silent = 
 -- }}}
 
 -- {{{1 load plugins
+
+-- gitのcommitメッセージで開いた場合
+--- @return boolean
+local function isOnGitCommitMsg()
+	for _, arg in ipairs(vim.v.argv) do
+		if string.match(arg, "COMMIT_EDITMSG") then
+			return true
+		end
+	end
+	return false
+end
+
+-- lazy.nvimをmini modeで実行するかを判定する
+---@return boolean
+local function isUseMiniMode()
+	return isOnGitCommitMsg()
+end
+
 local function load_plugins()
 	local ok, modOrErr = pcall(require, "plugins")
 	if not ok then
@@ -628,7 +637,7 @@ local function load_plugins()
 		print(err)
 		return
 	end
-	local ok, err = pcall(modOrErr.initSetup, isGitCommitMsg)
+	local ok, err = pcall(modOrErr.initSetup, isUseMiniMode())
 	if not ok then
 		print(err)
 		return
