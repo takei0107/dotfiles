@@ -18,27 +18,19 @@ end
 -- setup lazy.nvim
 ---@see https://github.com/folke/lazy.nvim#-structuring-your-plugins
 local function setup_lazy()
-	local lazy = require("lazy")
-	if not lazy then
-		error("require('lazy') return nil")
-	end
-	lazy.setup("plugins.spec", {})
+	require("lazy").setup("plugins.spec", {})
 end
 
 -- setup lazy.nvim for mini mode
 -- 必要最低限のプラグインのみロードする
 local function setup_lazy_minimode()
-	local lazy = require("lazy")
-	if not lazy then
-		error("require('lazy') return nil")
-	end
 	local mini_mode_specs = {
 		require("plugins.spec"),
 		require("plugins.spec.LuaSnip"),
 		require("plugins.spec.lightline"),
 		require("plugins.spec.nvim-cmp"),
 	}
-	lazy.setup(mini_mode_specs, {
+	require("lazy").setup(mini_mode_specs, {
 		root = vim.fn.stdpath("data") .. "/lazy-mini-mode",
 		lockfile = vim.fn.stdpath("config") .. "/lazy-mini-mode-lock.json",
 		install = {
@@ -68,11 +60,15 @@ local function setup_colorscheme()
 	end
 end
 
-return {
+---@class rc.PluginsInitializer
+local M = {
+	-- プラグインマネージャーを初期化する
 	initManager = function()
 		init_lazy()
 	end,
-	---@param isMiniMode boolean
+	-- プラグインのセットアップする
+	-- `isMiniMode`がtrueの場合にはミニモードとして最低限のプラグインで起動する。
+	---@param isMiniMode boolean mini mode 起動フラグ
 	initSetup = function(isMiniMode)
 		if isMiniMode then
 			setup_lazy_minimode()
@@ -82,3 +78,5 @@ return {
 		setup_colorscheme()
 	end,
 }
+
+return M

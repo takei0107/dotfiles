@@ -42,11 +42,6 @@ set.nrformats:append("unsigned")
 set.path:append(S.PWD .. "/**")
 -- }}}
 
--- highlight{{{
-vim.cmd("hi SignColumn ctermbg=none")
-vim.cmd("hi SignColumn guibg=none")
--- }}}
-
 -- {{{ keymaps
 
 -- see ":h map-table"
@@ -627,20 +622,18 @@ local function isUseMiniMode()
 end
 
 local function load_plugins()
-	local ok, modOrErr = pcall(require, "plugins")
+	---@type boolean, rc.Util|string
+	local ok, utilOrErr = pcall(require, "util")
 	if not ok then
-		print(modOrErr)
-		return
+		print(utilOrErr)
 	end
-	local ok, err = pcall(modOrErr.initManager)
-	if not ok then
-		print(err)
-		return
-	end
-	local ok, err = pcall(modOrErr.initSetup, isUseMiniMode())
-	if not ok then
-		print(err)
-		return
+	---@param initializer rc.PluginsInitializer
+	local _, err = utilOrErr.safeRequire("plugins", function(initializer)
+		initializer.initManager()
+		initializer.initSetup(isUseMiniMode())
+	end)
+	if err then
+		print("safeRequire() failed. error: " .. err)
 	end
 end
 load_plugins()
