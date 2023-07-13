@@ -23,6 +23,8 @@ local M = require("plugins.colorscheme.colorscheme").new({
 		vim.g.sonokai_disable_italic_comment = 1
 		---@type integer
 		vim.g.sonokai_dim_inactive_windows = 1
+
+		vim.g.use_sonokai = true
 	end,
 })
 
