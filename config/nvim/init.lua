@@ -8,15 +8,6 @@ vim.g.loaded_zipPlugin = 1
 vim.g.loaded_spellfile_plugin = 1
 --- }}}
 
--- gitのcommitメッセージで開いた場合 {{{
-local isGitCommitMsg = false
-for _, arg in ipairs(vim.v.argv) do
-	if string.match(arg, "COMMIT_EDITMSG") then
-		isGitCommitMsg = true
-	end
-end
--- }}}
-
 -- alias {{{
 local set = vim.opt
 local setlocal = vim.opt_local
@@ -49,11 +40,6 @@ set.completeopt = "menu"
 set.matchpairs:append("<:>")
 set.nrformats:append("unsigned")
 set.path:append(S.PWD .. "/**")
--- }}}
-
--- highlight{{{
-vim.cmd("hi SignColumn ctermbg=none")
-vim.cmd("hi SignColumn guibg=none")
 -- }}}
 
 -- {{{ keymaps
@@ -617,21 +603,37 @@ keymap.set("n", terminal_key_prefix .. "t", ":tabnew +terminal<CR>", { silent = 
 -- }}}
 
 -- {{{1 load plugins
+
+-- gitのcommitメッセージで開いた場合
+--- @return boolean
+local function isOnGitCommitMsg()
+	for _, arg in ipairs(vim.v.argv) do
+		if string.match(arg, "COMMIT_EDITMSG") then
+			return true
+		end
+	end
+	return false
+end
+
+-- lazy.nvimをmini modeで実行するかを判定する
+---@return boolean
+local function isUseMiniMode()
+	return isOnGitCommitMsg()
+end
+
 local function load_plugins()
-	local ok, modOrErr = pcall(require, "plugins")
+	---@type boolean, rc.Util|string
+	local ok, utilOrErr = pcall(require, "util")
 	if not ok then
-		print(modOrErr)
-		return
+		print(utilOrErr)
 	end
-	local ok, err = pcall(modOrErr.initManager)
-	if not ok then
-		print(err)
-		return
-	end
-	local ok, err = pcall(modOrErr.initSetup, isGitCommitMsg)
-	if not ok then
-		print(err)
-		return
+	---@param initializer rc.PluginsInitializer
+	local _, err = utilOrErr.safeRequire("plugins", function(initializer)
+		initializer.initManager()
+		initializer.initSetup(isUseMiniMode())
+	end)
+	if err then
+		print("safeRequire() failed. error: " .. err)
 	end
 end
 load_plugins()
