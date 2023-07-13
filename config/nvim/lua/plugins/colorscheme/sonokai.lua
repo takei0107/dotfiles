@@ -24,6 +24,7 @@ local M = require("plugins.colorscheme.colorscheme").new({
 		---@type integer
 		vim.g.sonokai_dim_inactive_windows = 1
 
+		-- lightlineでカラーテーマとして使ったりする
 		vim.g.use_sonokai = true
 	end,
 })
