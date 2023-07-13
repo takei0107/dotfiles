@@ -17,7 +17,7 @@ return {
 			lightline.colorscheme = "sonokai"
 			vim.g.lightline = lightline
 		end
-		vim.g.loaded_lightline = 0
-		vim.cmd("runtime! lightline")
+		vim.cmd("unlet g:loaded_lightline")
+		vim.cmd("runtime! plugin/lightline.vim")
 	end,
 }
