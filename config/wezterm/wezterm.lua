@@ -45,7 +45,7 @@ end
 return {
 	show_update_window = false,
 	default_cwd = wezterm.home_dir,
-	font = wezterm.font(e_font, { weight = "Medium" }),
+	font = wezterm.font(e_font, { weight = "Light" }),
 	use_ime = true,
 	font_size = e_font_size,
 	color_scheme = "FishTank",

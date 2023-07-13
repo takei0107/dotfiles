@@ -1,9 +1,9 @@
 local M = require("plugins.colorscheme.colorscheme").new({
-	repo = "Th3Whit3Wolf/one-nvim",
-	schemeName = "one-nvim",
+	repo = "LunarVim/onedarker.nvim",
+	schemeName = "onedarker",
 	lazyPriority = 1000,
 	lazy = true,
-	transparent_enable = true,
+	transparent_enable = false,
 })
 
 return M

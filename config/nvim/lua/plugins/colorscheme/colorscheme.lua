@@ -19,6 +19,7 @@ end
 ---@field lazyPriority integer|nil lazyの優先度 lazyのヘルプの'COLORSCHEMES'参照
 ---@field lazy boolean
 ---@field config fun(self:LazyPlugin, opts:table)|true|nil
+---@field init fun(self:LazyPlugin)|nil
 ---@field skipSetup boolean trueの時、setupメソッドをスキップする
 ---@field transparent_enable boolean 背景透過させるかどうか
 ---
@@ -41,6 +42,7 @@ colorscheme.new = function(config)
 		lazyPriority = config.lazyPriority,
 		lazy = config.lazy or false,
 		config = config.config,
+		init = config.init,
 		skipSetup = config.skipSetup or false,
 		transparent_enable = config.transparent_enable or false,
 	}, {
@@ -59,11 +61,10 @@ function colorscheme:toLazySpec()
 	---@type LazySpec
 	return {
 		[1] = self.repo,
-		---@type integer|nil
 		priority = self.lazyPriority,
 		lazy = self.lazy,
-		---@type fun(self:LazyPlugin, opts:table)|true|nil
 		config = self.config,
+		init = self.init,
 	}
 end
 

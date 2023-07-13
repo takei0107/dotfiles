@@ -1,1 +1,1 @@
-return require("plugins.colorscheme.monokai")
+return require("plugins.colorscheme.sonokai")
