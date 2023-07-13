@@ -34,7 +34,7 @@ local e_font = "JetBrains Mono" -- 組み込みフォント(デフォルト)
 local e_font_size = 12.0
 if wezterm.target_triple == "x86_64-unknown-linux-gnu" then
 	-- linux
-	e_font = "FiraCode Nerd Font"
+	e_font = "Hack"
 	e_font_size = 13.0
 elseif wezterm.target_triple == "aarch64-apple-darwin" then
 	-- mac
@@ -45,7 +45,7 @@ end
 return {
 	show_update_window = false,
 	default_cwd = wezterm.home_dir,
-	font = wezterm.font(e_font, { weight = "Light" }),
+	font = wezterm.font(e_font, { weight = "Regular" }),
 	use_ime = true,
 	font_size = e_font_size,
 	color_scheme = "FishTank",
