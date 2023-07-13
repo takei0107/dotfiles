@@ -1,0 +1,38 @@
+let mapleader=" "
+
+" options {{{
+set clipboard+=unnamed,unnamdeplus
+set incsearch
+set hlsearch
+set number
+set relativenumber
+set scrolloff=5
+set novisualbell
+" }}}
+
+" idea options {{{
+set ideajoin
+" }}}
+
+" nmap {{{
+nnoremap <C-[> <ESC>
+nnoremap <C-L> :nohlsearch<CR>
+" }}}
+
+" xmap {{{
+xnoremap $ g_
+" }}}
+
+" idea actions {{{
+nmap <leader>gd <Action>(GotoDeclaration)
+nmap <leader>gr <Action>(GotoDeclaration)
+nmap <leader>gi <Action>(GotoImplementation)
+nmap <leader>gt <Action>(GotoTypeDeclaration)
+nmap <leader>rn <Action>(RenameElement)
+nmap <leader>nt <Action>(SelectInProjectView)
+nmap <leader>rg <Action>(FindInPath)
+" }}}
+
+" plugins
+Plug 'vim-matchit'
+"Plug 'tpope/vim-surround'
