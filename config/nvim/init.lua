@@ -1,3 +1,21 @@
+-- nvim in nvim {{{
+if os.getenv("NVIM") ~= nil then
+	---@type boolean, rc.Util|string
+	local ok, utilOrErr = pcall(require, "util")
+	if not ok then
+		print(utilOrErr)
+	end
+	---@param initializer rc.PluginsInitializer
+	local _, err = utilOrErr.safeRequire("plugins", function(initializer)
+		initializer.initManager()
+		initializer.initSetupInNvim()
+	end)
+	if err then
+		print("safeRequire() failed. error: " .. err)
+	end
+end
+-- }}}
+
 -- disable rtp plugins {{{
 vim.g.loaded_remote_plugins = 1
 vim.g.loaded_gzip = 1

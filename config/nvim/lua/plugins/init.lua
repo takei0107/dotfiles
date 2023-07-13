@@ -47,6 +47,13 @@ local function setup_lazy_minimode()
 	})
 end
 
+-- nvim in nvim時のプラグインロード
+local function setup_lazy_in_nvim()
+	require("lazy").setup({
+		require("plugins.spec.flatten"),
+	})
+end
+
 -- setup colorscheme
 local function setup_colorscheme()
 	local colorscheme = require("plugins.colorscheme")
@@ -62,10 +69,12 @@ end
 
 ---@class rc.PluginsInitializer
 local M = {
+
 	-- プラグインマネージャーを初期化する
 	initManager = function()
 		init_lazy()
 	end,
+
 	-- プラグインのセットアップする
 	-- `isMiniMode`がtrueの場合にはミニモードとして最低限のプラグインで起動する。
 	---@param isMiniMode boolean mini mode 起動フラグ
@@ -76,6 +85,11 @@ local M = {
 			setup_lazy()
 		end
 		setup_colorscheme()
+	end,
+
+	-- nvim in nvimのセットアップをする
+	initSetupInNvim = function()
+		setup_lazy_in_nvim()
 	end,
 }
 
