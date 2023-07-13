@@ -23,6 +23,7 @@ set.number = true
 set.list = true
 set.relativenumber = true
 set.scrolloff = 5
+set.ignorecase = true
 set.smartcase = true
 set.smartindent = true
 set.smarttab = true

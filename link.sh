@@ -9,6 +9,7 @@ set -u
 declare -A linksdef
 linksdef=(
 	[$PWD/.zshrc]=$HOME/.zshrc
+	[$PWD/.ideavimrc]=$HOME/.ideavimrc
 )
 for entry in $PWD/config/*;
 do
