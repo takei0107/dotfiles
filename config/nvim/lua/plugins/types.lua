@@ -77,7 +77,6 @@
 
 ---------------------------------------------------------------------------//
 
-
 ---------------------------// nvim-cmp //----------------------------------//
 
 -- vim -----------------------------------------------------------------//
@@ -127,7 +126,6 @@
 ---@field public global fun(c: cmp.ConfigSchema)
 ---@field public cmdline fun(type: string|string[], c: cmp.ConfigSchema)
 ---@field public filetype fun(type: string|string[], c: cmp.ConfigSchema)
-
 
 -- cmp -----------------------------------------------------------------//
 ---@see https://github.com/hrsh7th/nvim-cmp/blob/main/lua/cmp/types/cmp.lua

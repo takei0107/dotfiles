@@ -1,7 +1,7 @@
 return {
-	"neovim/nvim-lspconfig",
-	lazy = true,
-	dependencies = {
-		"j-hui/fidget.nvim",
-	},
+  "neovim/nvim-lspconfig",
+  lazy = true,
+  dependencies = {
+    "j-hui/fidget.nvim",
+  },
 }
