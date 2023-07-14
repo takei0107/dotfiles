@@ -1,13 +1,13 @@
 globals = {
-	"vim"
+  "vim",
 }
 
 -- read only global variables
 read_globals = {
-	"pp",
-	"termcodes"
+  "pp",
+  "termcodes",
 }
 
 exclude_files = {
-	"_nvim/*",
+  "_nvim/*",
 }
