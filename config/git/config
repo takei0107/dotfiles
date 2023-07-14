@@ -1,0 +1,7 @@
+[user]
+	name = takei0107
+	email = takei0107.work@gmail.com
+[init]
+	defaultBranch = main
+[core]
+	editor = /usr/local/bin/nvim
