@@ -15,6 +15,8 @@ util.safeRequireWithSideEffect("rc.options")
 util.safeRequireWithSideEffect("rc.keymaps")
 ---@module "rc.commands"
 util.safeRequireWithSideEffect("rc.commands")
+---@module "rc.autocmd"
+util.safeRequireWithSideEffect("rc.autocmd")
 
 -- alias {{{
 local set = vim.opt
@@ -25,7 +27,7 @@ local keymap = vim.keymap
 local S = vim.env
 -- }}}
 
--- {{{ _G functions
+-- _G functions
 _G.pp = function(arg)
   vim.print(arg)
 end
@@ -33,7 +35,6 @@ end
 _G.termcodes = function(key)
   return api.nvim_replace_termcodes(key, true, true, true)
 end
--- }}}
 
 -- {{{ local functions
 -- vimscriptの関数呼び出しなので1-indexed
@@ -85,32 +86,6 @@ api.nvim_create_autocmd({ "BufEnter" }, {
   pattern = { vimrc_dir .. "/*.lua", vimrc_dir .. "/*/*.lua" },
   callback = function(_)
     set.foldmethod = "marker"
-  end,
-})
--- }}}
-
---  {{{ auto-mkdir
--- see https://vim-jp.org/vim-users-jp/2011/02/20/Hack-202.html
-local function confirm_should_mkdir(dir)
-  local r = false
-  vim.ui.input({
-    prompt = string.format('"%s" does not exist. Create? [y/n]\n> ', dir),
-  }, function(input)
-    r = input == "y"
-  end)
-  return r
-end
-local function auto_mkdir(dir, force)
-  if fn.isdirectory(dir) ~= 1 and (force or confirm_should_mkdir(dir)) then
-    fn.mkdir(dir, "p")
-  end
-end
-api.nvim_create_augroup("auto-mkdir", {})
-api.nvim_create_autocmd("BufWritePre", {
-  group = "auto-mkdir",
-  pattern = "*",
-  callback = function(args)
-    auto_mkdir(fn.fnamemodify(args.file, ":p:h"), vim.v.cmdbang == 1)
   end,
 })
 -- }}}
