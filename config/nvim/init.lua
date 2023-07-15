@@ -1,23 +1,20 @@
--- {{{ requires
 ---@type rc.Util
 local util = require("util")
--- }}}
 
--- nvim in nvim {{{
+-- nvim in nvim
 if os.getenv("NVIM") ~= nil then
   require("nvim-in-nvim").init(util)
 end
--- }}}
 
--- disable rtp plugins {{{
-vim.g.loaded_remote_plugins = 1
-vim.g.loaded_gzip = 1
-vim.g.loaded_tarPlugin = 1
-vim.g.loaded_2html_plugin = 1
-vim.g.loaded_tutor_mode_plugin = 1
-vim.g.loaded_zipPlugin = 1
-vim.g.loaded_spellfile_plugin = 1
---- }}}
+-- basic settings
+---@module "rc.rtp"
+util.safeRequireWithSideEffect("rc.rtp")
+---@module "rc.options"
+util.safeRequireWithSideEffect("rc.options")
+---@module "rc.keymaps"
+util.safeRequireWithSideEffect("rc.keymaps")
+---@module "rc.commands"
+util.safeRequireWithSideEffect("rc.commands")
 
 -- alias {{{
 local set = vim.opt
@@ -26,120 +23,6 @@ local api = vim.api
 local fn = vim.fn
 local keymap = vim.keymap
 local S = vim.env
--- }}}
-
--- options {{{
-set.belloff = "all"
-set.number = true
-set.list = true
-set.relativenumber = true
-set.scrolloff = 5
-set.ignorecase = true
-set.smartcase = true
-set.smartindent = true
-set.smarttab = true
-set.undofile = true
-set.swapfile = false
-set.splitright = true
-set.splitbelow = true
-set.cursorline = true
-set.cursorlineopt = { "screenline" }
-set.virtualedit = "block"
-set.laststatus = 2
-set.signcolumn = "yes"
-set.cmdheight = 0
-set.completeopt = "menu"
-set.matchpairs:append("<:>")
-set.nrformats:append("unsigned")
-set.path:append(S.PWD .. "/**")
--- }}}
-
--- {{{ keymaps
-
--- see ":h map-table"
-----------------------------------------------------------------------
---          Mode  | Norm | Ins | Cmd | Vis | Sel | Opr | Term | Lang |
--- Command        +------+-----+-----+-----+-----+-----+------+------+
--- [nore]map      | yes  |  -  |  -  | yes | yes | yes |  -   |  -   |
--- n[nore]map     | yes  |  -  |  -  |  -  |  -  |  -  |  -   |  -   |
--- [nore]map!     |  -   | yes | yes |  -  |  -  |  -  |  -   |  -   |
--- i[nore]map     |  -   | yes |  -  |  -  |  -  |  -  |  -   |  -   |
--- c[nore]map     |  -   |  -  | yes |  -  |  -  |  -  |  -   |  -   |
--- v[nore]map     |  -   |  -  |  -  | yes | yes |  -  |  -   |  -   |
--- x[nore]map     |  -   |  -  |  -  | yes |  -  |  -  |  -   |  -   |
--- s[nore]map     |  -   |  -  |  -  |  -  | yes |  -  |  -   |  -   |
--- o[nore]map     |  -   |  -  |  -  |  -  |  -  | yes |  -   |  -   |
--- t[nore]map     |  -   |  -  |  -  |  -  |  -  |  -  | yes  |  -   |
--- l[nore]map     |  -   | yes | yes |  -  |  -  |  -  |  -   | yes  |
-----------------------------------------------------------------------
-
-vim.g.mapleader = " "
-
--- same as <C-L>
--- vim.keymap.set("n", "<ESC><ESC>", "<cmd>nohlsearch<CR><ESC>", { silent = true })
-
--- '*','#'による検索で次の一致に自動的に飛ばないようにする
--- see ':h restore-position'
-keymap.set("n", "*", "msHmt`s*'tzt`s")
-keymap.set("n", "#", "msHmt`s#'tzt`s")
-
-keymap.set("x", "$", "g_")
-
--- ビジュアルの'p'で無名レジスタ更新しない
-keymap.set("x", "p", "P")
-
-keymap.set({ "o", "x" }, 'a"', '2i"')
-keymap.set({ "o", "x" }, "a'", "2i'")
-keymap.set({ "o", "x" }, "a`", "2i`")
-
-keymap.set({ "n", "x" }, "x", '"_x')
-keymap.set({ "n", "x" }, "X", '"_X')
-keymap.set({ "n", "x" }, "s", '"_s')
-keymap.set({ "n", "x" }, "S", '"_S')
-
--- reload vimrc
-keymap.set("n", "<F5>", function()
-  local vimrc = S.MYVIMRC
-  vim.cmd("luafile " .. vimrc)
-  print(string.format("%s reloaded", vimrc))
-end)
-
--- popup-menuが出ているときに<CR>で選択する
-keymap.set("i", "<CR>", function()
-  if fn.pumvisible() == 1 then
-    return "<C-Y>"
-  else
-    return "<CR>"
-  end
-end, {
-  expr = true,
-})
--- }}}
-
--- {{{1 commands
-
--- ":Of オプション名" で設定値表示
-vim.cmd([[command! -nargs=1 -complete=option Of execute("echo &"..expand("<args>"))]])
-
--- helpをvsplitで開く
-api.nvim_create_user_command("Vhelp", function(opts)
-  api.nvim_command("vertical help " .. opts.args)
-end, {
-  nargs = 1,
-  complete = "help",
-})
-
--- {{{2 lua commands
-local lua_ag_id = api.nvim_create_augroup("MyLuaCommand", {})
-api.nvim_create_autocmd({ "FileType" }, {
-  group = lua_ag_id,
-  pattern = { "lua" },
-  callback = function()
-    -- luaの現在行をチャンクとして実行
-    api.nvim_buf_create_user_command(0, "LuaExprLine", ".luado assert(loadstring(line))()", { nargs = 0 })
-  end,
-})
--- }}}
 -- }}}
 
 -- {{{ _G functions
@@ -192,9 +75,6 @@ local function open_split_win_with_buf(bufnr, direction)
   return winid
 end
 
--- }}}
-
--- {{{ help
 -- }}}
 
 -- {{{ fold vimrc
@@ -548,36 +428,6 @@ end, { silent = true })
 keymap.set("n", terminal_key_prefix .. "t", ":tabnew +terminal<CR>", { silent = true })
 -- }}}
 
--- {{{1 load plugins
-
--- gitのcommitメッセージで開いた場合
---- @return boolean
-local function isOnGitCommitMsg()
-  for _, arg in ipairs(vim.v.argv) do
-    if string.match(arg, "COMMIT_EDITMSG") then
-      return true
-    end
-  end
-  return false
-end
-
--- lazy.nvimをmini modeで実行するかを判定する
----@return boolean
-local function isUseMiniMode()
-  return isOnGitCommitMsg()
-end
-
--- プラグイン読み込み
-local function load_plugins()
-  ---@type boolean, rc.Util|string
-  ---@param initializer rc.PluginsInitializer
-  local _, err = util.safeRequire("plugins", function(initializer)
-    initializer.initManager()
-    initializer.initSetup(isUseMiniMode())
-  end)
-  if err then
-    print("safeRequire() failed. error: " .. err)
-  end
-end
-load_plugins()
--- }}}
+-- load plugins
+---@module "load-plugins"
+util.safeRequireWithSideEffect("load-plugins")

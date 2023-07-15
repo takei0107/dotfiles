@@ -16,4 +16,15 @@ M.safeRequire = function(modname, callback)
   return pcall(callback, errOrMod)
 end
 
+---@param modname string
+M.safeRequireWithSideEffect = function(modname)
+  vim.validate({
+    modname = { modname, "string" },
+  })
+  local ok, err = pcall(require, modname)
+  if not ok then
+    print("safeRequire() failed. error: " .. err)
+  end
+end
+
 return M
