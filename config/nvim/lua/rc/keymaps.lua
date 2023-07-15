@@ -1,5 +1,3 @@
-local fn = vim.fn
-local S = vim.env
 local keymap = vim.keymap
 
 -- see ":h map-table"
@@ -45,14 +43,14 @@ keymap.set({ "n", "x" }, "S", '"_S')
 
 -- reload vimrc
 keymap.set("n", "<F5>", function()
-  local vimrc = S.MYVIMRC
+  local vimrc = vim.env.MYVIMRC
   vim.cmd("luafile " .. vimrc)
   print(string.format("%s reloaded", vimrc))
 end)
 
 -- popup-menuが出ているときに<CR>で選択する
 keymap.set("i", "<CR>", function()
-  if fn.pumvisible() == 1 then
+  if vim.fn.pumvisible() == 1 then
     return "<C-Y>"
   else
     return "<CR>"

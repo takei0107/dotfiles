@@ -1,5 +1,4 @@
 local set = vim.opt
-local S = vim.env
 
 set.belloff = "all"
 set.number = true
@@ -23,4 +22,4 @@ set.cmdheight = 0
 set.completeopt = "menu"
 set.matchpairs:append("<:>")
 set.nrformats:append("unsigned")
-set.path:append(S.PWD .. "/**")
+set.path:append(vim.env.PWD .. "/**")
