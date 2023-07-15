@@ -16,6 +16,10 @@ local function resolve_deps()
   return deps
 end
 
+local function emulate_esc_input()
+  vim.api.nvim_feedkeys(termcodes("<Esc>"), "n", false)
+end
+
 ---@type LazySpec
 return {
   "hrsh7th/nvim-cmp",
@@ -69,6 +73,7 @@ return {
         ["<CR>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
+            emulate_esc_input()
           else
             fallback()
           end
@@ -80,10 +85,10 @@ return {
           if cmp.visible() then
             if cmp.get_selected_entry() then
               cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
-              vim.api.nvim_feedkeys(termcodes("<Esc>"), "n", false)
+              emulate_esc_input()
             else
               cmp.abort()
-              vim.api.nvim_feedkeys(termcodes("<Esc>"), "n", false)
+              emulate_esc_input()
             end
           else
             fallback()
