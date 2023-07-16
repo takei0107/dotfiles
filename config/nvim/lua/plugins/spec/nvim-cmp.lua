@@ -26,7 +26,7 @@ return {
   "hrsh7th/nvim-cmp",
   --cond = false,
   lazy = true,
-  event = {"InsertEnter, CmdlineEnter"},
+  event = {"InsertEnter", "CmdlineEnter"},
   keys = {"/", "?"},
   ---@type LazySpec[]
   dependencies = resolve_deps(),
@@ -119,7 +119,7 @@ return {
     })
 
     -- keymap for searchmode completion
-    cmp.setup.cmdline("/", {
+    cmp.setup.cmdline({"/", "?"}, {
       mapping = {
         -- 'ctrl-n' to select next item
         ---@param fallback function
@@ -154,24 +154,58 @@ return {
           end
         end, {"c"}),
 
-        -- 'ESC/ctrl-[' to abort completion
+        ["<C-e>"] = function()
+          cmp.abort()
+        end
+      },
+
+      sources = sources(cmpType.CMD_SEARCH)
+    })
+
+    -- keymap for exmode completion
+    cmp.setup.cmdline(":", {
+      mapping = {
+        -- 'ctrl-n' to select next item
         ---@param fallback function
-        ["<C-[>"] = cmp.mapping(function(fallback)
+        ---@diagnostic disable-next-line: unused-local
+        ["<C-n>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
-            if cmp.get_selected_entry() then
-              cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
-              emulate_esc_input()
-            else
-              cmp.abort()
-              emulate_esc_input()
-            end
+            cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
+          else
+            cmp.complete()
+          end
+        end, {"c"}),
+
+        -- 'ctrl-p' to select prev item
+        ---@param fallback function
+        ---@diagnostic disable-next-line: unused-local
+        ["<C-p>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert })
+          else
+            cmp.complete()
+          end
+        end, {"c"}),
+
+        -- 'enter' to accept item
+        ---@param fallback function
+        ["<CR>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
+            emulate_esc_input()
           else
             fallback()
           end
         end, {"c"}),
+
+        -- pathの補完を'/'区切りで入力していけるように
+        ---@diagnostic disable-next-line: unused-local
+        ["<C-e>"] = cmp.mapping(function(fallback)
+          cmp.close()
+        end, {"c"})
       },
 
-      sources = sources(cmpType.CMD_SEARCH)
+      sources = sources(cmpType.CMD_EX)
     })
   end,
 }

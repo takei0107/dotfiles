@@ -38,6 +38,25 @@ local sources = {
     end,
     types = { cmpType.EDITOR, cmpType.CMD_EX, cmpType.CMD_SEARCH },
   },
+  {
+    name = "hrsh7th/cmp-path",
+    sourceName = "path",
+    option = {},
+    format = function(vim_item)
+      vim_item.kind = "path"
+      return vim_item
+    end,
+    types = {cmpType.EDITOR, cmpType.CMD_EX, cmpType.CMD_SEARCH}
+  },
+  {
+    name = "hrsh7th/cmp-cmdline",
+    sourceName = "cmdline",
+    format = function(vim_item)
+      vim_item.kind = "cmd"
+      return vim_item
+    end,
+    types = {cmpType.CMD_EX}
+  }
 }
 
 setmetatable(sources, {
