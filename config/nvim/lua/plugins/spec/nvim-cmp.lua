@@ -1,4 +1,5 @@
 local sources = require("plugins.cmp.nvim-cmp-sources") or {}
+local cmpType = require("plugins.cmp.cmp-type")
 
 -- resolve dependencies for 'lazy.nvim'
 ---@return LazySpec[]
@@ -24,13 +25,17 @@ end
 return {
   "hrsh7th/nvim-cmp",
   --cond = false,
-  event = "InsertEnter",
+  lazy = true,
+  event = {"InsertEnter, CmdlineEnter"},
+  keys = {"/", "?"},
   ---@type LazySpec[]
   dependencies = resolve_deps(),
   ---@type fun(self:LazyPlugin, opts:table)
   config = function()
     local cmp = require("cmp")
     local types = require("cmp.types")
+
+    -- mappings for insert mode completion
     cmp.setup({
       enabled = true,
 
@@ -97,7 +102,7 @@ return {
       },
 
       ---@type cmp.SourceConfig[]
-      sources = sources() or {},
+      sources = sources(cmpType.CMD_EX) or {},
 
       -- :h cmp-config.formatting.format
       ---@type cmp.FormattingConfig
@@ -111,6 +116,62 @@ return {
           return vim_item
         end,
       },
+    })
+
+    -- keymap for searchmode completion
+    cmp.setup.cmdline("/", {
+      mapping = {
+        -- 'ctrl-n' to select next item
+        ---@param fallback function
+        ---@diagnostic disable-next-line: unused-local
+        ["<C-n>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_next_item({ behavior = types.cmp.SelectBehavior.Insert })
+          else
+            cmp.complete()
+          end
+        end, {"c"}),
+
+        -- 'ctrl-p' to select prev item
+        ---@param fallback function
+        ---@diagnostic disable-next-line: unused-local
+        ["<C-p>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_prev_item({ behavior = types.cmp.SelectBehavior.Insert })
+          else
+            cmp.complete()
+          end
+        end, {"c"}),
+
+        -- 'enter' to accept item
+        ---@param fallback function
+        ["<CR>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
+            emulate_esc_input()
+          else
+            fallback()
+          end
+        end, {"c"}),
+
+        -- 'ESC/ctrl-[' to abort completion
+        ---@param fallback function
+        ["<C-[>"] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            if cmp.get_selected_entry() then
+              cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
+              emulate_esc_input()
+            else
+              cmp.abort()
+              emulate_esc_input()
+            end
+          else
+            fallback()
+          end
+        end, {"c"}),
+      },
+
+      sources = sources(cmpType.CMD_SEARCH)
     })
   end,
 }

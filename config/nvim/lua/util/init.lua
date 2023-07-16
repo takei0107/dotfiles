@@ -16,7 +16,7 @@ M.safeRequire = function(modname, callback)
   return pcall(callback, errOrMod)
 end
 
----@param modname string
+---@param modname string モジュール名
 M.safeRequireWithSideEffect = function(modname)
   vim.validate({
     modname = { modname, "string" },

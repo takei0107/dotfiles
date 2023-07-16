@@ -2,7 +2,10 @@
 ---@field name string lazy.nvimで使うリポジトリ名
 ---@field sourceName string nvim-cmpのソース名
 ---@field option table|nil nvim-cmpの各ソースのオプション
+---@field types rc.CmpType[] どのモードでソースを利用するか
 ---@field format fun(vim_item: vim.CompletedItem): vim.CompletedItem ":h cmp-config.formatting.format"
+
+local cmpType = require("plugins.cmp.cmp-type")
 
 ---@type rc.CmpSource[]
 local sources = {
@@ -14,6 +17,7 @@ local sources = {
       vim_item.kind = "lsp"
       return vim_item
     end,
+    types = { cmpType.EDITOR },
   },
   {
     name = "hrsh7th/cmp-buffer",
@@ -32,23 +36,27 @@ local sources = {
       vim_item.kind = "buffer"
       return vim_item
     end,
+    types = { cmpType.EDITOR, cmpType.CMD_EX, cmpType.CMD_SEARCH },
   },
 }
 
 setmetatable(sources, {
   -- nvim-cmpのセットアップ時に設定する'sources'の値を取得できる
   ---@param self rc.CmpSource[]
+  ---@param type rc.CmpType
   ---@return cmp.SourceConfig[]
-  __call = function(self)
+  __call = function(self, type)
     ---@type cmp.SourceConfig[]
     local t = {}
     for _, source in ipairs(self) do
-      ---@type cmp.SourceConfig
-      local s = { name = source.sourceName }
-      if source.option then
-        s.option = source.option
+      if vim.tbl_contains(source.types, type) then
+        ---@type cmp.SourceConfig
+        local s = { name = source.sourceName }
+        if source.option then
+          s.option = source.option
+        end
+        table.insert(t, s)
       end
-      table.insert(t, s)
     end
     return t
   end,
