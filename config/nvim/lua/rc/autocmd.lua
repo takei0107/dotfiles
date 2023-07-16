@@ -22,3 +22,14 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     auto_mkdir(vim.fn.fnamemodify(args.file, ":p:h"), vim.v.cmdbang == 1)
   end,
 })
+
+-- 挿入モードを抜ける際に日本語入力を終了する。
+if vim.fn.executable("fcitx5-remote") == 1 then
+  local id = vim.api.nvim_create_augroup("fcitx5", {})
+  vim.api.nvim_create_autocmd("InsertLeave", {
+    group = id,
+    callback = function(_)
+      vim.system({ "fcitx5-remote", "-c" })
+    end,
+  })
+end
