@@ -26,8 +26,8 @@ return {
   "hrsh7th/nvim-cmp",
   --cond = false,
   lazy = true,
-  event = {"InsertEnter", "CmdlineEnter"},
-  keys = {"/", "?"},
+  event = { "InsertEnter", "CmdlineEnter" },
+  keys = { "/", "?" },
   ---@type LazySpec[]
   dependencies = resolve_deps(),
   ---@type fun(self:LazyPlugin, opts:table)
@@ -102,7 +102,7 @@ return {
       },
 
       ---@type cmp.SourceConfig[]
-      sources = sources(cmpType.CMD_EX) or {},
+      sources = sources(cmpType.EDITOR) or {},
 
       -- :h cmp-config.formatting.format
       ---@type cmp.FormattingConfig
@@ -119,7 +119,7 @@ return {
     })
 
     -- keymap for searchmode completion
-    cmp.setup.cmdline({"/", "?"}, {
+    cmp.setup.cmdline({ "/", "?" }, {
       mapping = {
         -- 'ctrl-n' to select next item
         ---@param fallback function
@@ -130,7 +130,7 @@ return {
           else
             cmp.complete()
           end
-        end, {"c"}),
+        end, { "c" }),
 
         -- 'ctrl-p' to select prev item
         ---@param fallback function
@@ -141,7 +141,7 @@ return {
           else
             cmp.complete()
           end
-        end, {"c"}),
+        end, { "c" }),
 
         -- 'enter' to accept item
         ---@param fallback function
@@ -152,14 +152,14 @@ return {
           else
             fallback()
           end
-        end, {"c"}),
+        end, { "c" }),
 
         ["<C-e>"] = function()
           cmp.abort()
-        end
+        end,
       },
 
-      sources = sources(cmpType.CMD_SEARCH)
+      sources = sources(cmpType.CMD_SEARCH),
     })
 
     -- keymap for exmode completion
@@ -174,7 +174,7 @@ return {
           else
             cmp.complete()
           end
-        end, {"c"}),
+        end, { "c" }),
 
         -- 'ctrl-p' to select prev item
         ---@param fallback function
@@ -185,7 +185,7 @@ return {
           else
             cmp.complete()
           end
-        end, {"c"}),
+        end, { "c" }),
 
         -- 'enter' to accept item
         ---@param fallback function
@@ -196,16 +196,16 @@ return {
           else
             fallback()
           end
-        end, {"c"}),
+        end, { "c" }),
 
         -- pathの補完を'/'区切りで入力していけるように
         ---@diagnostic disable-next-line: unused-local
         ["<C-e>"] = cmp.mapping(function(fallback)
           cmp.close()
-        end, {"c"})
+        end, { "c" }),
       },
 
-      sources = sources(cmpType.CMD_EX)
+      sources = sources(cmpType.CMD_EX),
     })
   end,
 }
