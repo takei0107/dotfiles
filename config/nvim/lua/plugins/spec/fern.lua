@@ -79,19 +79,21 @@ local function set_keymaps(before_win, fernBuf)
 
   -- fernでファイルを開いた後のフック
   -- fernで開いたバッファをフロートウィンドウを開く前のウィンドウにアタッチする。
-  -- '<Plug>(fern-action-open)'の時点でfernが閉じfernローカルのキーマップは使えなくなるので擬似的なローカルマッピングを作る
-  vim.keymap.set("n", "<Plug>(change-win)", function()
-    print("called")
+  -- '<Plug>(fern-action-open:*)'の時点でfernが閉じfernローカルのキーマップは使えなくなるので擬似的なローカルマッピングを作る
+  vim.keymap.set("n", "<Plug>(change-win-edit)", function()
     local bufnr = vim.fn.bufnr()
+    vim.cmd("close")
     vim.api.nvim_win_set_buf(before_win, bufnr)
-    vim.keymap.del("n", "<Plug>(change-win)")
+    vim.keymap.del("n", "<Plug>(change-win-edit)")
   end, {})
 
-  -- '<Plug>(fern-action-open)'でファイルを開いた際にフロートウィンドウ閉じる
-  vim.keymap.set("n", "<Plug>(fern-action-open)", "<Plug>(fern-action-open:edit)<Plug>(change-win)<cmd>close<CR>", {
+  -- <Plug>マッピング用オプション
+  local opts = {
     buffer = fernBuf,
-    remap = true,
-  })
+    remap = true
+  }
+
+  vim.keymap.set("n", "<Plug>(fern-action-open)", "<Plug>(fern-action-open:edit)<Plug>(change-win-edit)", opts)
 end
 
 -- fernをフロートウィンドウで開く
