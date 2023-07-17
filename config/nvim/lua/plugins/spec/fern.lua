@@ -71,7 +71,6 @@ end
 ---@param before_win number フロートウィンドウを開く前のwinnr
 ---@param fernBuf number fernのbufnr
 local function set_keymaps(before_win, fernBuf)
-
   -- 'q'でフロートウィンドウ閉じる
   vim.keymap.set("n", "q", "<cmd>close<cr>", {
     buffer = fernBuf,
@@ -90,14 +89,15 @@ local function set_keymaps(before_win, fernBuf)
   -- <Plug>マッピング用オプション
   local opts = {
     buffer = fernBuf,
-    remap = true
+    remap = true,
   }
 
   vim.keymap.set("n", "<Plug>(fern-action-open)", "<Plug>(fern-action-open:edit)<Plug>(change-win-edit)", opts)
 end
 
 -- fernをフロートウィンドウで開く
-local function open_fern_floating()
+---@paran パス
+local function open_fern_floating(path)
   local called_win = vim.fn.win_getid()
   ---@type FloatOpts
   local opts = {
@@ -107,7 +107,7 @@ local function open_fern_floating()
   local float_win = make_float_win(opts)
   assert(float_win ~= 0, "make_float_win() failed.")
   vim.api.nvim_win_call(float_win, function()
-    vim.cmd("Fern . -reveal=%")
+    vim.cmd(string.format("Fern . -reveal=%s", path))
   end)
   local fernBuf = vim.api.nvim_win_get_buf(float_win)
   layout_floating_display(fernBuf)
@@ -121,7 +121,10 @@ return {
     -- fern kemaps
     local fern_prefix = "<C-k>"
     vim.keymap.set("n", fern_prefix .. "k", "<Cmd>Fern . -reveal=% -opener=edit<CR>")
-    vim.keymap.set("n", fern_prefix .. "f", open_fern_floating)
+    vim.keymap.set("n", fern_prefix .. "f", function()
+      local path = vim.fn.expand("%")
+      open_fern_floating(path)
+    end)
 
     -- fern variablse
     vim.g["fern#default_hidden"] = 1
