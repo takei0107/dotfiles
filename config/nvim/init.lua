@@ -4,6 +4,7 @@ local util = require("util")
 -- nvim in nvim
 if os.getenv("NVIM") ~= nil then
   require("nvim-in-nvim").init(util)
+  return
 end
 
 -- _G functions
