@@ -1,3 +1,0 @@
-" lsp type setting
-"let g:lsp_tomls = ['coc.toml']
-let g:lsp_tomls = ['ddc.toml', 'vim-lsp.toml']
