@@ -86,7 +86,7 @@ return {
 
         -- 'ESC/ctrl-[' to abort completion
         ---@param fallback function
-        ["<C-[>"] = cmp.mapping(function(fallback)
+        ["<C-e>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             if cmp.get_selected_entry() then
               cmp.confirm({ select = false, behavior = cmp.ConfirmBehavior.Replace })
