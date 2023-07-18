@@ -3,7 +3,9 @@
 ---@field sourceName string nvim-cmpのソース名
 ---@field option table|nil nvim-cmpの各ソースのオプション
 ---@field types rc.CmpType[] どのモードでソースを利用するか
+---@field group_index integer|nil
 ---@field format fun(vim_item: vim.CompletedItem): vim.CompletedItem ":h cmp-config.formatting.format"
+---@field config fun(self:LazyPlugin, opts:table)|true|nil lazy.nvimのconfigプロパティ
 
 local cmpType = require("plugins.cmp.cmp-type")
 
@@ -22,6 +24,7 @@ local sources = {
   {
     name = "hrsh7th/cmp-buffer",
     sourceName = "buffer",
+    group_index = 2,
     option = {
       -- ウィンドウ表示状態のバッファ
       get_bufnrs = function()
@@ -57,6 +60,22 @@ local sources = {
     end,
     types = { cmpType.CMD_EX },
   },
+  {
+    name = "tamago324/cmp-zsh",
+    sourceName = "zsh",
+    option = {},
+    format = function(vim_item)
+      vim_item.kind = "zsh"
+      return vim_item
+    end,
+    types = { cmpType.EDITOR },
+    config = function()
+      require("cmp_zsh").setup({
+        zshrc = true,
+        filetypes = { "deoledit", "zsh" },
+      })
+    end,
+  },
 }
 
 setmetatable(sources, {
@@ -73,6 +92,9 @@ setmetatable(sources, {
         local s = { name = source.sourceName }
         if source.option then
           s.option = source.option
+        end
+        if source.group_index then
+          s.group_index = source.group_index
         end
         table.insert(t, s)
       end

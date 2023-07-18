@@ -36,7 +36,7 @@ end
 
 return {
   "Shougo/deol.nvim",
-  enabled = false,
+  --enabled = false,
   config = function()
     vim.g["deol#floating_border"] = "single"
     local floatConfig = make_float_config({
