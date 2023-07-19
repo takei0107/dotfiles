@@ -12,6 +12,9 @@ local function resolve_deps()
       [1] = source.name,
       lazy = true,
     }
+    if source.config then
+      spec.config = source.config
+    end
     table.insert(deps, spec)
   end
   return deps
