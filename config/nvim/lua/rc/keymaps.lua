@@ -41,6 +41,32 @@ keymap.set({ "n", "x" }, "X", '"_X')
 keymap.set({ "n", "x" }, "s", '"_s')
 keymap.set({ "n", "x" }, "S", '"_S')
 
+local function exist_quickfix_win()
+  local wins = vim.api.nvim_list_wins()
+  for _, winID in ipairs(wins) do
+    if vim.api.nvim_get_option_value("buftype", { win = winID }) == "quickfix" then
+      return true
+    end
+  end
+  return false
+end
+
+-- Qucikfix Listのウィンドウがあったら<C-n>/<C-p>で進む/戻る
+keymap.set("n", "<C-n>", function()
+  if exist_quickfix_win() then
+    return "<cmd>cn<cr>"
+  else
+    return "<C-n>"
+  end
+end, { expr = true })
+keymap.set("n", "<C-p>", function()
+  if exist_quickfix_win() then
+    return "<cmd>cN<cr>"
+  else
+    return "<C-p>"
+  end
+end, { expr = true })
+
 -- reload vimrc
 keymap.set("n", "<F5>", function()
   local vimrc = vim.env.MYVIMRC
