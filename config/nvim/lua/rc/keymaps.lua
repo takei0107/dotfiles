@@ -41,6 +41,10 @@ keymap.set({ "n", "x" }, "X", '"_X')
 keymap.set({ "n", "x" }, "s", '"_s')
 keymap.set({ "n", "x" }, "S", '"_S')
 
+-- <C-s>で+レジスタを選択状態に
+keymap.set({ "n", "x" }, "<C-s>", '"+')
+
+-- Qucikfix Listのウィンドウがあったら<C-n>/<C-p>で進む/戻る
 local function exist_quickfix_win()
   local wins = vim.api.nvim_list_wins()
   for _, winID in ipairs(wins) do
@@ -50,8 +54,6 @@ local function exist_quickfix_win()
   end
   return false
 end
-
--- Qucikfix Listのウィンドウがあったら<C-n>/<C-p>で進む/戻る
 keymap.set("n", "<C-n>", function()
   if exist_quickfix_win() then
     return "<cmd>cn<cr>"
