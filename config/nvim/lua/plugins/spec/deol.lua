@@ -37,9 +37,11 @@ end
 return {
   "Shougo/deol.nvim",
   --enabled = false,
-  config = function()
+  keys = { "<C-t>" },
+  cmd = {"Deol", "DeolEdit"},
+  init = function()
     local shell = vim.fn.fnamemodify(vim.o.shell, ":p:t")
-    if shell == 'zsh' then
+    if shell == "zsh" then
       vim.g["deol#prompt_pattern"] = "❯ " -- 対話シェルで使っているプロンプト文字列
     end
     vim.g["deol#floating_border"] = "single"

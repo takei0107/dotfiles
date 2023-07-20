@@ -28,7 +28,7 @@ local function make_float_config(opts)
   return {
     relative = "editor",
     anchor = "NW",
-    border = "solid",
+    border = "single",
     height = float_win_height,
     width = float_win_width,
     row = float_win_row,
