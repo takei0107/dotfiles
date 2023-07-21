@@ -7,7 +7,6 @@
       "globals" : ["vim"]
     },
     "completion": {
-      "keywordSnippet": "Disable"
     }
   }
 }
