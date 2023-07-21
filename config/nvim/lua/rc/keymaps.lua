@@ -86,3 +86,8 @@ keymap.set("i", "<CR>", function()
 end, {
   expr = true,
 })
+
+-- F2でrelativenumber切り替え
+vim.keymap.set("n", "<F2>", function()
+  vim.wo.relativenumber = not vim.wo.relativenumber
+end)
