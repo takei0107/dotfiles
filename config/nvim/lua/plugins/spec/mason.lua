@@ -6,4 +6,5 @@ return {
   config = function()
     require("mason").setup()
   end,
+  cmd = { "Mason", "MasonLog" },
 }
