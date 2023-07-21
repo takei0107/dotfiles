@@ -14,7 +14,31 @@ local settings = {
     enable = true,
     force_install = true,
     lspconfig_handler = function(lspconfig)
-      lspconfig.setup({})
+      lspconfig.setup({
+        settings = {
+          Lua = {
+            runtime = {
+              version = "LuaJIT",
+            },
+            diagnostics = {
+              globals = { "vim" },
+              disable = {
+                "duplicate-set-field",
+                "duplicate-doc-alias",
+                "duplicate-doc-field",
+                "duplicate-doc-param",
+              },
+            },
+            workspace = {
+              library = { vim.env.VIMRUNTIME .. "/lua" },
+              checkThirdParty = false,
+            },
+            telemetry = {
+              enable = false,
+            },
+          },
+        },
+      })
     end,
   },
   {
