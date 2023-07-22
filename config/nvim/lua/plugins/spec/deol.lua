@@ -26,19 +26,34 @@ local function make_float_config(opts)
   }
 end
 
+local lazygit_bufnr = nil
 ---@param isNewTab boolean 新しいタブで開くかどうか
 local function create_lazygit_buffer(isNewTab)
+  -- 他のタブで開いていたらそのタブのウィンドウを開く
+  if lazygit_bufnr ~= nil and vim.api.nvim_buf_is_valid(lazygit_bufnr) then
+    for _, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
+      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tabpage)) do
+        if vim.api.nvim_win_get_buf(win) == lazygit_bufnr then
+          vim.api.nvim_set_current_tabpage(tabpage)
+          vim.api.nvim_set_current_win(win)
+          vim.cmd("startinsert")
+          return
+        end
+      end
+    end
+  end
   if isNewTab then
     vim.cmd("tabnew")
   end
   vim.cmd("Deol lazygit -start-insert -toggle")
+  lazygit_bufnr = vim.fn.bufnr()
 end
 
 return {
   "Shougo/deol.nvim",
   --enabled = false,
   keys = { "<C-t>" },
-  cmd = {"Deol", "DeolEdit"},
+  cmd = { "Deol", "DeolEdit" },
   init = function()
     local shell = vim.fn.fnamemodify(vim.o.shell, ":p:t")
     if shell == "zsh" then
