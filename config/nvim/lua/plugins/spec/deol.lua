@@ -27,22 +27,22 @@ local function make_float_config(opts)
 end
 
 local lazygit_bufnr = nil
----@param isNewTab boolean 新しいタブで開くかどうか
-local function create_lazygit_buffer(isNewTab)
+---@param useTab boolean タブで開くかどうか
+local function open_lazygit_buffer(useTab)
   -- 他のタブで開いていたらそのタブのウィンドウを開く
-  if lazygit_bufnr ~= nil and vim.api.nvim_buf_is_valid(lazygit_bufnr) then
-    for _, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
-      for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tabpage)) do
-        if vim.api.nvim_win_get_buf(win) == lazygit_bufnr then
-          vim.api.nvim_set_current_tabpage(tabpage)
-          vim.api.nvim_set_current_win(win)
-          vim.cmd("startinsert")
-          return
+  if useTab then
+    if lazygit_bufnr ~= nil and vim.api.nvim_buf_is_valid(lazygit_bufnr) then
+      for _, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
+        for _, win in ipairs(vim.api.nvim_tabpage_list_wins(tabpage)) do
+          if vim.api.nvim_win_get_buf(win) == lazygit_bufnr then
+            vim.api.nvim_set_current_tabpage(tabpage)
+            vim.api.nvim_set_current_win(win)
+            vim.cmd("startinsert")
+            return
+          end
         end
       end
     end
-  end
-  if isNewTab then
     vim.cmd("tabnew")
   end
   vim.cmd("Deol lazygit -start-insert -toggle")
@@ -68,7 +68,7 @@ return {
     vim.keymap.set("n", "<C-t>f", cmd:format(floatConfig.height, floatConfig.row, floatConfig.width, floatConfig.col))
     if vim.fn.executable("lazygit") == 1 then
       vim.keymap.set("n", "<C-t>l", function()
-        create_lazygit_buffer(true)
+        open_lazygit_buffer(true)
       end)
     end
   end,
