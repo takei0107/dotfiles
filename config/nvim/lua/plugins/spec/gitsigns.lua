@@ -4,6 +4,7 @@ return {
   config = function()
     local gitsigns = require("gitsigns")
     gitsigns.setup({
+      numhl = true,
       on_attach = function(bufnr)
         vim.keymap.set("n", "[g", gitsigns.prev_hunk, { buffer = bufnr })
         vim.keymap.set("n", "]g", gitsigns.next_hunk, { buffer = bufnr })
