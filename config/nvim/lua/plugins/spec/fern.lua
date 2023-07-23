@@ -62,9 +62,9 @@ local function make_float_win(opts)
 end
 
 --- フロートウィンドウのレイアウト設定
-local function layout_floating_display(buf)
-  vim.api.nvim_set_option_value("number", false, { buf = buf })
-  vim.api.nvim_set_option_value("relativenumber", false, { buf = buf })
+local function layout_floating_display(winId)
+  vim.api.nvim_set_option_value("number", false, { win = winId })
+  vim.api.nvim_set_option_value("relativenumber", false, { win = winId })
 end
 
 --- フロートで開いたfernにキーマップを設定する。
@@ -109,8 +109,8 @@ local function open_fern_floating(path)
   vim.api.nvim_win_call(float_win, function()
     vim.cmd(string.format("Fern . -reveal=%s", path))
   end)
+  layout_floating_display(float_win)
   local fernBuf = vim.api.nvim_win_get_buf(float_win)
-  layout_floating_display(fernBuf)
   set_keymaps(called_win, fernBuf)
 end
 

@@ -48,7 +48,8 @@ keymap.set({ "n", "x" }, "<C-s>", '"+')
 local function exist_quickfix_win()
   local wins = vim.api.nvim_list_wins()
   for _, winID in ipairs(wins) do
-    if vim.api.nvim_get_option_value("buftype", { win = winID }) == "quickfix" then
+    local bufnr = vim.fn.winbufnr(winID)
+    if vim.api.nvim_get_option_value("buftype", { buf = bufnr }) == "quickfix" then
       return true
     end
   end
