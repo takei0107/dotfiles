@@ -114,9 +114,27 @@ local function open_fern_floating(path)
   set_keymaps(called_win, fernBuf)
 end
 
+--- fernの読み込み後に実行される関数群
+--- fernのプラグインの初期化とかに使う
+---@type fun()[]
+local fern_loaded_hooks = {}
+
 return {
   "lambdalisue/fern.vim",
   lazy = true,
+  ---@type LazySpec[]
+  dependencies = {
+    {
+      "lambdalisue/fern-git-status.vim",
+      init = function()
+        vim.g.loaded_fern_git_status = 1
+        table.insert(fern_loaded_hooks, function()
+          vim.cmd("unlet g:loaded_fern_git_status")
+          vim.fn["fern_git_status#init"]()
+        end)
+      end,
+    },
+  },
   init = function()
     -- fern kemaps
     local fern_prefix = "<C-k>"
@@ -131,4 +149,9 @@ return {
     vim.g["fern#default_exclude"] = ".git"
   end,
   cmd = { "Fern", "FernDo" },
+  config = function()
+    for _, hook in ipairs(fern_loaded_hooks) do
+      hook()
+    end
+  end,
 }
