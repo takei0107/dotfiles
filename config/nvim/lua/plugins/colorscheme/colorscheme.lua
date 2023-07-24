@@ -51,7 +51,7 @@ colorscheme.new = function(config)
 end
 
 function colorscheme:setup()
-  vim.cmd("syntax enable")
+  vim.cmd.syntax("enable")
   vim.opt.termguicolors = true
   vim.cmd(string.format("colorscheme %s", self.schemeName))
 end

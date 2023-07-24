@@ -81,7 +81,7 @@ local function set_keymaps(before_win, fernBuf)
   -- '<Plug>(fern-action-open:*)'の時点でfernが閉じfernローカルのキーマップは使えなくなるので擬似的なローカルマッピングを作る
   vim.keymap.set("n", "<Plug>(change-win-edit)", function()
     local bufnr = vim.fn.bufnr()
-    vim.cmd("close")
+    vim.cmd.close()
     vim.api.nvim_win_set_buf(before_win, bufnr)
     vim.keymap.del("n", "<Plug>(change-win-edit)")
   end, {})
@@ -129,7 +129,7 @@ return {
       init = function()
         vim.g.loaded_fern_git_status = 1
         table.insert(fern_loaded_hooks, function()
-          vim.cmd("unlet g:loaded_fern_git_status")
+          vim.cmd.unlet("g:loaded_fern_git_status")
           vim.fn["fern_git_status#init"]()
         end)
       end,

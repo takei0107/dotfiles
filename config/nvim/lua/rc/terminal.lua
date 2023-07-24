@@ -12,6 +12,6 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
   group = t_ag,
   pattern = "*",
   callback = function(_)
-    vim.cmd("startinsert")
+    vim.cmd.startinsert()
   end,
 })
