@@ -1,3 +1,4 @@
+---@diagnostic disable
 ---------------------------// lazy.nvim //---------------------------------//
 
 ---@see https://github.com/folke/lazy.nvim/blob/main/lua/lazy/types.lua
