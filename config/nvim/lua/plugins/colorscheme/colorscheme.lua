@@ -53,7 +53,7 @@ end
 function colorscheme:setup()
   vim.cmd.syntax("enable")
   vim.opt.termguicolors = true
-  vim.cmd(string.format("colorscheme %s", self.schemeName))
+  vim.cmd.colorscheme(self.schemeName)
 end
 
 ---@return LazySpec
