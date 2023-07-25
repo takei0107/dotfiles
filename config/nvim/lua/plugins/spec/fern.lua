@@ -76,6 +76,10 @@ local function set_keymaps(before_win, fernBuf)
     buffer = fernBuf,
   })
 
+  vim.keymap.set("n", "<Plug>(fern-action-rename)", "<Plug>(fern-action-rename:edit)", {
+    buffer = fernBuf,
+  })
+
   -- fernでファイルを開いた後のフック
   -- fernで開いたバッファをフロートウィンドウを開く前のウィンドウにアタッチする。
   -- '<Plug>(fern-action-open:*)'の時点でfernが閉じfernローカルのキーマップは使えなくなるので擬似的なローカルマッピングを作る
