@@ -37,16 +37,23 @@ local function open_lazygit_buffer(useTab)
           if vim.api.nvim_win_get_buf(win) == lazygit_bufnr then
             vim.api.nvim_set_current_tabpage(tabpage)
             vim.api.nvim_set_current_win(win)
-            vim.cmd("startinsert")
+            vim.cmd.startinsert()
             return
           end
         end
       end
     end
-    vim.cmd("tabnew")
+    vim.cmd.tabnew()
   end
-  vim.cmd("Deol lazygit -start-insert -toggle")
+  vim.cmd.Deol({args = {"lazygit", "-start-insert", "-toggle"}})
   lazygit_bufnr = vim.fn.bufnr()
+  vim.keymap.set("n", "q", function()
+    vim.cmd.close()
+    vim.api.nvim_buf_delete(lazygit_bufnr, {})
+    lazygit_bufnr = nil
+  end, {
+    buffer = lazygit_bufnr,
+  })
 end
 
 return {

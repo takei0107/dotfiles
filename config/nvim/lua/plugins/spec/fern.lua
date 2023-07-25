@@ -81,7 +81,7 @@ local function set_keymaps(before_win, fernBuf)
   -- '<Plug>(fern-action-open:*)'の時点でfernが閉じfernローカルのキーマップは使えなくなるので擬似的なローカルマッピングを作る
   vim.keymap.set("n", "<Plug>(change-win-edit)", function()
     local bufnr = vim.fn.bufnr()
-    vim.cmd("close")
+    vim.cmd.close()
     vim.api.nvim_win_set_buf(before_win, bufnr)
     vim.keymap.del("n", "<Plug>(change-win-edit)")
   end, {})
@@ -107,16 +107,34 @@ local function open_fern_floating(path)
   local float_win = make_float_win(opts)
   assert(float_win ~= 0, "make_float_win() failed.")
   vim.api.nvim_win_call(float_win, function()
-    vim.cmd(string.format("Fern . -reveal=%s", path))
+    vim.cmd.Fern({ args = { ".", "-reveal=" .. path } })
   end)
   layout_floating_display(float_win)
   local fernBuf = vim.api.nvim_win_get_buf(float_win)
   set_keymaps(called_win, fernBuf)
 end
 
+--- fernの読み込み後に実行される関数群
+--- fernのプラグインの初期化とかに使う
+---@type fun()[]
+local fern_loaded_hooks = {}
+
 return {
   "lambdalisue/fern.vim",
   lazy = true,
+  ---@type LazySpec[]
+  dependencies = {
+    {
+      "lambdalisue/fern-git-status.vim",
+      init = function()
+        vim.g.loaded_fern_git_status = 1
+        table.insert(fern_loaded_hooks, function()
+          vim.cmd.unlet("g:loaded_fern_git_status")
+          vim.fn["fern_git_status#init"]()
+        end)
+      end,
+    },
+  },
   init = function()
     -- fern kemaps
     local fern_prefix = "<C-k>"
@@ -131,4 +149,9 @@ return {
     vim.g["fern#default_exclude"] = ".git"
   end,
   cmd = { "Fern", "FernDo" },
+  config = function()
+    for _, hook in ipairs(fern_loaded_hooks) do
+      hook()
+    end
+  end,
 }

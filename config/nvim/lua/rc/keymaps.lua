@@ -73,7 +73,7 @@ end, { expr = true })
 -- reload vimrc
 keymap.set("n", "<F5>", function()
   local vimrc = vim.env.MYVIMRC
-  vim.cmd("luafile " .. vimrc)
+  vim.cmd.luafile(vimrc)
   print(string.format("%s reloaded", vimrc))
 end)
 

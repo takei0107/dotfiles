@@ -2,7 +2,7 @@
 vim.cmd([[command! -nargs=1 -complete=option Of execute("echo &"..expand("<args>"))]])
 
 -- helpをvsplitで開く
-vim.cmd("command! -nargs=1 -complete=help Vhelp vertical help <args>")
+vim.cmd.command({ args = { "-nargs=1", "-complete=help", "Vhelp", "vertical", "help", "<args>" }, bang = true })
 
 -- lua
 local lua_ag_id = vim.api.nvim_create_augroup("MyLuaCommand", {})
