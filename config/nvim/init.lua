@@ -1,4 +1,5 @@
 ---@type rc.Util
+---@module"lua.util.init"
 local util = require("util")
 
 -- nvim in nvim

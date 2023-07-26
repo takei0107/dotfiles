@@ -5,6 +5,16 @@
 ---@field force_install boolean|nil lspサーバーの強制インストール trueの時のみ強制する
 ---@field lspconfig_handler fun(lspconfig: any)|nil ":h mason-lspconfig.setup_handlers()"
 
+---@return string[]
+local function lua_library()
+  local libraries = { vim.env.VIMRUNTIME .. "/lua" }
+  local plugin_libraries = require("plugins.lua-libraries") or {}
+  for _, lib in ipairs(plugin_libraries) do
+    table.insert(libraries, lib)
+  end
+  return libraries
+end
+
 ---@type rc.LspSetting[]
 local settings = {
   -- 各LSの設定を書いていく
@@ -28,9 +38,10 @@ local settings = {
                 "duplicate-doc-field",
                 "duplicate-doc-param",
               },
+              libraryFiles = "Disable",
             },
             workspace = {
-              library = { vim.env.VIMRUNTIME .. "/lua" },
+              library = lua_library(),
               checkThirdParty = false,
             },
             telemetry = {
