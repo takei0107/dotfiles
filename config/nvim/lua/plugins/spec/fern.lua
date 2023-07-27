@@ -18,8 +18,9 @@ end
 
 --- フロートウィンドウのレイアウト設定
 local function layout_floating_display(winId)
-  vim.api.nvim_set_option_value("number", false, { win = winId })
-  vim.api.nvim_set_option_value("relativenumber", false, { win = winId })
+  local opts = { win = winId, scope = "local" }
+  vim.api.nvim_set_option_value("number", false, opts)
+  vim.api.nvim_set_option_value("relativenumber", false, opts)
 end
 
 --- フロートで開いたfernにキーマップを設定する。
