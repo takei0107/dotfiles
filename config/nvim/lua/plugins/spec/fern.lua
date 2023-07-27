@@ -7,7 +7,6 @@ local function make_scratch_buf()
   return vim.api.nvim_create_buf(false, true)
 end
 
-
 --- フロートウィンドウを作成する。
 local function make_float_win()
   local buf = make_scratch_buf()
@@ -60,7 +59,6 @@ end
 ---@paran パス
 local function open_fern_floating(path)
   local called_win = vim.fn.win_getid()
-  ---@type FloatConfig
   local float_win = make_float_win()
   assert(float_win ~= 0, "make_float_win() failed.")
   vim.api.nvim_win_call(float_win, function()

@@ -2,6 +2,7 @@
 local util = require("util")
 
 local lazygit_bufnr = nil
+
 ---@param useTab boolean タブで開くかどうか
 local function open_lazygit_buffer(useTab)
   -- 他のタブで開いていたらそのタブのウィンドウを開く

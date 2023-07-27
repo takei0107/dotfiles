@@ -35,7 +35,17 @@ M.get_screen_attrs = function()
   return height, width
 end
 
----@enum FloatRelative
+
+---@class FloatConfig
+---@field relative FloatConfig.relative
+---@field anchor FloatConfig.anchor
+---@field width integer
+---@field height integer
+---@field row integer
+---@field col integer
+---@field border FloatConfig.border
+
+---@enum FloatConfig.relative
 M.FloatRelative = {
   EDITOR = "editor",
   WIN = "win",
@@ -43,7 +53,7 @@ M.FloatRelative = {
   MOUSE = "mouse"
 }
 
----@enum FloatAnchor
+---@enum FloatConfig.anchor
 M.FloatAnchor = {
   NORTHWEST = "NW",
   NORTHEAST = "NE",
@@ -51,7 +61,7 @@ M.FloatAnchor = {
   SOUTHEAST = "SE"
 }
 
----@enum FloatBorder
+---@enum FloatConfig.border
 M.FloatBorder = {
   NONE = "none",
   SINGLE = "single",
@@ -60,15 +70,6 @@ M.FloatBorder = {
   SOLID = "solid",
   SHADOW = "shadow",
 }
-
----@class FloatConfig
----@field relative FloatRelative
----@field anchor FloatAnchor
----@field width integer
----@field height integer
----@field row integer
----@field col integer
----@field border FloatBorder
 
 ---@return FloatConfig
 local function default_config()
@@ -90,15 +91,14 @@ local function default_config()
 end
 
 --- フロートウィンドウ作成用のコンフィグを作成する
----@param config FloatConfig|nil
-M.make_float_config = function(config)
-  config = config or {}
-  vim.validate({ opts = { config, "table" } })
+---@param override FloatConfig|nil
+---@return FloatConfig
+M.make_float_config = function(override)
+  override = override or {}
+  vim.validate({ opts = { override, "table" } })
 
   local default = default_config()
-  vim.tbl_deep_extend("force", default, config)
-  -- screen position
-  return default
+  return vim.tbl_deep_extend("force", default, override)
 end
 
 return M
