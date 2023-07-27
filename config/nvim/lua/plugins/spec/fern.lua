@@ -1,5 +1,4 @@
----@module "util.init"
-local util = require("util")
+local floatUtil = require("util.float")
 
 --- スクラッチバッファ作成
 ---@return number bufnr
@@ -13,7 +12,7 @@ local function make_float_win()
   assert(buf ~= 0, "nvim_create_buf() failed.")
 
   -- create floating window
-  local float_config = util.make_float_config()
+  local float_config = floatUtil.make_float_config()
   return vim.api.nvim_open_win(buf, true, float_config)
 end
 
