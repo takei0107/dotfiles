@@ -1,27 +1,10 @@
-local function ui_tranparent()
-  if vim.opt.termguicolors:get() then
-    vim.cmd("hi Normal guibg=none")
-    vim.cmd("hi LineNr guifg=none")
-    vim.cmd("hi LineNr guibg=none")
-    vim.cmd("hi SignColumn guibg=none")
-    vim.cmd("hi SignColumn guifg=none")
-  else
-    vim.cmd("hi Normal ctermbg=none")
-    vim.cmd("hi LineNr ctermfg=none")
-    vim.cmd("hi SignColumn ctermbg=none")
-    vim.cmd("hi SignColumn ctermfg=none")
-  end
-end
-
 ---@class rc.colorscheme
 ---@field repo string lazy.nvimで使うリポジトリ名
 ---@field schemeName string カラースキーム名
 ---@field lazyPriority integer|nil lazyの優先度 lazyのヘルプの'COLORSCHEMES'参照
----@field lazy boolean
----@field config fun(self:LazyPlugin, opts:table)|true|nil
+---@field lazy boolean デフォルト: false lazyが有効な場合は、`colorscheme {スキーマ名}`実行時にロードされる。
+---@field config fun(self:LazyPlugin, opts:table)|boolean|nil
 ---@field init fun(self:LazyPlugin)|nil
----@field skipSetup boolean trueの時、setupメソッドをスキップする
----@field transparent_enable boolean 背景透過させるかどうか
 ---
 -- 'lazy'がtrueかつ、'skipSetup'がtrue以外の時
 -- ':colorscheme {schemeName}'がsetupメソッドで実行されるタイミングで
@@ -43,8 +26,6 @@ colorscheme.new = function(config)
     lazy = config.lazy or false,
     config = config.config,
     init = config.init,
-    skipSetup = config.skipSetup or false,
-    transparent_enable = config.transparent_enable or false,
   }, {
     __index = colorscheme,
   })
@@ -66,10 +47,6 @@ function colorscheme:toLazySpec()
     config = self.config,
     init = self.init,
   }
-end
-
-function colorscheme.transparent()
-  ui_tranparent()
 end
 
 return colorscheme

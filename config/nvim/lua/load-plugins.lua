@@ -1,4 +1,4 @@
----@type rc.Util
+---@module "util.init"
 local util = require("util")
 
 -- gitのcommitメッセージで開いた場合
@@ -25,6 +25,7 @@ local function load_plugins()
   local _, err = util.safeRequire("plugins", function(initializer)
     initializer.initManager()
     initializer.initSetup(isUseMiniMode())
+    initializer.initColorScheme()
   end)
   if err then
     print("safeRequire() failed. error: " .. err)

@@ -12,8 +12,6 @@ local M = require("plugins.colorscheme.colorscheme").new({
   repo = "sainnhe/sonokai",
   schemeName = "sonokai",
   lazy = false,
-  lazyPriority = 1000,
-  transparent_enable = false,
   init = function()
     ---@type string
     vim.g.sonokai_style = STYLES.default
