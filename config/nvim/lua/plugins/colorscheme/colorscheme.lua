@@ -5,15 +5,7 @@
 ---@field lazy boolean デフォルト: false lazyが有効な場合は、`colorscheme {スキーマ名}`実行時にロードされる。
 ---@field config fun(self:LazyPlugin, opts:table)|boolean|nil
 ---@field init fun(self:LazyPlugin)|nil
----
--- 'lazy'がtrueかつ、'skipSetup'がtrue以外の時
--- ':colorscheme {schemeName}'がsetupメソッドで実行されるタイミングで
--- 対象のカラースキームのプラグインがlazyによってロードされる。
---
--- カラースキームの中にはプラグイン内でカラースキームの指定をしている場合があるので
--- その場合は、'skipSetup'をtrueに設定し、'config'を設定した上で、
--- lazyの読み込み時にプラグインが提供している初期化手順を実行する。
---
+---@field adjustor fun()|nil カラースキームの反映後にハイライトとかを調整するための関数
 local colorscheme = {}
 
 ---@param config rc.colorscheme
@@ -26,6 +18,7 @@ colorscheme.new = function(config)
     lazy = config.lazy or false,
     config = config.config,
     init = config.init,
+    adjustor = config.adjustor,
   }, {
     __index = colorscheme,
   })
@@ -35,6 +28,9 @@ function colorscheme:setup()
   vim.cmd.syntax("enable")
   vim.opt.termguicolors = true
   vim.cmd.colorscheme(self.schemeName)
+  if self.adjustor then
+    self.adjustor()
+  end
 end
 
 ---@return LazySpec
