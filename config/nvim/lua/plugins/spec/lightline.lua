@@ -5,7 +5,7 @@ return {
       tabline = {
         right = {},
       },
-      colorscheme = "wombat",
+      colorscheme = "one",
     }
     vim.g.loaded_lightline = 1
   end,

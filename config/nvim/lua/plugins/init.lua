@@ -19,6 +19,9 @@ end
 ---@see https://github.com/folke/lazy.nvim#-structuring-your-plugins
 local function setup_lazy()
   require("lazy").setup("plugins.spec", {
+    ui = {
+      border = require("util.float").FloatBorder.DOUBLE,
+    },
     change_detection = {
       notify = false,
     },

@@ -119,6 +119,10 @@ return {
           return vim_item
         end,
       },
+
+      window = {
+        completion = cmp.config.window.bordered({border = require("util.float").FloatBorder.DOUBLE})
+      }
     })
 
     -- keymap for searchmode completion
