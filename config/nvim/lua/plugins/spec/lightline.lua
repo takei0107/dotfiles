@@ -18,6 +18,6 @@ return {
       vim.g.lightline = lightline
     end
     vim.cmd.unlet("g:loaded_lightline")
-    vim.cmd.runtime({args={"plugin/lightline.vim"}, bang=true})
+    vim.cmd.runtime({ args = { "plugin/lightline.vim" }, bang = true })
   end,
 }

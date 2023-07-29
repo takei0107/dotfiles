@@ -20,8 +20,9 @@
   "null-ls.nvim": { "branch": "main", "commit": "db09b6c691def0038c456551e4e2772186449f35" },
   "nvim-cmp": { "branch": "main", "commit": "c4e491a87eeacf0408902c32f031d802c7eafce8" },
   "nvim-lspconfig": { "branch": "master", "commit": "b6091272422bb0fbd729f7f5d17a56d37499c54f" },
-  "nvim-treesitter": { "branch": "master", "commit": "5e27645a2b7ecce1f8e0971d78f55de0f392ba23" },
+  "nvim-treesitter": { "branch": "master", "commit": "db0ccd920b3cf7e96a0a9b43aac0f367decd231a" },
   "plenary.nvim": { "branch": "master", "commit": "267282a9ce242bbb0c5dc31445b6d353bed978bb" },
   "sonokai": { "branch": "master", "commit": "adb066ac5250556ccfca22f901c9710a735f23c2" },
-  "vim-matchup": { "branch": "master", "commit": "0646093e07b1f89b16536cfb3dc4993e3f0ac653" }
+  "vim-matchup": { "branch": "master", "commit": "4f426d15ae10f496ee5e519441bc53cae1b7eba1" },
+  "vim-sandwich": { "branch": "master", "commit": "c5a2cc438ce6ea2005c556dc833732aa53cae21a" }
 }
