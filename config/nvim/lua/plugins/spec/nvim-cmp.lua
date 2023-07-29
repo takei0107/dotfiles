@@ -206,6 +206,12 @@ return {
         ["<C-e>"] = cmp.mapping(function(fallback)
           cmp.close()
         end, { "c" }),
+
+        -- コマンドラインウィンドウに切り替える。
+        ["<C-f>"] = cmp.mapping(function(fallback)
+          cmp.abort()
+          fallback()
+        end, { "c" }),
       },
 
       sources = sources(cmpType.CMD_EX),
