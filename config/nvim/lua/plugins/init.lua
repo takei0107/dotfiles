@@ -64,9 +64,7 @@ end
 -- setup colorscheme
 local function setup_colorscheme()
   local colorscheme = require("plugins.colorscheme")
-  if colorscheme.setup then
-    colorscheme:setup()
-  end
+  colorscheme:setup()
 end
 
 ---@class rc.PluginsInitializer

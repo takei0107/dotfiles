@@ -46,3 +46,15 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 -- load plugins
 ---@module "load-plugins"
 util.safeRequireWithSideEffect("load-plugins")
+
+-- 画面透過
+local function screen_transparent()
+  ---@param module rc.Screen
+  local _, err = util.safeRequire("util.screen", function(module)
+    module.transparent()
+  end)
+  if err then
+    print("safeRequire 'util.screen' failed")
+  end
+end
+screen_transparent()

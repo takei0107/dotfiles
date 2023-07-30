@@ -27,12 +27,4 @@ M.safeRequireWithSideEffect = function(modname)
   end
 end
 
---- スクリーンの属性を返す
----@return integer 高さ,integer
-M.get_screen_attrs = function()
-  local height = vim.api.nvim_get_option_value("lines", {})
-  local width = vim.api.nvim_get_option_value("columns", {})
-  return height, width
-end
-
 return M

@@ -1,5 +1,5 @@
----@module "util.init"
-local util = require("util")
+---@module "util.screen"
+local screen = require("util.screen")
 
 local M = {}
 
@@ -40,7 +40,7 @@ M.FloatBorder = {
 
 ---@return FloatConfig
 local function default_config()
-  local screen_height, screen_width = util.get_screen_attrs()
+  local screen_height, screen_width = screen.get_screen_attrs()
   local float_win_height = math.floor(screen_height * 0.8)
   local float_win_width = math.floor(screen_width * 0.8)
   local float_win_row = (screen_height - float_win_height) / 2
