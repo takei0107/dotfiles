@@ -24,14 +24,6 @@ colorscheme.new = function(config)
   })
 end
 
-function colorscheme.transparent()
-  vim.cmd("hi Normal guibg=none")
-  vim.cmd("hi LineNr guifg=none")
-  vim.cmd("hi LineNr guibg=none")
-  vim.cmd("hi SignColumn guibg=none")
-  vim.cmd("hi SignColumn guifg=none")
-end
-
 function colorscheme:setup()
   vim.cmd.syntax("enable")
   vim.opt.termguicolors = true
