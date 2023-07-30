@@ -6,10 +6,10 @@
 ---@field on_new_config fun(new_config: rc.LSConfig, new_root_dir: string)|nil
 ---@field capabilities table<string, string|table|boolean|function>|nil
 ---@field cmd string[]|nil
----@field handlers function[]
----@field init_options table<string, string|table|boolean>
----@field on_attach fun(client: integer, bufnr: integer)
----@field settings table<string, string|table|boolean>
+---@field handlers function[]|nil
+---@field init_options table<string, string|table|boolean>|nil
+---@field on_attach fun(client: integer, bufnr: integer)|nil
+---@field settings table<string, string|table|boolean>|nil
 
 ---@type rc.LSConfig
 local M = {}
