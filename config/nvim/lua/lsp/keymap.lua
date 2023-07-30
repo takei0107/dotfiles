@@ -4,6 +4,12 @@ M.register = function()
   vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
     callback = function(event)
+      -- hoverにボーダーをつける
+      local border = require("util.float").FloatBorder.SINGLE
+      vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+        border = border,
+      })
+
       -- options
       local opts = {
         buffer = event.buf,

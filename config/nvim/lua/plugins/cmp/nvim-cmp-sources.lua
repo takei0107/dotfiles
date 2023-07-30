@@ -22,6 +22,11 @@ local sources = {
     types = { cmpType.EDITOR },
   },
   {
+    name = "hrsh7th/cmp-nvim-lsp-signature-help",
+    sourceName = "nvim_lsp_signature_help",
+    types = { cmpType.EDITOR },
+  },
+  {
     name = "hrsh7th/cmp-buffer",
     sourceName = "buffer",
     group_index = 2,
