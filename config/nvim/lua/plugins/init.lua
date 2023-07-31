@@ -19,6 +19,9 @@ end
 ---@see https://github.com/folke/lazy.nvim#-structuring-your-plugins
 local function setup_lazy()
   require("lazy").setup("plugins.spec", {
+    ui = {
+      border = require("util.float").FloatBorder.DOUBLE,
+    },
     change_detection = {
       notify = false,
     },
@@ -61,14 +64,7 @@ end
 -- setup colorscheme
 local function setup_colorscheme()
   local colorscheme = require("plugins.colorscheme")
-  if not colorscheme.skipSetup then
-    if colorscheme.setup then
-      colorscheme:setup()
-    end
-  end
-  if colorscheme.transparent_enable then
-    colorscheme.transparent()
-  end
+  colorscheme:setup()
 end
 
 ---@class rc.PluginsInitializer
@@ -88,12 +84,17 @@ local M = {
     else
       setup_lazy()
     end
-    setup_colorscheme()
   end,
 
   -- nvim in nvimのセットアップをする
   initSetupInNvim = function()
     setup_lazy_in_nvim()
+  end,
+
+  -- colorschemeのセットアップをする。
+  -- colorschemeのプラグインを利用する場合は、initSetupの後に実行すること。
+  initColorScheme = function()
+    setup_colorscheme()
   end,
 }
 

@@ -8,8 +8,6 @@ local M = require("plugins.colorscheme.colorscheme").new({
       italics = false,
     })
   end,
-  transparent_enable = false,
-  skipSetup = true,
 })
 
 return M

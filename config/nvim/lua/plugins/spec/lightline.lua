@@ -5,7 +5,7 @@ return {
       tabline = {
         right = {},
       },
-      colorscheme = "wombat",
+      colorscheme = "one",
     }
     vim.g.loaded_lightline = 1
   end,
@@ -18,6 +18,6 @@ return {
       vim.g.lightline = lightline
     end
     vim.cmd.unlet("g:loaded_lightline")
-    vim.cmd.runtime({args={"plugin/lightline.vim"}, bang=true})
+    vim.cmd.runtime({ args = { "plugin/lightline.vim" }, bang = true })
   end,
 }

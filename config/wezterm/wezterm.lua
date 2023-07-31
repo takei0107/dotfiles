@@ -48,8 +48,8 @@ return {
   font = wezterm.font(e_font, { weight = "Regular" }),
   use_ime = true,
   font_size = e_font_size,
-  color_scheme = "FishTank",
-  window_background_opacity = 0.8,
+  color_scheme = "3024 Night (Gogh)",
+  --window_background_opacity = 0.8,
   audible_bell = "Disabled",
   keys = {
     -- tab actions

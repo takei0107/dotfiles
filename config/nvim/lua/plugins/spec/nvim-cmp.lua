@@ -119,6 +119,10 @@ return {
           return vim_item
         end,
       },
+
+      window = {
+        completion = cmp.config.window.bordered({border = require("util.float").FloatBorder.DOUBLE})
+      }
     })
 
     -- keymap for searchmode completion
@@ -205,6 +209,12 @@ return {
         ---@diagnostic disable-next-line: unused-local
         ["<C-e>"] = cmp.mapping(function(fallback)
           cmp.close()
+        end, { "c" }),
+
+        -- コマンドラインウィンドウに切り替える。
+        ["<C-f>"] = cmp.mapping(function(fallback)
+          cmp.abort()
+          fallback()
         end, { "c" }),
       },
 

@@ -1,36 +1,11 @@
-local function ui_tranparent()
-  if vim.opt.termguicolors:get() then
-    vim.cmd("hi Normal guibg=none")
-    vim.cmd("hi LineNr guifg=none")
-    vim.cmd("hi LineNr guibg=none")
-    vim.cmd("hi SignColumn guibg=none")
-    vim.cmd("hi SignColumn guifg=none")
-  else
-    vim.cmd("hi Normal ctermbg=none")
-    vim.cmd("hi LineNr ctermfg=none")
-    vim.cmd("hi SignColumn ctermbg=none")
-    vim.cmd("hi SignColumn ctermfg=none")
-  end
-end
-
 ---@class rc.colorscheme
 ---@field repo string lazy.nvimで使うリポジトリ名
 ---@field schemeName string カラースキーム名
 ---@field lazyPriority integer|nil lazyの優先度 lazyのヘルプの'COLORSCHEMES'参照
----@field lazy boolean
----@field config fun(self:LazyPlugin, opts:table)|true|nil
+---@field lazy boolean デフォルト: false lazyが有効な場合は、`colorscheme {スキーマ名}`実行時にロードされる。
+---@field config fun(self:LazyPlugin, opts:table)|boolean|nil
 ---@field init fun(self:LazyPlugin)|nil
----@field skipSetup boolean trueの時、setupメソッドをスキップする
----@field transparent_enable boolean 背景透過させるかどうか
----
--- 'lazy'がtrueかつ、'skipSetup'がtrue以外の時
--- ':colorscheme {schemeName}'がsetupメソッドで実行されるタイミングで
--- 対象のカラースキームのプラグインがlazyによってロードされる。
---
--- カラースキームの中にはプラグイン内でカラースキームの指定をしている場合があるので
--- その場合は、'skipSetup'をtrueに設定し、'config'を設定した上で、
--- lazyの読み込み時にプラグインが提供している初期化手順を実行する。
---
+---@field adjustor fun()|nil カラースキームの反映後にハイライトとかを調整するための関数
 local colorscheme = {}
 
 ---@param config rc.colorscheme
@@ -43,8 +18,7 @@ colorscheme.new = function(config)
     lazy = config.lazy or false,
     config = config.config,
     init = config.init,
-    skipSetup = config.skipSetup or false,
-    transparent_enable = config.transparent_enable or false,
+    adjustor = config.adjustor,
   }, {
     __index = colorscheme,
   })
@@ -54,6 +28,9 @@ function colorscheme:setup()
   vim.cmd.syntax("enable")
   vim.opt.termguicolors = true
   vim.cmd.colorscheme(self.schemeName)
+  if self.adjustor then
+    self.adjustor()
+  end
 end
 
 ---@return LazySpec
@@ -66,10 +43,6 @@ function colorscheme:toLazySpec()
     config = self.config,
     init = self.init,
   }
-end
-
-function colorscheme.transparent()
-  ui_tranparent()
 end
 
 return colorscheme

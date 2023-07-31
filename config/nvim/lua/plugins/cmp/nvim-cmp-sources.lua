@@ -5,7 +5,7 @@
 ---@field types rc.CmpType[] どのモードでソースを利用するか
 ---@field group_index integer|nil
 ---@field format fun(vim_item: vim.CompletedItem): vim.CompletedItem ":h cmp-config.formatting.format"
----@field config fun(self:LazyPlugin, opts:table)|true|nil lazy.nvimのconfigプロパティ
+---@field config fun(self:LazyPlugin, opts:table)|boolean|nil lazy.nvimのconfigプロパティ
 
 local cmpType = require("plugins.cmp.cmp-type")
 
@@ -19,6 +19,11 @@ local sources = {
       vim_item.kind = "lsp"
       return vim_item
     end,
+    types = { cmpType.EDITOR },
+  },
+  {
+    name = "hrsh7th/cmp-nvim-lsp-signature-help",
+    sourceName = "nvim_lsp_signature_help",
     types = { cmpType.EDITOR },
   },
   {
