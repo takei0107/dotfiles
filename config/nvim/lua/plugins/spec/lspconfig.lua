@@ -9,8 +9,8 @@ return {
   event = "BufRead *",
   config = function()
     local settings = require("lsp.settings")
-    for _, ls_name in ipairs(vim.tbl_keys(settings)) do
-      require("lspconfig")[ls_name].setup(settings[ls_name])
+    for ls_name, setting in pairs(settings) do
+      require("lspconfig")[ls_name].setup(setting)
     end
     require("lsp.keymap").register()
   end,
