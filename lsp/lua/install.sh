@@ -81,7 +81,18 @@ download_ls() {
     return 1
   fi
 
-  local gzip_file="lua-language-server-${latest_version}-linux-x64.tar.gz"
+  local gzip_file
+  local arch="$(uname)"
+  case $arch in
+    Linux)
+      gzip_file="lua-language-server-${latest_version}-linux-x64.tar.gz" ;;
+    Darwin)
+      gzip_file="lua-language-server-${latest_version}-darwin-arm64.tar.gz" ;;
+  esac
+  if [[ -z $gzip_file ]]; then
+    echo "'uname' returned unexpected value: $arch"
+    return 1
+  fi
   local dl_url="https://github.com/${GIT_REPO}/releases/download/${latest_version}/${gzip_file}"
 
   output_path="$tmp_dir/$gzip_file"
