@@ -44,6 +44,10 @@ keymap.set({ "n", "x" }, "S", '"_S')
 -- <C-s>で+レジスタを選択状態に
 keymap.set({ "n", "x" }, "<C-s>", '"+')
 
+-- <Left>/<Right>でタブ移動
+keymap.set("n", "<Left>", "gT")
+keymap.set("n", "<Right>", "gt")
+
 -- Qucikfix Listのウィンドウがあったら<C-n>/<C-p>で進む/戻る
 local function exist_quickfix_win()
   local wins = vim.api.nvim_list_wins()
