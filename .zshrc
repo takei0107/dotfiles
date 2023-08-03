@@ -60,7 +60,7 @@ if type fzf > /dev/null 2>&1; then
   zle clear-screen
   }
   zle -N fzf_ssh
-  bindkey '^l' fzf_ssh
+  bindkey '^p' fzf_ssh
 
   alias fcd='cd `dirname $(fzf)`'
 fi
