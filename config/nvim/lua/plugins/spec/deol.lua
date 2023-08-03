@@ -20,7 +20,7 @@ local function open_lazygit_buffer(useTab)
     end
     vim.cmd.tabnew()
   end
-  vim.cmd.Deol({args = {"lazygit", "-start-insert", "-toggle"}})
+  vim.cmd.Deol({ args = { "lazygit", "-start-insert", "-toggle" } })
   lazygit_bufnr = vim.fn.bufnr()
   vim.keymap.set("n", "q", function()
     vim.cmd.close()
@@ -39,11 +39,11 @@ return {
   init = function()
     local shell = vim.fn.fnamemodify(vim.o.shell, ":p:t")
     if shell == "zsh" then
-      vim.g["deol#prompt_pattern"] = "❯ " -- 対話シェルで使っているプロンプト文字列
+      vim.g["deol#prompt_pattern"] = "^.*❯ " -- 対話シェルで使っているプロンプト文字列
     end
     vim.g["deol#floating_border"] = "single"
     local floatConfig = floatUtil.make_float_config()
-    local cmd = "<cmd>Deol -edit -split=floating -toggle -winheight=%d -winrow=%d -winwidth=%d -wincol=%d<CR>"
+    local cmd = "<cmd>Deol -split=floating -toggle -winheight=%d -winrow=%d -winwidth=%d -wincol=%d<CR>"
     vim.keymap.set("n", "<C-t>f", cmd:format(floatConfig.height, floatConfig.row, floatConfig.width, floatConfig.col))
     if vim.fn.executable("lazygit") == 1 then
       vim.keymap.set("n", "<C-t>l", function()
