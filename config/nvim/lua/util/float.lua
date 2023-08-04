@@ -4,13 +4,13 @@ local screen = require("util.screen")
 local M = {}
 
 ---@class FloatConfig
----@field relative FloatConfig.relative
----@field anchor FloatConfig.anchor
----@field width integer
----@field height integer
----@field row integer
----@field col integer
----@field border FloatConfig.border
+---@field relative FloatConfig.relative|nil
+---@field anchor FloatConfig.anchor|nil
+---@field width integer|nil
+---@field height integer|nil
+---@field row integer|nil
+---@field col integer|nil
+---@field border FloatConfig.border|nil
 
 ---@enum FloatConfig.relative
 M.FloatRelative = {
