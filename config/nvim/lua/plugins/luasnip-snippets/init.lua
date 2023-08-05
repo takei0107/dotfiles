@@ -16,7 +16,7 @@ function M:new(opts)
     ["opts.snippets"] = { opts.snippets, { "t", "f" } },
   })
   local ins = vim.tbl_deep_extend("force", self, opts)
-  return setmetatable(ins, {__index = M})
+  return setmetatable(ins, { __index = M })
 end
 
 function M:add_snippets()
