@@ -7,14 +7,14 @@ return {
     local ls = require("luasnip")
 
     vim.keymap.set("i", "<tab>", function()
-      if ls.jumpable(1) then
+      if ls.locally_jumpable(1) then
         ls.jump(1)
       else
         vim.api.nvim_feedkeys(termcodes("<tab>"), "n", false)
       end
     end)
     vim.keymap.set("i", "<s-tab>", function()
-      if ls.jumpable(-1) then
+      if ls.locally_jumpable(-1) then
         ls.jump(-1)
       else
         vim.api.nvim_feedkeys(termcodes("<s-tab>"), "n", false)
