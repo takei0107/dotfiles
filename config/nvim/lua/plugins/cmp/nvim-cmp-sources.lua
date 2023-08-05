@@ -4,7 +4,7 @@
 ---@field option table|nil nvim-cmpの各ソースのオプション
 ---@field types rc.CmpType[] どのモードでソースを利用するか
 ---@field group_index integer|nil
----@field format fun(vim_item: vim.CompletedItem): vim.CompletedItem ":h cmp-config.formatting.format"
+---@field format? fun(vim_item: vim.CompletedItem):vim.CompletedItem ":h cmp-config.formatting.format"
 ---@field config fun(self:LazyPlugin, opts:table)|boolean|nil lazy.nvimのconfigプロパティ
 
 local cmpType = require("plugins.cmp.cmp-type")
@@ -81,6 +81,16 @@ local sources = {
       })
     end,
   },
+  {
+    name = "saadparwaiz1/cmp_luasnip",
+    sourceName = "luasnip",
+    option = { use_show_condition = true },
+    format = function(vim_item)
+      vim_item.kind = "luasnip"
+      return vim_item
+    end,
+    types = {cmpType.EDITOR}
+  }
 }
 
 setmetatable(sources, {
