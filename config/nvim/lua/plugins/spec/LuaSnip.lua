@@ -1,25 +1,30 @@
 return {
   "L3MON4D3/LuaSnip",
-  version = "1.*",
+  version = "2.*",
   event = "InsertEnter",
   build = "make install_jsregexp",
   config = function()
     local ls = require("luasnip")
 
+    -- keymaps
     vim.keymap.set("i", "<tab>", function()
       if ls.locally_jumpable(1) then
-        ls.jump(1)
+        return "<Plug>luasnip-jump-next"
       else
-        vim.api.nvim_feedkeys(termcodes("<tab>"), "n", false)
+        return "<tab>"
       end
-    end)
+    end, {
+      expr = true,
+    })
     vim.keymap.set("i", "<s-tab>", function()
       if ls.locally_jumpable(-1) then
-        ls.jump(-1)
+        return "<Plug>luasnip-jump-prev"
       else
-        vim.api.nvim_feedkeys(termcodes("<s-tab>"), "n", false)
+        return "<s-tab>"
       end
-    end)
+    end, {
+      expr = true,
+    })
 
     -- filetype snippets
     require("plugins.luasnip-snippets.c"):add_snippets()
