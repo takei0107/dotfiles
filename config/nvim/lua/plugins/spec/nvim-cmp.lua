@@ -121,8 +121,8 @@ return {
       },
 
       window = {
-        completion = cmp.config.window.bordered({border = require("util.float").FloatBorder.DOUBLE})
-      }
+        completion = cmp.config.window.bordered({ border = require("util.float").FloatBorder.DOUBLE }),
+      },
     })
 
     -- keymap for searchmode completion

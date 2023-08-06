@@ -89,8 +89,8 @@ local sources = {
       vim_item.kind = "luasnip"
       return vim_item
     end,
-    types = {cmpType.EDITOR}
-  }
+    types = { cmpType.EDITOR },
+  },
 }
 
 setmetatable(sources, {
