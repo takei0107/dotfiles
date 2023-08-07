@@ -4,8 +4,8 @@ return require("plugins.luasnip-snippets"):new({
     local s = ls.snippet
     local t = ls.text_node
     local i = ls.insert_node
-    local sn = ls.snippet_node
-    local isn = ls.indent_snippet_node
+    -- local sn = ls.snippet_node
+    -- local isn = ls.indent_snippet_node
     -- stylua: ignore
     return {
       -- '#include<{}>'
@@ -31,11 +31,7 @@ return require("plugins.luasnip-snippets"):new({
         trig = "if",
       }, {
         t("if("), i(1, "cond"), t({") {", ""}),
-        sn(0, {
-          isn(1, {
-            t("\t"), i(1, "body")
-          }, "")
-        }),
+        t("\t"), i(0, "body"),
         t({"", "}"})
       }),
       -- while文
@@ -43,11 +39,7 @@ return require("plugins.luasnip-snippets"):new({
         trig = "while",
       }, {
         t("while("), i(1, "cond"), t({") {", ""}),
-        sn(0, {
-          isn(1, {
-            t("\t"), i(1, "body")
-          }, "")
-        }),
+        t("\t"), i(0, "body"),
         t({"", "}"})
       }),
       -- for文
@@ -55,11 +47,7 @@ return require("plugins.luasnip-snippets"):new({
         trig = "for",
       }, {
         t("for("), i(1, "init"), t("; "), i(2, "test"), t("; "), i(3, "post"), t({") {", ""}),
-        sn(0, {
-          isn(1, {
-            t("\t"), i(1, "body")
-          }, "")
-        }),
+        t("\t"), i(0, "body"),
         t({"", "}"})
       })
     }
