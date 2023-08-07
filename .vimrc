@@ -27,5 +27,7 @@ set undofile
 " 履歴
 set history=5000
 
+nnoremap <C-l> <cmd>nohlsearch<CR>
+
 syntax enable
 filetype plugin indent on
