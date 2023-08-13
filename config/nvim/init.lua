@@ -58,3 +58,7 @@ local function screen_transparent()
   end
 end
 screen_transparent()
+
+-- formatter
+---@module "support.formatter"
+util.safeRequireWithSideEffect("support.formatter")

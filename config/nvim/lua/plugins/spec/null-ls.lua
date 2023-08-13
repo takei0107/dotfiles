@@ -29,6 +29,7 @@ return {
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
+  enabled = false,
   ft = { "lua" },
   config = function()
     local null_ls = require("null-ls")
