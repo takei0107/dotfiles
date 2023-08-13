@@ -2,7 +2,7 @@
 ---@field repo string lazy.nvimで使うリポジトリ名
 ---@field schemeName string カラースキーム名
 ---@field lazyPriority integer|nil lazyの優先度 lazyのヘルプの'COLORSCHEMES'参照
----@field lazy boolean デフォルト: false lazyが有効な場合は、`colorscheme {スキーマ名}`実行時にロードされる。
+---@field lazy boolean|nil デフォルト: false lazyが有効な場合は、`colorscheme {スキーマ名}`実行時にロードされる。
 ---@field config fun(self:LazyPlugin, opts:table)|boolean|nil
 ---@field init fun(self:LazyPlugin)|nil
 ---@field adjustor fun()|nil カラースキームの反映後にハイライトとかを調整するための関数

@@ -1,7 +1,4 @@
 ---@class rc.Screen
----@field transparent fun()
-
----@type rc.Screen
 local M = {}
 
 M.transparent = function()
