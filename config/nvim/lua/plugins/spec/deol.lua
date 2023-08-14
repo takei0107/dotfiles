@@ -22,13 +22,33 @@ local function open_lazygit_buffer(useTab)
   end
   vim.cmd.Deol({ args = { "lazygit", "-start-insert", "-toggle" } })
   lazygit_bufnr = vim.fn.bufnr()
-  vim.keymap.set({ "n", "t" }, "q", function()
-    vim.cmd.close({ bang = true })
-    vim.api.nvim_buf_delete(lazygit_bufnr, { force = true })
-    lazygit_bufnr = nil
-  end, {
-    buffer = lazygit_bufnr,
-  })
+
+  local function lazygit_buf_autocmd()
+    vim.api.nvim_create_autocmd({ "BufEnter" }, {
+      group = vim.api.nvim_create_augroup("LazyBufEnter", {}),
+      buffer = lazygit_bufnr,
+      callback = function()
+        if vim.fn.mode() ~= "t" then
+          vim.cmd.startinsert()
+        end
+      end,
+    })
+  end
+
+  local function lazygit_buf_keymap()
+    vim.keymap.set("t", "<Left>", "<C-\\><C-n>gT", { buffer = lazygit_bufnr })
+    vim.keymap.set("t", "<Right>", "<C-\\><C-n>gt", { buffer = lazygit_bufnr })
+    vim.keymap.set({ "n", "t" }, "q", function()
+      vim.cmd.quit({ bang = true })
+      vim.api.nvim_buf_delete(lazygit_bufnr, { force = true })
+      lazygit_bufnr = nil
+    end, {
+      buffer = lazygit_bufnr,
+    })
+  end
+
+  lazygit_buf_autocmd()
+  lazygit_buf_keymap()
 end
 
 return {
