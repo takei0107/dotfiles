@@ -36,15 +36,16 @@ local function open_lazygit_buffer(useTab)
   end
 
   local function lazygit_buf_keymap()
-    vim.keymap.set("t", "<Left>", "<C-\\><C-n>gT", { buffer = lazygit_bufnr })
-    vim.keymap.set("t", "<Right>", "<C-\\><C-n>gt", { buffer = lazygit_bufnr })
-    vim.keymap.set({ "n", "t" }, "q", function()
+    local function lazygit_keymap(mode, lhs, rhs)
+      vim.keymap.set(mode, lhs, rhs, { buffer = lazygit_bufnr })
+    end
+    lazygit_keymap("t", "<Left>", "<C-\\><C-n>gT")
+    lazygit_keymap("t", "<Right>", "<C-\\><C-n>gt")
+    lazygit_keymap({ "n", "t" }, "q", function()
       vim.cmd.quit({ bang = true })
       vim.api.nvim_buf_delete(lazygit_bufnr, { force = true })
       lazygit_bufnr = nil
-    end, {
-      buffer = lazygit_bufnr,
-    })
+    end)
   end
 
   lazygit_buf_autocmd()
