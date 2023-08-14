@@ -62,3 +62,6 @@ screen_transparent()
 -- formatter
 ---@module "support.formatter"
 util.safeRequireWithSideEffect("support.formatter")
+
+---@module "support.lazygit"
+util.safeRequireWithSideEffect("support.lazygit")
