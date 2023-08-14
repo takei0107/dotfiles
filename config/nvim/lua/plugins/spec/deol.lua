@@ -22,9 +22,9 @@ local function open_lazygit_buffer(useTab)
   end
   vim.cmd.Deol({ args = { "lazygit", "-start-insert", "-toggle" } })
   lazygit_bufnr = vim.fn.bufnr()
-  vim.keymap.set("n", "q", function()
-    vim.cmd.close()
-    vim.api.nvim_buf_delete(lazygit_bufnr, {})
+  vim.keymap.set({ "n", "t" }, "q", function()
+    vim.cmd.close({ bang = true })
+    vim.api.nvim_buf_delete(lazygit_bufnr, { force = true })
     lazygit_bufnr = nil
   end, {
     buffer = lazygit_bufnr,
