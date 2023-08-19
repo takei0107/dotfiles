@@ -48,7 +48,7 @@ return {
   font = wezterm.font(e_font, { weight = "Regular" }),
   use_ime = true,
   font_size = e_font_size,
-  color_scheme = "3024 Night (Gogh)",
+  color_scheme = "CGA",
   --window_background_opacity = 0.8,
   audible_bell = "Disabled",
   keys = {
