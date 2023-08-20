@@ -2,7 +2,7 @@
 return {
   "nvim-treesitter/nvim-treesitter",
   build = function()
-    require("nvim-treesitter.install").update({ with_sync = true })
+    vim.cmd.TSUpdate()
   end,
   ft = { "lua" },
   ---@type fun(self:LazyPlugin, opts:table)|true
