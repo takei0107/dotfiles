@@ -18,7 +18,7 @@ set.cursorlineopt = { "screenline" }
 set.virtualedit = "block"
 set.laststatus = 2
 set.signcolumn = "yes"
-set.cmdheight = 0
+set.cmdheight = 1
 set.completeopt = "menu"
 set.matchpairs:append("<:>")
 set.nrformats:append("unsigned")
