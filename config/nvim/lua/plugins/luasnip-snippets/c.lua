@@ -14,6 +14,12 @@ return require("plugins.luasnip-snippets"):new({
       }, {
         t("#include<"), i(0, "header"), t(">"),
       }),
+      -- '#include"{}"'
+      s({
+        trig = "inc",
+      }, {
+        t('#include"'), i(0, "header"), t('"'),
+      }),
       -- '#define {} {}'
       s({
         trig = "def",
