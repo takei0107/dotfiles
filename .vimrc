@@ -1,5 +1,14 @@
 set nocompatible
 
+let g:loaded_remote_plugins = 1
+let g:loaded_gzip = 1
+let g:loaded_tarPlugin = 1
+let g:loaded_2html_plugin = 1
+let g:loaded_tutor_mode_plugin = 1
+let g:loaded_zipPlugin = 1
+let g:loaded_spellfile_plugin = 1
+let g:loaded_netrwPlugin = 1
+
 " backspace
 set backspace=indent,eol,start
 
@@ -36,6 +45,12 @@ execute "set undodir=" .. s:undodir
 set history=5000
 
 nnoremap <C-l> <cmd>nohlsearch<CR>
+
+augroup c_man
+  au!
+  au FileType c,cpp :runtime ftplugin/man.vim
+augroup END
+
 
 syntax enable
 colorscheme industry
