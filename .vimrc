@@ -54,5 +54,17 @@ augroup END
 
 syntax enable
 colorscheme industry
+if g:colors_name == 'industry'
+  hi! link Type Special
+  hi! link Statement Special
+
+  hi! link Macro Function
+  hi! link Define Function
+  hi! link Include Function
+  hi! link PreProc Function
+
+  hi! link Constant Identifier
+  hi! link SpecialChar Constant
+endif
 
 filetype plugin indent on

@@ -4,6 +4,7 @@ set -e
 set -u
 
 [[ ! -d $HOME/.config ]] && mkdir "$HOME"/.config
+[[ ! -d $HOME/.vim ]] && mkdir "$HOME"/.vim
 
 # links define
 declare -A linksdef
@@ -12,9 +13,15 @@ linksdef=(
   [$PWD/.zshrc]=$HOME/.zshrc
   [$PWD/.ideavimrc]=$HOME/.ideavimrc
 )
+
 for entry in "$PWD"/config/*;
 do
   linksdef[$entry]=$HOME/.config
+done
+
+for entry in "$PWD"/vim/*;
+do
+  linksdef[$entry]=$HOME/.vim
 done
 
 # check linksdef
