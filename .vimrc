@@ -64,7 +64,11 @@ if g:colors_name == 'industry'
   hi! link PreProc Function
 
   hi! link Constant Identifier
-  hi! link SpecialChar Constant
+
+  hi! link String Conceal
+  hi! link SpecialChar String
+
+  hi! link LineNr Conceal
 endif
 
 filetype plugin indent on
