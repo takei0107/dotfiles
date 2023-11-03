@@ -13,6 +13,8 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     zsh = wezterm.nerdfonts.dev_terminal,
     ssh = wezterm.nerdfonts.mdi_server,
     top = wezterm.nerdfonts.mdi_monitor,
+    git = wezterm.nerdfonts.dev_git,
+    lazygit = wezterm.nerdfonts.dev_git
   }
   local pane = tab.active_pane
   local process_name = basename(pane.foreground_process_name)
@@ -43,6 +45,7 @@ elseif wezterm.target_triple == "aarch64-apple-darwin" then
 end
 
 return {
+  window_frame = {font_size = 25.0},
   show_update_window = false,
   default_cwd = wezterm.home_dir,
   font = wezterm.font(e_font, { weight = "Regular" }),
