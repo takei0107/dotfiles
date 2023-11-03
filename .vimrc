@@ -66,7 +66,7 @@ if g:colors_name == 'industry'
   hi! link Constant Identifier
 
   hi! link String Conceal
-  hi! link SpecialChar String
+  "hi! link SpecialChar String
 
   hi! link LineNr Conceal
 endif
