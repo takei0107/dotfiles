@@ -69,6 +69,8 @@ return {
     -- window actions
     { key = "n", mods = "ALT", action = wezterm.action.SpawnWindow },
     { key = "o", mods = "ALT", action = wezterm.action.ToggleFullScreen},
+    { key = "w", mods = "ALT", action = wezterm.action.ActivateWindowRelative(1)},
+    { key = "w", mods = "SHIFT|ALT", action = wezterm.action.ActivateWindowRelative(-1)},
 
     -- pane actions
     { key = "s", mods = "ALT", action = wezterm.action({ SplitVertical = { domain = "CurrentPaneDomain" } }) },
