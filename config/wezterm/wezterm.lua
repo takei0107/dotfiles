@@ -66,6 +66,10 @@ return {
     { key = "a", mods = "ALT", action = "ShowTabNavigator" },
     { key = "q", mods = "ALT", action = wezterm.action({ CloseCurrentTab = { confirm = true } }) },
 
+    -- window actions
+    { key = "n", mods = "ALT", action = wezterm.action.SpawnWindow },
+    { key = "o", mods = "ALT", action = wezterm.action.ToggleFullScreen},
+
     -- pane actions
     { key = "s", mods = "ALT", action = wezterm.action({ SplitVertical = { domain = "CurrentPaneDomain" } }) },
     { key = "v", mods = "ALT", action = wezterm.action({ SplitHorizontal = { domain = "CurrentPaneDomain" } }) },
