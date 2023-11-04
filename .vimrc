@@ -1,5 +1,6 @@
 set nocompatible
 
+" rtp
 let g:loaded_remote_plugins = 1
 let g:loaded_gzip = 1
 let g:loaded_tarPlugin = 1
@@ -15,6 +16,9 @@ set backspace=indent,eol,start
 " バッファ関連
 set number
 set hidden
+
+" インデント
+set smartindent
 
 " コマンドライン補完
 set wildmenu
@@ -46,12 +50,13 @@ set history=5000
 
 nnoremap <C-l> <cmd>nohlsearch<CR>
 
+" CとC++で:Manを有効化
 augroup c_man
   au!
   au FileType c,cpp :runtime ftplugin/man.vim
 augroup END
 
-
+" 外観
 syntax enable
 colorscheme industry
 if g:colors_name == 'industry'
