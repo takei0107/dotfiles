@@ -48,12 +48,21 @@ execute "set undodir=" .. s:undodir
 " 履歴
 set history=5000
 
+" 分割
+set splitright
+
 nnoremap <C-l> <cmd>nohlsearch<CR>
 
 " CとC++で:Manを有効化
 augroup c_man
   au!
   au FileType c,cpp :runtime ftplugin/man.vim
+augroup END
+
+" 自動的にQuickFixのウィンドウをオープンする。
+augroup auto_copen
+  au!
+  au QuickFixCmdPost make,vimgrep :copen
 augroup END
 
 " 外観
