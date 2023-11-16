@@ -51,6 +51,9 @@ set history=5000
 " 分割
 set splitright
 
+" ターミナル
+set termwinkey=<C-g>
+
 nnoremap <C-l> <cmd>nohlsearch<CR>
 
 " CとC++で:Manを有効化
@@ -67,8 +70,8 @@ augroup END
 
 " 外観
 syntax enable
-colorscheme industry
-if g:colors_name == 'industry'
+
+function! s:layout_industry() abort
   hi! link Type Special
   hi! link Statement Special
 
@@ -83,6 +86,12 @@ if g:colors_name == 'industry'
   "hi! link SpecialChar String
 
   hi! link LineNr Conceal
-endif
+endfunction
+
+augroup cs_industry	
+  au!
+  au ColorScheme industry :call <SID>layout_industry()
+augroup END
+colorscheme industry
 
 filetype plugin indent on
